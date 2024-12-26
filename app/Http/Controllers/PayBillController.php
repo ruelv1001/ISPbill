@@ -57,7 +57,8 @@ class PayBillController extends Controller
     {
 
         $paybill = new Transaction();
-        $paybill->payment_amount = $request->payment_method;
+        $paybill->user_id = $request->user_id;
+        $paybill->payment_method = $request->payment_method;
         $paybill->payment_amount = $request->payment_amount;
         $paybill->ref_code = $request->ref_code;
         $paybill->remarks = $request->remarks;

@@ -9,7 +9,7 @@ class ServiceDetails extends Model
 {
     use HasFactory;
     public $timestamps = false;
-    protected $fillable = ['subscription_date', 'previous_due_date', 'active_due_date', 'billing_date', 'user_id'];
+    protected $fillable = ['subscription_date', 'previous_due_date', 'active_due_date', 'billing_date', 'user_id', 'status'];
     protected $casts = [
         'active_due_date' => 'datetime',
         'billing_date' => 'datetime',

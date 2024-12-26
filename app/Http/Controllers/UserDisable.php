@@ -13,7 +13,8 @@ class UserDisable extends Controller
     {
         $router_name = $user->detail->router_name;
         $router = Router::where("name", $router_name)->firstOrFail();
-        
+
+
         try {
             $client = new Client([
                 "host" => $router->ip,
@@ -22,7 +23,7 @@ class UserDisable extends Controller
             ]);
 
             $query = new Query("/ppp/secret/disable");
-            $query->equal("numbers", $user->name);
+            $query->equal("numbers", $user->id);
             $client->query($query)->read();
         } catch (\Exception $e) {
             return back()->with("error", __("Mikrotik connection fails"));

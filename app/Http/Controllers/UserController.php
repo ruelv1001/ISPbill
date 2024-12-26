@@ -99,39 +99,8 @@ class UserController extends Controller
         // Start a database transaction for better error handling
         DB::beginTransaction();
 
-        $settings = Setting::first();
-        if (!$settings) {
-            Log::error("Settings not found: Unable to connect to the Mikrotik router.");
-            return back()->with("error", __("Settings not found"));
-        }
-
-        $package = Package::where("id", $request->package_name)->first();
-        if (!$package) {
-            Log::error("Package not found: Requested package ID {$request->package_name} does not exist.");
-            return back()->with("error", __("Package not found"));
-        }
-
-        try {
-            $client = new Client([
-                "host" => $settings->router_ip,
-                "user" => $settings->router_username,
-                "pass" => $settings->router_password,
-            ]);
-
-            $query = new Query("/ppp/secret/add");
-            $query->equal("name", $request->name);
-            $query->equal("password", $request->router_password);
-            $query->equal("service", 'any');
-            $query->equal("profile", $package->name);
-
-            $client->query($query)->read();
-        } catch (\Exception $e) {
-            Log::error("Mikrotik connection failed: " . $e->getMessage(), [
-                'host' => $settings->router_ip,
-                'user' => $settings->router_username,
-            ]);
-            return back()->with("error", __("Mikrotik connection fails"));
-        }
+        $settings = Setting::firstOrFail();
+        $package = Package::where("id", $request->package_name)->firstOrFail();
 
         try {
             // Create user
@@ -176,6 +145,7 @@ class UserController extends Controller
                 'subscription_date' => $currentDateAndTime,
                 'active_due_date' => $oneMonthdateAndTime,
                 'billing_date' => $oneMonthPlusTenDays,
+                'status' => "Active",
             ]);
 
             // Create billing record
@@ -185,7 +155,37 @@ class UserController extends Controller
                 'package_name' => $details->package_name,
                 'package_price' => $details->package_price,
                 'package_start' => $details->package_start,
+
             ]);
+
+            // Now, run the Mikrotik query with user_id only
+            try {
+                $client = new Client([
+                    "host" => $settings->router_ip,
+                    "user" => $settings->router_username,
+                    "pass" => $settings->router_password,
+                ]);
+
+                $query = new Query("/ppp/secret/add");
+                $query->equal("name", $user->id);  // Use only user_id
+                $query->equal("password", $validatedData['router_password']);
+                $query->equal("service", 'any');
+                $query->equal("profile", $package->name);
+
+                $client->query($query)->read();
+            } catch (\Exception $e) {
+                // Log the error for debugging
+                Log::error('Failed to create Mikrotik user.', [
+                    'error_message' => $e->getMessage(),
+                    'stack_trace' => $e->getTraceAsString(),
+                    'request_data' => $request->all(),
+                ]);
+
+                // Rollback the transaction
+                DB::rollBack();
+
+                return back()->with("error", __("Mikrotik connection fails"));
+            }
 
             // Commit the transaction
             DB::commit();
