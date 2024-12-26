@@ -46,9 +46,7 @@ class PayBillController extends Controller
     public function edit(User $user)
     {
         if (!auth()->user()->isAdmin()) {
-            return redirect('/');
-        }
-
+            return r
 
         return view('paybill.edit', compact('user'));
     }
