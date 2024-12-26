@@ -46,7 +46,9 @@ class PayBillController extends Controller
     public function edit(User $user)
     {
         if (!auth()->user()->isAdmin()) {
-            return r
+            return redirect('/');
+        }
+
 
         return view('paybill.edit', compact('user'));
     }
@@ -55,7 +57,7 @@ class PayBillController extends Controller
     {
 
         $paybill = new Transaction();
-<div class=""></div>quest->payment_method;
+        $paybill->payment_amount = $request->payment_method;
         $paybill->payment_amount = $request->payment_amount;
         $paybill->ref_code = $request->ref_code;
         $paybill->remarks = $request->remarks;
