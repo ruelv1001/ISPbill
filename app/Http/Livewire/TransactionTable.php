@@ -13,12 +13,10 @@ class TransactionTable extends DataTableComponent
 {
     protected $model = Transaction::class;
 
-
-
     public function configure(): void
     {
         $this->setPrimaryKey('id')
-            ->setAdditionalSelects(['users.id as id'])
+            ->setAdditionalSelects(['transaction.id as transaction_id'])
             ->setTableRowUrl(function ($row) {
                 return route('transaction.create', ['user' => $row->id]);
             });
@@ -28,31 +26,36 @@ class TransactionTable extends DataTableComponent
     public function columns(): array
     {
         return [
-            Column::make("Transaction ID", "transaction.id")
+            Column::make("Transaction ID", "id") 
+                ->setTable('transaction') 
                 ->sortable()
                 ->searchable(),
-            Column::make("First Name", "detail.first_name")
+                Column::make("First Name", "detail.first_name")
                 ->sortable()
                 ->searchable(),
             Column::make("Last Name", "detail.last_name")
                 ->sortable()
                 ->searchable(),
-            Column::make("Package Name", "detail.package_name")
+                Column::make("Payment  method", "payment_method") 
+                ->setTable('transaction') 
                 ->sortable()
                 ->searchable(),
-            Column::make("Package Price", "detail.package_price")
+                Column::make("Payment  Date", "payment_date") 
+                ->setTable('transaction') 
                 ->sortable()
                 ->searchable(),
-
-            Column::make("Due Date", "service_details.active_due_date")
+                Column::make("Payment  Amount", "payment_amount") 
+                ->setTable('transaction') 
                 ->sortable()
-                ->searchable()
-
+                ->searchable(),
+                
         ];
     }
 
     public function builder(): Builder
     {
-        return User::query()->where('role', 'user')->select();
+        return Transaction::query()
+        ->with('detail') 
+        ->select('transaction.*');
     }
 }
