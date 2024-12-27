@@ -19,7 +19,7 @@
                         </h2>
                     </div>
                     <div>
-                        <form action="{{ route('due.user.disable') }}" class="mt-6" method="post">
+                        <form action="{{ route('due.user.disable') }}" class="mt-6 hidden" method="post">
                             @csrf
                             <x-danger-button>{{ __('Disable all users with due') }}</x-danger-button>
                         </form>

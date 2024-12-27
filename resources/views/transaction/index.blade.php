@@ -6,13 +6,13 @@
                 <div class="p-6 text-gray-900">
                     <div class="flex justify-between items-center mb-6 border-b-2 border-slate-100 pb-4">
                         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                            {{ __('Pay Bill') }}
+                            {{ __('Transactions') }}
                         </h2>
 
 
                     </div>
                     <div>
-                        <livewire:pay-bill-table />
+                        <livewire:transaction-table />
                     </div>
                 </div>
             </div>

@@ -19,6 +19,7 @@ use App\Http\Controllers\RouterController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\ShowUser;
 use App\Http\Controllers\TicketController;
+use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserDisable;
 use App\Http\Controllers\UserDownload;
@@ -38,9 +39,12 @@ Route::middleware('auth')->group(function () {
     Route::resource('/payment', PaymentController::class)->only(['index', 'store']);
     Route::resource('/ticket', TicketController::class);
     Route::resource('/paybill', PayBillController::class);
+    Route::resource('/transaction', TransactionController::class);
     Route::resource('/router', RouterController::class);
     //myself
     Route::get('/paybill/create/{user}', [PaybillController::class, 'create'])->name('paybill.create');
+//Users
+Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
 
 
 

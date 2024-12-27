@@ -249,4 +249,14 @@ class UserController extends Controller
 
         return redirect("users")->with("success", __("User added successfully"));
     }
+
+    public function destroy(User $user)
+{
+    try {
+        $user->delete();
+        return redirect()->route('users.index')->with('success', 'User deleted successfully.');
+    } catch (\Exception $e) {
+        return redirect()->route('users.index')->with('error', 'Error deleting user: ' . $e->getMessage());
+    }
+}
 }

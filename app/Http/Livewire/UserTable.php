@@ -17,10 +17,10 @@ class UserTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id')
-            ->setAdditionalSelects(['users.id as id'])
-            ->setTableRowUrl(function ($row) {
-                return route('users.show', $row);
-            });
+            ->setAdditionalSelects(['users.id as id']);
+            // ->setTableRowUrl(function ($row) {
+            //     return route('users.show', $row);
+            // });
         $this->setEagerLoadAllRelationsEnabled();
     }
 
@@ -31,22 +31,22 @@ class UserTable extends DataTableComponent
                 ->sortable()
                 ->searchable()
                 ->format(fn($value, $row) => $row->detail->first_name . ' ' . $row->detail->last_name),
-
-            Column::make("Email", "email")
-                ->sortable()
-                ->searchable(),
+    
+            // Column::make("Email", "email")
+            //     ->sortable()
+            //     ->searchable(),
             Column::make("Router", "detail.router_name")
                 ->sortable()
                 ->searchable(),
             Column::make("Package", "detail.package_name")
                 ->sortable()
                 ->searchable(),
-            Column::make("Started", "detail.package_start")
-                ->sortable()
-                ->searchable(),
-            Column::make("Status", "detail.status")
-                ->sortable(),
-            Column::make("Due" . __(' (') . config('app.currency') . __(')'))
+            // Column::make("Started", "detail.package_start")
+            //     ->sortable()
+            //     ->searchable(),
+            // Column::make("Status", "detail.status")
+            //     ->sortable(),
+            Column::make("Package Price" )
                 ->sortable()
                 ->label(function ($row) {
                     return $row->due_amount($row->id);
@@ -55,11 +55,17 @@ class UserTable extends DataTableComponent
                 ->format(function ($value) {
                     return Carbon::parse($value)->format('Y-m-d');
                 }),
+            Column::make('Actions')
+                ->label(fn($row) => view('components.actions', ['row' => $row])),
         ];
     }
+    
 
     public function builder(): Builder
     {
         return User::query()->where('role', 'user')->select();
     }
+
+
+    
 }

@@ -12,6 +12,8 @@
                     :active="request()->routeIs('users.index')">{{ __('Customer') }}</x-sidebar-item>
                 <x-sidebar-item :href="route('paybill.index')"
                     :active="request()->routeIs('paybill.index')">{{ __('Pay Bill') }}</x-sidebar-item>
+                    <x-sidebar-item :href="route('transaction.index')"
+                    :active="request()->routeIs('transaction.index')">{{ __('Transaction') }}</x-sidebar-item>
                 <x-sidebar-item :href="route('company.edit')"
                     :active="request()->routeIs('company.edit')">{{ __('ISP') }}</x-sidebar-item>
                 <x-sidebar-item :href="route('router.index')"
