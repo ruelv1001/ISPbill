@@ -16,46 +16,48 @@ class TransactionTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id')
-            ->setAdditionalSelects(['transaction.id as transaction_id'])
-            ->setTableRowUrl(function ($row) {
-                return route('transaction.create', ['user' => $row->id]);
-            });
+            ->setAdditionalSelects(['transaction.id as transaction_id']);
+        // ->setTableRowUrl(function ($row) {
+        //     return route('transaction.create', ['user' => $row->id]);
+        // });
         $this->setEagerLoadAllRelationsEnabled();
     }
 
     public function columns(): array
     {
         return [
-            Column::make("Transaction ID", "id") 
-                ->setTable('transaction') 
+            Column::make("Transaction ID", "id")
+                ->setTable('transaction')
                 ->sortable()
                 ->searchable(),
-                Column::make("First Name", "detail.first_name")
+            Column::make("First Name", "detail.first_name")
                 ->sortable()
                 ->searchable(),
             Column::make("Last Name", "detail.last_name")
                 ->sortable()
                 ->searchable(),
-                Column::make("Payment  method", "payment_method") 
-                ->setTable('transaction') 
+            Column::make("Payment  method", "payment_method")
+                ->setTable('transaction')
                 ->sortable()
                 ->searchable(),
-                Column::make("Payment  Date", "payment_date") 
-                ->setTable('transaction') 
+            Column::make("Payment  Date", "payment_date")
+                ->setTable('transaction')
                 ->sortable()
                 ->searchable(),
-                Column::make("Payment  Amount", "payment_amount") 
-                ->setTable('transaction') 
+            Column::make("Payment  Amount", "payment_amount")
+                ->setTable('transaction')
                 ->sortable()
                 ->searchable(),
-                
+            Column::make('Actions')
+                ->label(fn($row) => view('components.action', ['row' => $row])),
+
         ];
     }
 
     public function builder(): Builder
     {
         return Transaction::query()
-        ->with('detail') 
-        ->select('transaction.*');
+            ->with('detail')
+            ->select('transaction.*');
     }
 }

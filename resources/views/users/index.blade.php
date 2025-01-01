@@ -20,25 +20,28 @@
                         </h2>
                         <div class="flex items-center  ">
                             @if (auth()->user()->isAdmin())
-                            <form action="{{ route('due.user.disable') }}" method="post" class="hidden">
-                                @csrf
-                                <x-danger-button>{{ __('Disable all Customer with due') }}</x-danger-button>
-                            </form>
-                            <a href="{{ route('user.download') }}" class="ml-2 inline-flex items-center px-4 py-2 bg-orange-400 text-white dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs rounded uppercase">
+                                <form action="{{ route('due.user.disable') }}" method="post" class="hidden">
+                                    @csrf
+                                    <x-danger-button>{{ __('Disable all Customer with due') }}</x-danger-button>
+                                </form>
+                                <a href="{{ route('user.download') }}"
+                                    class="ml-2 inline-flex items-center px-4 py-2 bg-orange-400 text-white dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs rounded uppercase">
                                     {{ __('Download') }}
                                 </a>
 
-                                <a href="{{ route('users.create') }}" class="ml-2 inline-flex items-center px-4 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white rounded uppercase">
+                                <a href="{{ route('users.create') }}"
+                                    class="ml-2 inline-flex items-center px-4 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white rounded uppercase">
                                     {{ __('Create') }}
                                 </a>
                             @endif
                         </div>
                     </div>
                     <div>
-                        <livewire:user-table/>
+                        <livewire:user-table />
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </x-app-layout>
+@include('sweetalert::alert')

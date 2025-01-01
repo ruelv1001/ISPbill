@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Hash;
 use RouterOS\Client;
 use RouterOS\Query;
 use App\Models\User;
-
+use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\Log;
 class UserController extends Controller
 {
@@ -89,7 +89,7 @@ class UserController extends Controller
             "phone" => "required|string",
             "dob" => "nullable|date",
             "pin" => "required|string",
-            "my_profile" => "required|in:Profile 1,Profile 2,Profile 3",
+            "my_profile" => "nullable|in:Profile 1,Profile 2,Profile 3",
             "coordinates" => "required|string",
             "package_name" => "required|exists:packages,id",
             "router_name" => "required|exists:routers,id",
@@ -133,7 +133,7 @@ class UserController extends Controller
                 'first_name' => $validatedData['first_name'],
                 'last_name' => $validatedData['last_name'],
                 'area' => $validatedData['area'] ?? null,
-                'my_profile' => $validatedData['my_profile'],
+                "my_profile" => "nullable|string|in:Profile 1,Profile 2,Profile 3",
                 'coordinates' => $validatedData['coordinates'],
                 'package_start' => Carbon::now(),
             ]);
@@ -149,14 +149,14 @@ class UserController extends Controller
             ]);
 
             // Create billing record
-            $billing = Billing::create([
-                'user_id' => $user->id,
-                'invoice' => $this->generateUniqueInvoiceNumber(),
-                'package_name' => $details->package_name,
-                'package_price' => $details->package_price,
-                'package_start' => $details->package_start,
+            // $billing = Billing::create([
+            //     'user_id' => $user->id,
+            //     'invoice' => $this->generateUniqueInvoiceNumber(),
+            //     'package_name' => $details->package_name,
+            //     'package_price' => $details->package_price,
+            //     'package_start' => $details->package_start,
 
-            ]);
+            // ]);
 
             // Now, run the Mikrotik query with user_id only
             try {
@@ -208,6 +208,9 @@ class UserController extends Controller
                 ->with('error', __('User creation failed: ') . $e->getMessage());
         }
     }
+
+
+
     public function show(User $user)
     {
         if (!auth()->user()->isAdmin()) {
@@ -228,35 +231,89 @@ class UserController extends Controller
 
     public function update(Request $request, User $user)
     {
-        $this->validate($request, [
+        $validatedData = $this->validate($request, [
             "password" => "nullable|min:6|confirmed",
-            "address" => "required",
-            "phone" => "required",
-            "dob" => "required",
+            "address" => "nullable|string|max:255",
+            "phone" => "nullable|string|max:15",
+            "dob" => "nullable|date",
+            "email" => "nullable|email|unique:users,email," . $user->id,
+            "first_name" => "nullable|string|max:255",
+            "last_name" => "nullable|string|max:255",
+            "area" => "nullable|in:1,2,3,4,5,6,7,8,9,10",
+            "pin" => "nullable|string|max:10",
+            "my_profile" => "nullable|in:Profile 1,Profile 2,Profile 3",
+            "coordinates" => "nullable|string",
+            "package_name" => "nullable|exists:packages,name",
+            "router_name" => "nullable|exists:routers,name",
+            "router_password" => "nullable|string",
+            "subscription_date" => "nullable|date",
+            "active_due_date" => "nullable|date",
+            "billing_date" => "nullable|date",
         ]);
 
-        if (filled($request->password)) {
-            $user->password = Hash::make($request->password);
+        if (filled($validatedData['password'])) {
+            $user->password = Hash::make($validatedData['password']);
         }
+
+        $user->email = $validatedData['email'] ?? $user->email;
         $user->save();
 
         $details = Detail::firstWhere('user_id', $user->id);
-        $details->phone = $request->phone;
-        $details->address = $request->address;
-        $details->dob = $request->dob;
-        $details->pin = $request->pin;
-        $details->save();
 
-        return redirect("users")->with("success", __("User added successfully"));
+        if ($details) {
+            $details->update([
+                'first_name' => $validatedData['first_name'] ?? $details->first_name,
+                'last_name' => $validatedData['last_name'] ?? $details->last_name,
+                'phone' => $validatedData['phone'] ?? $details->phone,
+                'address' => $validatedData['address'] ?? $details->address,
+                'dob' => $validatedData['dob'] ?? $details->dob,
+                'pin' => $validatedData['pin'] ?? $details->pin,
+                'router_password' => $validatedData['router_password'] ?? $details->router_password,
+                'package_name' => $validatedData['package_name'] ?? $details->package_name,
+                'router_name' => $validatedData['router_name'] ?? $details->router_name,
+                'area' => $validatedData['area'] ?? $details->area,
+                'my_profile' => $validatedData['my_profile'] ?? $details->my_profile,
+                'coordinates' => $validatedData['coordinates'] ?? $details->coordinates,
+            ]);
+        }
+
+        ServiceDetails::updateOrCreate(
+            ['user_id' => $user->id],
+            [
+                'subscription_date' => $validatedData['subscription_date'] ?? null,
+                'active_due_date' => $validatedData['active_due_date'] ?? null,
+                'billing_date' => $validatedData['billing_date'] ?? null,
+            ]
+        );
+
+        return redirect()->route("users.index")->with("success", __("User updated successfully"));
     }
+
+
 
     public function destroy(User $user)
-{
-    try {
-        $user->delete();
-        return redirect()->route('users.index')->with('success', 'User deleted successfully.');
-    } catch (\Exception $e) {
-        return redirect()->route('users.index')->with('error', 'Error deleting user: ' . $e->getMessage());
+    {
+        try {
+
+            $hasTransaction = \DB::table('transaction')->where('user_id', $user->id)->exists();
+
+            if ($hasTransaction) {
+
+                Alert::warning('Warning!', 'Consumer has transaction data');
+                return redirect()->route('users.index');
+            }
+
+
+            \DB::table('details')->where('user_id', $user->id)->delete();
+            \DB::table('service_details')->where('user_id', $user->id)->delete();
+
+
+            $user->delete();
+
+            return redirect()->route('users.index')->with('success', 'User deleted successfully.');
+        } catch (\Exception $e) {
+            return redirect()->route('users.index')->with('error', 'Error deleting user: ' . $e->getMessage());
+        }
     }
-}
+
 }

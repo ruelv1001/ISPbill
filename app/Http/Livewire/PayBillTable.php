@@ -46,6 +46,9 @@ class PayBillTable extends DataTableComponent
 
             Column::make("Due Date", "service_details.active_due_date")
                 ->sortable()
+                ->searchable(),
+            Column::make("Due Date", "service_details.status")
+                ->sortable()
                 ->searchable()
 
         ];

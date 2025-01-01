@@ -43,10 +43,15 @@ Route::middleware('auth')->group(function () {
     Route::resource('/router', RouterController::class);
     //myself
     Route::get('/paybill/create/{user}', [PaybillController::class, 'create'])->name('paybill.create');
-//Users
-Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
+    //Users
+    Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
 
-
+    Route::prefix('transaction')->name('transaction.')->group(function () {
+        Route::get('/{id}', [TransactionController::class, 'view'])->name('view');
+        Route::get('/{id}/edit', [TransactionController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [TransactionController::class, 'update'])->name('update');
+        Route::delete('/{id}', [TransactionController::class, 'destroy'])->name('delete');
+    });
 
     Route::get('/payment/create/{param}', [PaymentController::class, 'create'])->name('payment.create');
     Route::post('/payment/process', [PaymentController::class, 'process'])->name('payment.process');

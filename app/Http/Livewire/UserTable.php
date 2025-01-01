@@ -31,7 +31,7 @@ class UserTable extends DataTableComponent
                 ->sortable()
                 ->searchable()
                 ->format(fn($value, $row) => $row->detail->first_name . ' ' . $row->detail->last_name),
-    
+
             // Column::make("Email", "email")
             //     ->sortable()
             //     ->searchable(),
@@ -46,11 +46,11 @@ class UserTable extends DataTableComponent
             //     ->searchable(),
             // Column::make("Status", "detail.status")
             //     ->sortable(),
-            Column::make("Package Price" )
-                ->sortable()
-                ->label(function ($row) {
-                    return $row->due_amount($row->id);
-                }),
+            // Column::make("Package Price" )
+            //     ->sortable()
+            //     ->label(function ($row) {
+            //         return $row->due_amount($row->id);
+            //     }),
             Column::make("Member Since", "created_at")
                 ->format(function ($value) {
                     return Carbon::parse($value)->format('Y-m-d');
@@ -59,7 +59,7 @@ class UserTable extends DataTableComponent
                 ->label(fn($row) => view('components.actions', ['row' => $row])),
         ];
     }
-    
+
 
     public function builder(): Builder
     {
@@ -67,5 +67,5 @@ class UserTable extends DataTableComponent
     }
 
 
-    
+
 }
