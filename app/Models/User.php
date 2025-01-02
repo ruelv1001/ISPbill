@@ -59,6 +59,17 @@ class User extends Authenticatable
         return $this->role == 'user';
     }
 
+    public function isCashier()
+    {
+        return $this->role == 'cashier';
+    }
+
+    
+    public function isTechnician()
+    {
+        return $this->role == 'technician';
+    }
+
     public function due_amount($id){
         $user = self::where('id', $id)->firstOrFail();
 

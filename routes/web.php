@@ -24,6 +24,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserDisable;
 use App\Http\Controllers\UserDownload;
 use App\Http\Controllers\UserEnable;
+use App\Http\Controllers\UserManagementController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth')->group(function () {
@@ -39,12 +40,14 @@ Route::middleware('auth')->group(function () {
     Route::resource('/payment', PaymentController::class)->only(['index', 'store']);
     Route::resource('/ticket', TicketController::class);
     Route::resource('/paybill', PayBillController::class);
+    Route::resource('user-management', UserManagementController::class);
     Route::resource('/transaction', TransactionController::class);
     Route::resource('/router', RouterController::class);
     //myself
     Route::get('/paybill/create/{user}', [PaybillController::class, 'create'])->name('paybill.create');
     //Users
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
+    Route::delete('/users-delete/{user}', [UserController::class, 'destroyother'])->name('users.destroyother');
 
     Route::prefix('transaction')->name('transaction.')->group(function () {
         Route::get('/{id}', [TransactionController::class, 'view'])->name('view');

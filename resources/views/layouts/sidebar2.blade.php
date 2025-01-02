@@ -18,12 +18,14 @@
                     :active="request()->routeIs('company.edit')">{{ __('ISP') }}</x-sidebar-item>
                 <x-sidebar-item :href="route('router.index')"
                     :active="request()->routeIs('router.index')">{{ __('Router') }}</x-sidebar-item>
+                    <x-sidebar-item :href="route('user-management.index')"
+                    :active="request()->routeIs('user-management.index')">{{ __('User Management') }}</x-sidebar-item>
             @endif
-
+<!-- 
             <x-sidebar-item :href="route('billing.index')"
                 :active="request()->routeIs('billing.index')">{{ __('Billing') }}</x-sidebar-item>
             <x-sidebar-item :href="route('payment.index')"
-                :active="request()->routeIs('payment.index')">{{ __('Payment') }}</x-sidebar-item>
+                :active="request()->routeIs('payment.index')">{{ __('Payment') }}</x-sidebar-item> -->
             <x-sidebar-item :href="route('ticket.index')"
                 :active="request()->routeIs('ticket.index')">{{ __('Ticket') }}</x-sidebar-item>
 

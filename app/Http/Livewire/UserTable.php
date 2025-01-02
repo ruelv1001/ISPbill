@@ -30,7 +30,8 @@ class UserTable extends DataTableComponent
             Column::make("Name", "detail.first_name")
                 ->sortable()
                 ->searchable()
-                ->format(fn($value, $row) => $row->detail->first_name . ' ' . $row->detail->last_name),
+                ->format(fn($value, $row) => ($row->detail?->first_name ?? '') . ' ' . ($row->detail?->last_name ?? '')),
+
 
             // Column::make("Email", "email")
             //     ->sortable()
@@ -60,10 +61,11 @@ class UserTable extends DataTableComponent
         ];
     }
 
-
     public function builder(): Builder
     {
-        return User::query()->where('role', 'user')->select();
+        return User::query()
+            ->where('role', 'user') // Only show users with role = 'user'
+            ->select();  // You can specify any other fields you want to select here if needed
     }
 
 

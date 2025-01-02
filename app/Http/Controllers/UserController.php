@@ -294,6 +294,7 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         try {
+      
 
             $hasTransaction = \DB::table('transaction')->where('user_id', $user->id)->exists();
 
@@ -313,6 +314,32 @@ class UserController extends Controller
             return redirect()->route('users.index')->with('success', 'User deleted successfully.');
         } catch (\Exception $e) {
             return redirect()->route('users.index')->with('error', 'Error deleting user: ' . $e->getMessage());
+        }
+    }
+
+    public function destroyother(User $user)
+    {
+        try {
+           
+
+            $hasTransaction = \DB::table('transaction')->where('user_id', $user->id)->exists();
+
+            if ($hasTransaction) {
+
+                Alert::warning('Warning!', 'Consumer has transaction data');
+                return redirect()->route('users.index');
+            }
+
+
+            \DB::table('details')->where('user_id', $user->id)->delete();
+            \DB::table('service_details')->where('user_id', $user->id)->delete();
+
+
+            $user->delete();
+
+            return redirect()->route('user-management.index')->with('success', 'User deleted successfully.');
+        } catch (\Exception $e) {
+            return redirect()->route('user-management.index')->with('error', 'Error deleting user: ' . $e->getMessage());
         }
     }
 
