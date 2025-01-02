@@ -17,10 +17,10 @@ class UserTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id')
-            ->setAdditionalSelects(['users.id as id'])
-            ->setTableRowUrl(function ($row) {
-                return route('users.show', $row);
-            });
+            ->setAdditionalSelects(['users.id as id']);
+            // ->setTableRowUrl(function ($row) {
+            //     return route('users.show', $row);
+            // });
         $this->setEagerLoadAllRelationsEnabled();
     }
 
@@ -30,36 +30,44 @@ class UserTable extends DataTableComponent
             Column::make("Name", "detail.first_name")
                 ->sortable()
                 ->searchable()
-                ->format(fn($value, $row) => $row->detail->first_name . ' ' . $row->detail->last_name),
+                ->format(fn($value, $row) => ($row->detail?->first_name ?? '') . ' ' . ($row->detail?->last_name ?? '')),
 
-            Column::make("Email", "email")
-                ->sortable()
-                ->searchable(),
+
+            // Column::make("Email", "email")
+            //     ->sortable()
+            //     ->searchable(),
             Column::make("Router", "detail.router_name")
                 ->sortable()
                 ->searchable(),
             Column::make("Package", "detail.package_name")
                 ->sortable()
                 ->searchable(),
-            Column::make("Started", "detail.package_start")
-                ->sortable()
-                ->searchable(),
-            Column::make("Status", "detail.status")
-                ->sortable(),
-            Column::make("Due" . __(' (') . config('app.currency') . __(')'))
-                ->sortable()
-                ->label(function ($row) {
-                    return $row->due_amount($row->id);
-                }),
+            // Column::make("Started", "detail.package_start")
+            //     ->sortable()
+            //     ->searchable(),
+            // Column::make("Status", "detail.status")
+            //     ->sortable(),
+            // Column::make("Package Price" )
+            //     ->sortable()
+            //     ->label(function ($row) {
+            //         return $row->due_amount($row->id);
+            //     }),
             Column::make("Member Since", "created_at")
                 ->format(function ($value) {
                     return Carbon::parse($value)->format('Y-m-d');
                 }),
+            Column::make('Actions')
+                ->label(fn($row) => view('components.actions', ['row' => $row])),
         ];
     }
 
     public function builder(): Builder
     {
-        return User::query()->where('role', 'user')->select();
+        return User::query()
+            ->where('role', 'user') // Only show users with role = 'user'
+            ->select();  // You can specify any other fields you want to select here if needed
     }
+
+
+
 }

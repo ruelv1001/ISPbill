@@ -2,33 +2,32 @@
 
 namespace App\Http\Livewire;
 
-use App\Models\ServiceDetails;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
-use App\Models\Ticket;
+
+use App\Models\Transaction;
 use App\Models\User;
-class PayBillTable extends DataTableComponent
+class TransactionTable extends DataTableComponent
 {
-    protected $model = ServiceDetails::class;
-
-
+    protected $model = Transaction::class;
 
     public function configure(): void
     {
         $this->setPrimaryKey('id')
-            ->setAdditionalSelects(['users.id as id'])
-            ->setTableRowUrl(function ($row) {
-                return route('paybill.create', ['user' => $row->id]);
-            });
+            ->setAdditionalSelects(['transaction.id as transaction_id']);
+        // ->setTableRowUrl(function ($row) {
+        //     return route('transaction.create', ['user' => $row->id]);
+        // });
         $this->setEagerLoadAllRelationsEnabled();
     }
 
     public function columns(): array
     {
         return [
-            Column::make("Customer ID", "id")
+            Column::make("Transaction ID", "id")
+                ->setTable('transaction')
                 ->sortable()
                 ->searchable(),
             Column::make("First Name", "detail.first_name")
@@ -37,25 +36,28 @@ class PayBillTable extends DataTableComponent
             Column::make("Last Name", "detail.last_name")
                 ->sortable()
                 ->searchable(),
-            Column::make("Package Name", "detail.package_name")
+            Column::make("Payment  method", "payment_method")
+                ->setTable('transaction')
                 ->sortable()
                 ->searchable(),
-            Column::make("Package Price", "detail.package_price")
+            Column::make("Payment  Date", "payment_date")
+                ->setTable('transaction')
                 ->sortable()
                 ->searchable(),
-
-            Column::make("Due Date", "service_details.active_due_date")
+            Column::make("Payment  Amount", "payment_amount")
+                ->setTable('transaction')
                 ->sortable()
                 ->searchable(),
-            Column::make("Due Date", "service_details.status")
-                ->sortable()
-                ->searchable()
+            Column::make('Actions')
+                ->label(fn($row) => view('components.action', ['row' => $row])),
 
         ];
     }
 
     public function builder(): Builder
     {
-        return User::query()->where('role', 'user')->select();
+        return Transaction::query()
+            ->with('detail')
+            ->select('transaction.*');
     }
 }

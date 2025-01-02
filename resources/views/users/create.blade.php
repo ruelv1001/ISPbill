@@ -89,50 +89,49 @@
                                     <x-input-error class="mt-2" :messages="$errors->get('area')"></x-input-error>
                                 </div>
 
-                                <div>
+                                <div class="hidden">
                                     <x-input-label for="my_profile" :value="__('Profile')" class="mt-4"></x-input-label>
-                                    <select id="my_profile" name="my_profile" class="mt-1 block w-full">
-                                        <option value="" disabled selected>{{ __('Select Profile') }}</option>
-                                        <option value="Profile 1" {{ old('my_profile') == 1 ? 'selected' : '' }}>Profile 1</option>
-                                        <option value="Profile 2" {{ old('my_profile') == 2 ? 'selected' : '' }}>Profile 2</option>
-                                        <option value="Profile 3" {{ old('my_profile') == 3 ? 'selected' : '' }}>Profile 3</option>
-
-                                    </select>
+                            <select id="my_profile" name="my_profile" class="mt-1 block w-full">
+                                <option value="" disabled selected>{{ __('Select Profile') }}</option>
+                                <option value="Profile 1" {{ old('my_profile') == 'Profile 1' ? 'selected' : '' }}>Profile 1</option>
+                                <option value="Profile 2" {{ old('my_profile') == 'Profile 2' ? 'selected' : '' }}>Profile 2</option>
+                                <option value="Profile 3" {{ old('my_profile') == 'Profile 3' ? 'selected' : '' }}>Profile 3</option>
+                            </select>
                                     <x-input-error class="mt-2" :messages="$errors->get('my_profile')"></x-input-error>
                                 </div>
 
+                                <div class="mt-4 hidden">
+                                    <x-input-label for="search" :value="__('Search Place')" />
+                                    <x-text-input id="search" name="search" type="text" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                                        placeholder="Search a location" />
+                                    <x-input-error class="mt-2" :messages="$errors->get('search')" />
+                                </div>
 
-
-                    <div>
-                        <x-input-label for="coordinates" :value="__('Coordinates')" class="mt-4"></x-input-label>
-                        <x-text-input id="coordinates" name="coordinates" type="text"
-                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" :value="old('coordinates')" required readonly />
-                        <x-input-error class="mt-2" :messages="$errors->get('coordinates')" />
-                    </div>
+                                <div >
+                                    <x-input-label for="coordinates" :value="__('Coordinates')" class="mt-4"></x-input-label>
+                                    <x-text-input id="coordinates" name="coordinates" type="text"
+                                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" :value="old('coordinates')" required readonly />
+                                    <x-input-error class="mt-2" :messages="$errors->get('coordinates')" />
+                                </div>
 
                     <!-- Search Input -->
-                    <div class="mt-4">
-                        <x-input-label for="search" :value="__('Search Place')" />
-                        <x-text-input id="search" name="search" type="text" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
-                            placeholder="Search a location" />
-                        <x-input-error class="mt-2" :messages="$errors->get('search')" />
-                    </div>
+
 
                     <!-- Map -->
-                    <div id="map" style="height: 400px;" class="mt-6 rounded shadow"></div>
-                                <div >
-                                    <x-input-label for="dob" :value="__('Date of birth')" class="mt-4"></x-input-label>
-                                    <x-text-input id="dob" name="dob" type="date" class="mt-1 block w-full" :value="old('dob')" ></x-text-input>
-                                    <x-input-error class="mt-2" :messages="$errors->get('dob')"></x-input-error>
-                                </div>
+                                <div id="map" style="height: 400px;" class="mt-6 rounded shadow"></div>
+                                            <div class="hidden">
+                                                <x-input-label for="dob" :value="__('Date of birth')" class="mt-4"></x-input-label>
+                                                <x-text-input id="dob" name="dob" type="date" class="mt-1 block w-full" :value="old('dob')" ></x-text-input>
+                                                <x-input-error class="mt-2" :messages="$errors->get('dob')"></x-input-error>
+                                            </div>
 
-                                <div>
-                                    <x-input-label for="pin" :value="__('Personal Identification Number')" class="mt-4"></x-input-label>
-                                    <x-text-input id="pin" name="pin" type="text" class="mt-1 block w-full" :value="old('pin')" required></x-text-input>
-                                    <x-input-error class="mt-2" :messages="$errors->get('pin')"></x-input-error>
-                                </div>
-                            </div>
-                        </div>
+                                            <div>
+                                                <x-input-label for="pin" :value="__('Personal Identification Number')" class="mt-4"></x-input-label>
+                                                <x-text-input id="pin" name="pin" type="text" class="mt-1 block w-full" :value="old('pin')" required></x-text-input>
+                                                <x-input-error class="mt-2" :messages="$errors->get('pin')"></x-input-error>
+                                            </div>
+                                        </div>
+                                    </div>
                         <div class="grid grid-cols-2 gap-4">
                             <div>
                                 <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">{{ __('Subscription') }}</h2>
@@ -188,6 +187,27 @@
             document.getElementById('coordinates').value = `${e.latlng.lat}, ${e.latlng.lng}`;
         });
 
+        // Use Geolocation API to get user's precise location
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                function (position) {
+                    var lat = position.coords.latitude;
+                    var lng = position.coords.longitude;
+
+                    // Update map and marker to user's location
+                    var userLatLng = [lat, lng];
+                    map.setView(userLatLng, 13);
+                    marker.setLatLng(userLatLng);
+                    document.getElementById('coordinates').value = `${lat}, ${lng}`;
+                },
+                function (error) {
+                    console.error('Error getting location:', error.message);
+                }
+            );
+        } else {
+            alert('Geolocation is not supported by your browser.');
+        }
+
         // Handle search functionality
         var searchInput = document.getElementById('search');
         searchInput.addEventListener('keypress', function (e) {
@@ -213,3 +233,4 @@
         });
     });
 </script>
+
