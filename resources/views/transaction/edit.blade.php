@@ -16,7 +16,7 @@
 
                     <h2
                         class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight border-b-2 border-slate-100 pb-4">
-                        {{ __('Modify Transaction') }}
+                        {{ __('View Transaction') }}
                     </h2>
 
                     <form method="post" action="{{ route('transaction.update', $transaction->id) }}"
@@ -29,12 +29,16 @@
                                 <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">{{ __('Transaction') }}
                                 </h2>
                                 <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                                    {{ __("Modify Transaction") }}
+                                    {{ __("View Transaction") }}
                                 </p>
                             </div>
 
                             <div>
-
+                            <div class="hidden">
+                                    <x-input-label for="transaction_id" :value="__('Customer name')" class="mt-4" />
+                                    <x-text-input id="transaction_id" name="transaction_id" type="text"
+                                        class="mt-1 block w-full bg-gray-100" value="{{ $transaction->id }}" />
+                                </div>
                                 <div>
                                     <x-input-label for="user_id" :value="__('User ID')" class="mt-4"
                                         disabled></x-input-label>
@@ -69,7 +73,7 @@
                                 <div>
                                     <x-input-label for="payment_date" :value="__('User Payment Date')" class="mt-4"
                                         disabled></x-input-label>
-                                    <x-text-input id="payment_date" name="payment_date" type="text"
+                                    <x-text-input id="payment_date" name="payment_date" type="text" readonly
                                         class="mt-1 block w-full bg-gray-100"
                                         value="{{ $transaction->payment_date ?? '' }}"></x-text-input>
                                 </div>
@@ -87,7 +91,7 @@
 
 
 
-                                <div class="flex items-center gap-4 mt-4">
+                                <div class="flex items-center gap-4 mt-4 hidden">
                                     <x-primary-button>{{ __('Update') }}</x-primary-button>
                                 </div>
                             </div>
@@ -98,3 +102,4 @@
         </div>
     </div>
 </x-app-layout>
+@include('sweetalert::alert')
