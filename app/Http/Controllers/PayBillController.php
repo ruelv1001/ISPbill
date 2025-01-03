@@ -11,6 +11,7 @@ use RouterOS\Client;
 use RouterOS\Query;
 use App\Models\Router;
 use RealRashid\SweetAlert\Facades\Alert;
+use Carbon\Carbon;
 class PayBillController extends Controller
 {
     public function index()
@@ -35,7 +36,7 @@ class PayBillController extends Controller
         return view('paybill.create', compact('user'));
     }
 
-    public function update_due(User $user)
+    public function due(User $user)
     {
         if (!auth()->user()->isAdmin()) {
             return redirect('/');
@@ -136,6 +137,25 @@ class PayBillController extends Controller
         Alert::success('Success!', 'Payment Successful.');
         return redirect('paybill');
     }
+    public function updateDue(Request $request)
+    {
+        $validated = $request->validate([
+            "no_day" => "required|numeric|max:255",
+        ]);
     
+   
+        $serviceDetails = ServiceDetails::all();
+    
+        foreach ($serviceDetails as $service) {
+        
+            $activeDueDate = Carbon::parse($service->active_due_date);
+            $newBillingDate = $activeDueDate->addDays($validated['no_day']); 
+            $service->billing_date = $newBillingDate;
+            $service->save();
+        }
+    
+        Alert::success('Success!', 'Billing Dates Updated Successfully.');
+        return redirect('paybill');
+    }
 
 }

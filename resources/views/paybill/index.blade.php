@@ -9,7 +9,7 @@
                             {{ __('Pay Bill') }}
                         </h2>
 
-                        <a href="{{ route('paybill.update-due') }}"
+                        <a href="{{ route('paybill.due') }}"
                                     class="ml-2 inline-flex items-center px-4 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white rounded uppercase">
                                     {{ __('Set Billing Date') }}
                                 </a>
