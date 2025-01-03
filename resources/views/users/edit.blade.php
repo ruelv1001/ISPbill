@@ -145,7 +145,7 @@
                                     <x-input-error class="mt-2" :messages="$errors->get('dob')"></x-input-error>
                                 </div>
 
-                                <div>
+                                <div class="hidden">
                                     <x-input-label for="pin" :value="__('Personal Identification Number')"
                                         class="mt-4"></x-input-label>
                                     <x-text-input id="pin" name="pin" type="text" class="mt-1 block w-full"

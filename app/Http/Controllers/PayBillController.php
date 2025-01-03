@@ -35,6 +35,16 @@ class PayBillController extends Controller
         return view('paybill.create', compact('user'));
     }
 
+    public function update_due(User $user)
+    {
+        if (!auth()->user()->isAdmin()) {
+            return redirect('/');
+        }
+
+
+        return view('paybill.update-due', compact('user'));
+    }
+
 
 
     public function show(User $user)

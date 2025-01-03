@@ -96,10 +96,33 @@ class UserManagementController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, User $user)
     {
-        //
+        $validatedData = $this->validate($request, [
+            "password" => "nullable|min:6|confirmed",
+            "address" => "nullable|string|max:255",
+            "phone" => "nullable|string|max:15",
+            "email" => "nullable|email|unique:users,email," . $user->id,
+            "first_name" => "nullable|string|max:255",
+            "last_name" => "nullable|string|max:255",
+
+        ]);
+
+        if (filled($validatedData['password'])) {
+            $user->password = Hash::make($validatedData['password']);
+        }
+
+        $user->email = $validatedData['email'] ?? $user->email;
+        $user->save();
+
+        $details = Detail::firstWhere('user_id', $user->id);
+
+
+ 
+
+        return redirect()->route("user-management.index")->with("success", __("User updated successfully"));
     }
+
 
     /**
      * Remove the specified resource from storage.
