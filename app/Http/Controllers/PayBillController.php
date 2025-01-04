@@ -11,6 +11,7 @@ use RouterOS\Client;
 use RouterOS\Query;
 use App\Models\Router;
 use RealRashid\SweetAlert\Facades\Alert;
+use Carbon\Carbon;
 class PayBillController extends Controller
 {
     public function index()
@@ -33,6 +34,16 @@ class PayBillController extends Controller
 
 
         return view('paybill.create', compact('user'));
+    }
+
+    public function due(User $user)
+    {
+        if (!auth()->user()->isAdmin()) {
+            return redirect('/');
+        }
+
+
+        return view('paybill.update-due', compact('user'));
     }
 
 
