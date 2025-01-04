@@ -16,6 +16,7 @@ use RouterOS\Query;
 use App\Models\User;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\Log;
+use phpseclib3\Net\SSH2;
 class UserController extends Controller
 {
     public function __construct()
@@ -40,6 +41,7 @@ class UserController extends Controller
         }
 
         $packages = Package::orderBy('name')->get();
+
         return view('users.create', compact('packages'));
     }
 
@@ -82,11 +84,12 @@ class UserController extends Controller
         $validatedData = $request->validate([
             "email" => "required|email|unique:users,email",
             "password" => "required|min:6|confirmed",
-            "first_name" => "required|string|max:255",
-            "last_name" => "required|string|max:255",
+            "name" => "required|string|max:255",
             "address" => "required|string",
             "area" => "nullable|in:1,2,3,4,5,6,7,8,9,10",
             "phone" => "required|string",
+            "router_id" => "nullable",
+
             "dob" => "nullable|date",
             "my_profile" => "nullable|in:Profile 1,Profile 2,Profile 3",
             "coordinates" => "required|string",
@@ -103,7 +106,9 @@ class UserController extends Controller
 
         try {
             // Create user
+            $id = str_pad(User::max('id') + 1, 8, '0', STR_PAD_LEFT); // Get max ID and pad it
             $user = User::create([
+                'id' => $id,
                 'email' => $validatedData['email'],
                 'billing_address' => $validatedData['address'],
                 'role' => 'user',
@@ -113,7 +118,6 @@ class UserController extends Controller
             // Retrieve package and router
             $package = Package::findOrFail($validatedData['package_name']);
             $router = Router::findOrFail($validatedData['router_name']);
-
             // Create user details
             $accountNumber = $user->id . '-' . now()->format('YmdHis');
             $details = Detail::create([
@@ -127,12 +131,13 @@ class UserController extends Controller
                 'package_price' => $package->price,
                 'due' => $package->price,
                 'status' => 'active',
+                'is_lock' => 'unlock',
                 'account_number' => $accountNumber,
-                'first_name' => $validatedData['first_name'],
-                'last_name' => $validatedData['last_name'],
+                'name' => $validatedData['name'],
                 'area' => $validatedData['area'] ?? null,
                 "my_profile" => "nullable|string|in:Profile 1,Profile 2,Profile 3",
                 'coordinates' => $validatedData['coordinates'],
+                'router_id' => $router->id,
                 'package_start' => Carbon::now(),
             ]);
             $currentDateAndTime = Carbon::now();
@@ -218,14 +223,89 @@ class UserController extends Controller
         return view('users.show', compact('user'));
     }
 
+    // public function edit(User $user)
+    // {
+    //     if (!auth()->user()->isAdmin()) {
+    //         return redirect('/');
+    //     }
+
+    //     return view('users.edit', compact('user'));
+    // }
+
     public function edit(User $user)
     {
         if (!auth()->user()->isAdmin()) {
             return redirect('/');
         }
 
-        return view('users.edit', compact('user'));
+        $myrouter = $user->detail->router_id;
+
+        // Fetch router details
+        $router = Router::where("id", $myrouter)->firstOrFail();
+
+        try {
+            $ssh = new SSH2($router->ip);
+
+            if (!$ssh->login($router->username, $router->password)) {
+                throw new \Exception("SSH login failed");
+            }
+
+            // Get system resource info (includes uptime)
+            $systemResources = $ssh->exec('/system resource print');
+
+            // Get profile information
+            $profiles = $ssh->exec('/ip hotspot user profile print');
+
+            // Get last logged-out timestamp (check logs for 'logout' events)
+            $logData = $ssh->exec('/log print where message~"logout"');
+
+            // Parse uptime
+            $uptime = '';
+            if (preg_match('/uptime: (.+?)(?=\n|$)/', $systemResources, $matches)) {
+                $uptime = trim($matches[1]);
+            }
+
+            // Parse profiles into structured data
+            $profileData = [];
+            $profileLines = explode("\n", trim($profiles));
+            foreach ($profileLines as $line) {
+                if (preg_match('/^\s*\d+\s+(\S+)\s+(.+)$/', $line, $matches)) {
+                    $profileData[] = [
+                        'name' => trim($matches[1]),
+                        'settings' => trim($matches[2])
+                    ];
+                }
+            }
+
+            // Parse the last logged-out entry
+            $lastLoggedOut = '';
+            if (preg_match('/(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})\s+.*logout/', $logData, $matches)) {
+                $lastLoggedOut = trim($matches[1]);
+            }
+
+            // Structure the data
+            $data = [
+                'uptime' => $uptime,
+                'profiles' => $profileData,
+                'router' => [
+                    'ip' => $router->ip,
+                    'name' => $router->name ?? 'Unknown'
+                ],
+                'lastLoggedOut' => $lastLoggedOut
+            ];
+
+
+        } catch (\Exception $e) {
+            return back()->with("error", __("Mikrotik connection failed: " . $e->getMessage()));
+        }
+        $routers = Router::all();
+        $packages = Package::all();
+        // Pass data to the view
+        return view('users.edit', compact('user', 'data', 'routers', 'packages'));
+
+
     }
+
 
     public function update(Request $request, User $user)
     {
@@ -235,11 +315,11 @@ class UserController extends Controller
             "phone" => "nullable|string|max:15",
             "dob" => "nullable|date",
             "email" => "nullable|email|unique:users,email," . $user->id,
-            "first_name" => "nullable|string|max:255",
-            "last_name" => "nullable|string|max:255",
+            "name" => "nullable|string|max:255",
             "area" => "nullable|in:1,2,3,4,5,6,7,8,9,10",
             "my_profile" => "nullable|in:Profile 1,Profile 2,Profile 3",
             "coordinates" => "nullable|string",
+            "is_lock" => "nullable|string",
             "package_name" => "nullable|exists:packages,name",
             "router_name" => "nullable|exists:routers,name",
             "router_password" => "nullable|string",
@@ -259,8 +339,7 @@ class UserController extends Controller
 
         if ($details) {
             $details->update([
-                'first_name' => $validatedData['first_name'] ?? $details->first_name,
-                'last_name' => $validatedData['last_name'] ?? $details->last_name,
+                'name' => $validatedData['name'] ?? $details->name,
                 'phone' => $validatedData['phone'] ?? $details->phone,
                 'address' => $validatedData['address'] ?? $details->address,
                 'dob' => $validatedData['dob'] ?? $details->dob,
@@ -270,6 +349,7 @@ class UserController extends Controller
                 'area' => $validatedData['area'] ?? $details->area,
                 'my_profile' => $validatedData['my_profile'] ?? $details->my_profile,
                 'coordinates' => $validatedData['coordinates'] ?? $details->coordinates,
+                'is_lock' => $validatedData['is_lock'] ?? $details->is_lock,
             ]);
         }
 
@@ -281,8 +361,9 @@ class UserController extends Controller
                 'billing_date' => $validatedData['billing_date'] ?? null,
             ]
         );
+        return redirect("/users/{$user->id}/edit")
+            ->with("success", __("User updated successfully"));
 
-        return redirect()->route("users.index")->with("success", __("User updated successfully"));
     }
 
 
@@ -290,7 +371,7 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         try {
-      
+
 
             $hasTransaction = \DB::table('transaction')->where('user_id', $user->id)->exists();
 
@@ -316,7 +397,7 @@ class UserController extends Controller
     public function destroyother(User $user)
     {
         try {
-           
+
 
             $hasTransaction = \DB::table('transaction')->where('user_id', $user->id)->exists();
 

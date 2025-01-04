@@ -10,7 +10,7 @@
                     @endif
 
                     <h2 class="font-semibold text-xl text-gray-800 leading-tight border-b-2 border-slate-100 pb-4">
-                        {{ __('Create Payment') }}
+                        {{ __('Set Billing date') }}
                     </h2>
 
                     <form method="post" action="{{ route('paybill.due_update') }}" class="space-y-6">
@@ -19,16 +19,16 @@
                         <div class="grid grid-cols-2 gap-4">
                             <div>
 
-                            </div>
-     
+
+
                                 <div>
-                                    <x-input-label for="no_day" :value="__(key: 'Set number of days for Billing Date')" class="mt-4" />
+                                    <x-input-label for="no_day" :value="__(key: 'Set number of days for Billing Date')"
+                                        class="mt-4" />
                                     <x-text-input id="no_day" name="no_day" type="number"
-                                        class="mt-1 block w-full bg-gray-100"
-                                         aria-required="" />
+                                        class="mt-1 block w-full bg-gray-100" aria-required="" />
                                 </div>
-                              
-                               
+
+
 
 
                                 <div class="flex items-center gap-4 mt-4">

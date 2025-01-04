@@ -41,6 +41,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('/ticket', TicketController::class);
     Route::resource('/paybill', PayBillController::class);
     Route::resource('user-management', UserManagementController::class);
+    Route::get('/users', [UserController::class, 'index'])->name('users.index');
     Route::resource('/transaction', TransactionController::class);
     Route::resource('/router', RouterController::class);
     //myself

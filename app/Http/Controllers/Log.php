@@ -2,160 +2,80 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Detail;
-use App\Models\ServiceDetails;
-use App\Models\Transaction;
-use App\Models\User;
-use Illuminate\Http\Request;
 use RouterOS\Client;
 use RouterOS\Query;
 use App\Models\Router;
-use RealRashid\SweetAlert\Facades\Alert;
-use Carbon\Carbon;
-class PayBillController extends Controller
+
+use Illuminate\Http\Request;
+use phpseclib3\Net\SSH2;
+
+class Log extends Controller
 {
-    public function index()
+    public function __invoke($log)
     {
-        if (auth()->user()->isUser()) {
-            return redirect('/');
-        }
+        $router = Router::where("id", $log)->firstOrFail();
 
-        $users = User::with('service_details')->where('role', 'user')->get();
-        return view('paybill.index', compact('users'));
-    }
+        try {
+            $ssh = new SSH2($router->ip);
 
-
-
-    public function create(User $user)
-    {
-        if (!auth()->user()->isAdmin()) {
-            return redirect('/');
-        }
-
-
-        return view('paybill.create', compact('user'));
-    }
-
-    public function due(User $user)
-    {
-        if (!auth()->user()->isAdmin()) {
-            return redirect('/');
-        }
-
-
-        return view('paybill.update-due', compact('user'));
-    }
-
-
-
-    public function show(User $user)
-    {
-        if (!auth()->user()->isAdmin()) {
-            return redirect('/');
-        }
-
-        return view('paybill.create', compact('user'));
-    }
-
-    public function edit(User $user)
-    {
-        if (!auth()->user()->isAdmin()) {
-            return redirect('/');
-        }
-
-
-        return view('paybill.edit', compact('user'));
-    }
-
-    public function store(Request $request)
-    {
-        $details = Detail::where('user_id', $request->user_id)->first();
-        $current_payable_amount = $details->package_price;
-
-        $paybill = new Transaction();
-        $paybill->user_id = $request->user_id;
-        $paybill->payment_method = $request->payment_method;
-        $paybill->payment_amount = $request->payment_amount;
-        $paybill->ref_code = $request->ref_code;
-        $paybill->remarks = $request->remarks;
-        $paybill->payment_date = now();
-        $paybill->save();
-
-        $serviceDetails = ServiceDetails::where('user_id', $request->user_id)->first();
-
-        if ($serviceDetails) {
-            $previousDueDate = $serviceDetails->active_due_date;
-
-            // Check if current_payable_amount is not equal to the payment amount
-            if ($current_payable_amount != $request->payment_amount) {
-                $perdayAmount = $current_payable_amount / 30;
-                $noofdays = $request->payment_amount / $perdayAmount;
-
-                // Update active_due_date and billing_date
-                $newActiveDueDate = now()->addDays($noofdays);
-                $newBillingDate = $newActiveDueDate->copy()->addDays(10);
-
-                $serviceDetails->update([
-                    'previous_due_date' => $previousDueDate,
-                    'active_due_date' => $newActiveDueDate,
-                    'billing_date' => $newBillingDate,
-                    'status' => "Active",
-                ]);
-            } else {
-                // Default behavior: Extend by 1 month
-                $serviceDetails->update([
-                    'previous_due_date' => $previousDueDate,
-                    'active_due_date' => $serviceDetails->active_due_date->addMonth(),
-                    'billing_date' => $serviceDetails->billing_date->addMonth(),
-                    'status' => "Active",
-                ]);
+            if (!$ssh->login($router->username, $router->password)) {
+                throw new \Exception("SSH login failed");
             }
 
-            if ($serviceDetails->status = "Inactive") {
+            // Get system resource info (includes uptime)
+            $systemResources = $ssh->exec('/system resource print');
 
+            // Get profile information
+            $profiles = $ssh->exec('/ip hotspot user profile print');
 
-                $user = User::find($serviceDetails->user_id);
-                $router_name = $user->detail->router_name;
-                $router = Router::where("name", $router_name)->firstOrFail();
+            // Get last logged-out timestamp and remote address (check logs for 'logout' events)
+            $logData = $ssh->exec('/log print where message~"logout"');
 
-                try {
-                    $client = new Client([
-                        "host" => $router->ip,
-                        "user" => $router->username,
-                        "pass" => $router->password,
-                    ]);
+            // Parse uptime
+            $uptime = '';
+            if (preg_match('/uptime: (.+?)(?=\n|$)/', $systemResources, $matches)) {
+                $uptime = trim($matches[1]);
+            }
 
-                    $query = new Query("/ppp/secret/enable");
-                    $query->equal("numbers", $user->id);
-                    $client->query($query)->read();
-                } catch (\Exception $e) {
-                    return back()->with("error", __("Mikrotik connection fails"));
+            // Parse profiles into structured data
+            $profileData = [];
+            $profileLines = explode("\n", trim($profiles));
+            foreach ($profileLines as $line) {
+                if (preg_match('/^\s*\d+\s+(\S+)\s+(.+)$/', $line, $matches)) {
+                    $profileData[] = [
+                        'name' => trim($matches[1]),
+                        'settings' => trim($matches[2])
+                    ];
                 }
-
             }
+
+            // Parse the last logged-out entry and remote address
+            $lastLoggedOut = '';
+            $remoteAddress = '';
+            if (preg_match('/(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})\s+.*logout.*from\s+(\d+\.\d+\.\d+\.\d+)/', $logData, $matches)) {
+                $lastLoggedOut = trim($matches[1]);
+                $remoteAddress = trim($matches[2]);
+            }
+
+            // Structure the data
+            $data = [
+                'uptime' => $uptime,
+                'profiles' => $profileData,
+                'router' => [
+                    'ip' => $router->ip,
+                    'name' => $router->name ?? 'Unknown'
+                ],
+                'lastLoggedOut' => $lastLoggedOut,
+                'remoteAddress' => $remoteAddress
+            ];
+
+            // Debug output
+            dd($data);
+
+        } catch (\Exception $e) {
+            return back()->with("error", __("Mikrotik connection failed: " . $e->getMessage()));
         }
-        Alert::success('Success!', 'Payment Successful.');
-        return redirect('paybill');
+
+        return view('log', compact('data'));
     }
-    public function updateDue(Request $request)
-    {
-        $validated = $request->validate([
-            "no_day" => "required|numeric|max:255",
-        ]);
-
-
-        $serviceDetails = ServiceDetails::all();
-
-        foreach ($serviceDetails as $service) {
-
-            $activeDueDate = Carbon::parse($service->active_due_date);
-            $newBillingDate = $activeDueDate->addDays($validated['no_day']);
-            $service->billing_date = $newBillingDate;
-            $service->save();
-        }
-
-        Alert::success('Success!', 'Billing Dates Updated Successfully.');
-        return redirect('paybill');
-    }
-
 }

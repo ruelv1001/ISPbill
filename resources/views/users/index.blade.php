@@ -38,6 +38,7 @@
                     </div>
                     <div>
                         <livewire:user-table />
+
                     </div>
                 </div>
             </div>
@@ -45,3 +46,16 @@
     </div>
 </x-app-layout>
 @include('sweetalert::alert')
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+<script>
+    window.addEventListener('updatePaginationUrl', function (event) {
+        const url = new URL(window.location);
+        url.searchParams.set('page', event.detail.page);
+        history.pushState(null, '', url);
+    });
+
+    window.addEventListener('reloadPage', function () {
+
+        location.reload();
+    });
+</script>
