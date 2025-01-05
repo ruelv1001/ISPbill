@@ -1,6 +1,7 @@
 <div>
     <x-input-label for="router_name" :value="__('Select router')" class="mt-4"></x-input-label>
-    <select wire:model="routerId" name="router_name" id="router_name" class="mt-1 block w-full rounded-md border border-gray-300">
+    <select wire:model="routerId" name="router_name" id="router_name"
+        class="mt-1 block w-full rounded-md border border-gray-300">
         <option value="">{{ __('Select router') }}</option>
         @foreach ($routers as $router)
             <option value="{{ $router->id }}">{{ $router->name }}</option>

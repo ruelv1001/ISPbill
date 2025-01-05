@@ -17,8 +17,8 @@ class RouterController extends Controller
         if (!auth()->user()->isAdmin()) {
             redirect('/');
         }
-        
-        $routers = Router::orderBy("name","asc")->get();
+
+        $routers = Router::orderBy("name", "asc")->get();
         return view("router.index", compact("routers"));
     }
 
@@ -42,9 +42,9 @@ class RouterController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255|unique:routers',
             'location' => 'required',
-            'ip'=> 'required|ip',
-            'username'=> 'required',
-            'password'=> 'required',
+            'ip' => 'required',
+            'username' => 'required',
+            'password' => 'required',
         ]);
 
         $router = new Router();
@@ -79,10 +79,10 @@ class RouterController extends Controller
     public function update(Request $request, Router $router)
     {
         $validated = $request->validate([
-            'location'=> 'nullable|string',
-            'ip'=> 'required|ip',
-            'username'=> 'required',
-            'password'=> 'required',
+            'location' => 'nullable|string',
+            'ip' => 'required|ip',
+            'username' => 'required',
+            'password' => 'required',
         ]);
 
         $router->location = $validated['location'] ? $request->location : $router->location;

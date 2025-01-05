@@ -23,147 +23,192 @@
                         @csrf
                         @method('patch')
 
-                        <div class="grid grid-cols-2 gap-4">
+                        <div class="grid grid-cols-1 gap-4">
                             <div>
                                 <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">{{ __('Account') }}
                                 </h2>
                                 <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
                                     {{ __("Edit user account information") }}
                                 </p>
-                            </div>
-
-                            <div>
-                                <div>
-                                    <x-input-label for="user_id" :value="__('User ID')" class="mt-4"
-                                        disabled></x-input-label>
-                                    <x-text-input id="user_id" name="user_id" type="text" readonly
-                                        class="mt-1 block w-full bg-gray-100" value="{{ $user->id }}"></x-text-input>
-                                </div>
-                                <div>
-                                    <x-input-label for="first_name" :value="__('User FIrst Name')" class="mt-4"
-                                        disabled></x-input-label>
-                                    <x-text-input id="first_name" name="first_name" type="text"
-                                        class="mt-1 block w-full bg-gray-100"
-                                        value="{{ $user->detail->first_name }}"></x-text-input>
-                                </div>
-                                <div>
-                                    <x-input-label for="last_name" :value="__('User FIrst Name')" class="mt-4"
-                                        disabled></x-input-label>
-                                    <x-text-input id="last_name" name="last_name" type="text"
-                                        class="mt-1 block w-full bg-gray-100"
-                                        value="{{ $user->detail->last_name }}"></x-text-input>
-                                </div>
-
-                                <div>
-                                    <x-input-label for="subscription_date" :value="__('Subscription Date')"
-                                        class="mt-4"></x-input-label>
-                                    <x-text-input id="subscription_date" name="subscription_date" type="text" readonly
-                                        class="mt-1 block w-full bg-gray-100"
-                                        value="{{ $user->service_details->subscription_date ?? '' }}"></x-text-input>
-                                </div>
-                                <div>
-                                    <x-input-label for="billing_date" :value="__('Next Billing Date')"
-                                        class="mt-4"></x-input-label>
-                                    <x-text-input id="billing_date" name="billing_date" type="datetime-local"
-                                        class="mt-1 block w-full bg-gray-100"
-                                        value="{{ old('billing_date', $user->service_details->billing_date ?? '2025-02-07T00:00') }}">
-                                    </x-text-input>
-                                </div>
-
-                                <div>
-                                    <x-input-label for="active_due_date" :value="__('Active Due Date')"
-                                        class="mt-4"></x-input-label>
-                                    <x-text-input id="active_due_date" name="active_due_date" type="text"
-                                        class="mt-1 block w-full bg-gray-100"
-                                        value="{{ $user->service_details->active_due_date ?? '' }}"></x-text-input>
-                                </div>
-
-                                <div>
-                                    <x-input-label for="previous_due_date" :value="__('Previous Due Date')"
-                                        class="mt-4"></x-input-label>
-                                    <x-text-input id="previous_due_date" name="previous_due_date" type="text"
-                                        class="mt-1 block w-full bg-gray-100"
-                                        value="{{ $user->service_details->previous_due_date ?? '' }}"></x-text-input>
-                                </div>
-                                <div>
-                                    <x-input-label for="phone" :value="__('Phone number')" class="mt-4"></x-input-label>
-                                    <x-text-input id="phone" name="phone" type="text" class="mt-1 block w-full"
-                                        value="{{ $user->detail->phone }}"></x-text-input>
-                                    <x-input-error class="mt-2" :messages="$errors->get('phone')"></x-input-error>
-                                </div>
-                                <div>
-                                    <x-input-label for="email" :value="__('Email address')"
-                                        class="mt-4"></x-input-label>
-                                    <x-text-input id="email" name="email" type="text"
-                                        class="mt-1 block w-full bg-gray-100" value="{{ $user->email }}"
-                                        disabled></x-text-input>
-                                    <x-input-error class="mt-2" :messages="$errors->get('email')"></x-input-error>
-                                </div>
-
-                                <div>
-                                    <x-input-label for="password" :value="__('Password')" class="mt-4"></x-input-label>
-                                    <x-text-input name="password" type="password" class="mt-1 block w-full"
-                                        value=""></x-text-input>
-                                    <x-input-error class="mt-2" :messages="$errors->get('password')"></x-input-error>
-                                </div>
-
-                                <div>
-                                    <x-input-label for="password_confirmation" :value="__('Password confirm')"
-                                        class="mt-4"></x-input-label>
-                                    <x-text-input name="password_confirmation" type="password" class="mt-1 block w-full"
-                                        value=""></x-text-input>
-                                    <x-input-error class="mt-2"
-                                        :messages="$errors->get('password_confirmation')"></x-input-error>
-                                </div>
-
-                                <div>
-                                    <x-input-label for="address" :value="__('Address')" class="mt-4"></x-input-label>
-                                    <x-text-input id="address" name="address" type="text" class="mt-1 block w-full"
-                                        value="{{ $user->detail->address }}"></x-text-input>
-                                    <x-input-error class="mt-2" :messages="$errors->get('address')"></x-input-error>
-                                </div>
-
-                                <div>
-                                    <x-input-label for="coordinates" :value="__('Coordinates')"
-                                        class="mt-4"></x-input-label>
-                                    <x-text-input id="coordinates" name="coordinates" type="text"
-                                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
-                                        :value="old('coordinates')" readonly />
-                                    <x-input-error class="mt-2" :messages="$errors->get('coordinates')" />
-                                </div>
-
-                                <!-- Search Input -->
 
 
-                                <!-- Map -->
-                                <div id="map" style="height: 400px;" class="mt-6 rounded shadow"></div>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <x-input-label for="user_id" :value="__('User ID')" class="mt-4"
+                                            disabled></x-input-label>
+                                        <x-text-input id="user_id" name="user_id" type="text" readonly
+                                            class="mt-1 block w-full bg-gray-100"
+                                            value="{{ $user->id }}"></x-text-input>
+                                    </div>
 
-                                <div class="hidden">
-                                    <x-input-label for="dob" :value="__('Date of birth')" class="mt-4"></x-input-label>
-                                    <x-text-input id="dob" name="dob" type="date" class="mt-1 block w-full"
-                                        value="{{ $user->detail->dob }}"></x-text-input>
-                                    <x-input-error class="mt-2" :messages="$errors->get('dob')"></x-input-error>
+                                    <div>
+                                        <x-input-label for="name" :value="__('User  Name')" class="mt-4"
+                                            disabled></x-input-label>
+                                        <x-text-input id="name" name="name" type="text"
+                                            class="mt-1 block w-full bg-gray-100"
+                                            value="{{ $user->detail->name }}"></x-text-input>
+                                    </div>
+
+
+                                    <div>
+                                        <x-input-label for="subscription_date" :value="__('Subscription Date')"
+                                            class="mt-4"></x-input-label>
+                                        <x-text-input id="subscription_date" name="subscription_date" type="text"
+                                            readonly class="mt-1 block w-full bg-gray-100"
+                                            value="{{ $user->service_details->subscription_date ?? '' }}"></x-text-input>
+                                    </div>
+                                    <div>
+                                        <x-input-label for="billing_date" :value="__('Next Billing Date')"
+                                            class="mt-4"></x-input-label>
+                                        <x-text-input id="billing_date" name="billing_date" type="datetime-local"
+                                            class="mt-1 block w-full bg-gray-100"
+                                            value="{{ old('billing_date', $user->service_details->billing_date ?? '2025-02-07T00:00') }}">
+                                        </x-text-input>
+                                    </div>
+
+                                    <div>
+                                        <x-input-label for="active_due_date" :value="__('Active Due Date')"
+                                            class="mt-4"></x-input-label>
+                                        <x-text-input id="active_due_date" name="active_due_date" type="text"
+                                            class="mt-1 block w-full bg-gray-100"
+                                            value="{{ $user->service_details->active_due_date ?? '' }}"></x-text-input>
+                                    </div>
+
+
+                                    <div>
+                                        <x-input-label for="phone" :value="__('Phone number')"
+                                            class="mt-4"></x-input-label>
+                                        <x-text-input id="phone" name="phone" type="text" class="mt-1 block w-full"
+                                            value="{{ $user->detail->phone }}"></x-text-input>
+                                        <x-input-error class="mt-2" :messages="$errors->get('phone')"></x-input-error>
+                                    </div>
+                                    <div>
+                                        <x-input-label for="email" :value="__('Email address')"
+                                            class="mt-4"></x-input-label>
+                                        <x-text-input id="email" name="email" type="text"
+                                            class="mt-1 block w-full bg-gray-100" value="{{ $user->email }}"
+                                            disabled></x-text-input>
+                                        <x-input-error class="mt-2" :messages="$errors->get('email')"></x-input-error>
+                                    </div>
+
+                                    <div>
+                                        <x-input-label for="password" :value="__('Password')"
+                                            class="mt-4"></x-input-label>
+                                        <x-text-input name="password" type="password" class="mt-1 block w-full"
+                                            value=""></x-text-input>
+                                        <x-input-error class="mt-2"
+                                            :messages="$errors->get('password')"></x-input-error>
+                                    </div>
+
+                                    <div>
+                                        <x-input-label for="password_confirmation" :value="__('Password confirm')"
+                                            class="mt-4"></x-input-label>
+                                        <x-text-input name="password_confirmation" type="password"
+                                            class="mt-1 block w-full" value=""></x-text-input>
+                                        <x-input-error class="mt-2"
+                                            :messages="$errors->get('password_confirmation')"></x-input-error>
+                                    </div>
+
+                                    <div>
+                                        <x-input-label for="address" :value="__('Address')"
+                                            class="mt-4"></x-input-label>
+                                        <x-text-input id="address" name="address" type="text" class="mt-1 block w-full"
+                                            value="{{ $user->detail->address }}"></x-text-input>
+                                        <x-input-error class="mt-2" :messages="$errors->get('address')"></x-input-error>
+                                    </div>
+
+                                    <div>
+                                        <x-input-label for="coordinates" :value="__('Coordinates')"
+                                            class="mt-4"></x-input-label>
+                                        <x-text-input id="coordinates" name="coordinates" type="text"
+                                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                                            :value="old('coordinates')" readonly />
+                                        <x-input-error class="mt-2" :messages="$errors->get('coordinates')" />
+                                    </div>
+
+                                    <!-- Search Input -->
+
+
+                                    <!-- Map -->
+                                    <div>
+                                        <x-input-label for="is_lock" :value="__('Lock')" class="mt-4"></x-input-label>
+                                        <select id="is_lock" name="is_lock" class="mt-1 block w-full bg-gray-100">
+                                            <option value="lock" {{ $user->detail->is_lock == "lock" ? 'selected' : '' }}>
+                                                {{ __('Lock') }}
+                                            </option>
+                                            <option value="unlock" {{ $user->detail->is_lock == "unlock" ? 'selected' : '' }}>
+                                                {{ __('Unlock') }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div id="map" style="height: 400px;" class="mt-6 rounded shadow"></div>
+
+                                    <div class="hidden">
+                                        <x-input-label for="dob" :value="__('Date of birth')"
+                                            class="mt-4"></x-input-label>
+                                        <x-text-input id="dob" name="dob" type="date" class="mt-1 block w-full"
+                                            value="{{ $user->detail->dob }}"></x-text-input>
+                                        <x-input-error class="mt-2" :messages="$errors->get('dob')"></x-input-error>
+                                    </div>
+
+                                    <div class="hidden">
+                                        <x-input-label for="pin" :value="__('Personal Identification Number')"
+                                            class="mt-4"></x-input-label>
+                                        <x-text-input id="pin" name="pin" type="text" class="mt-1 block w-full"
+                                            value="{{ $user->detail->pin }}"></x-text-input>
+                                        <x-input-error class="mt-2" :messages="$errors->get('pin')"></x-input-error>
+                                    </div>
+
+                                    <div class="mt-4">
+                                        <p class="text-lg font-medium text-gray-900 dark:text-gray-100">
+                                            {{ __("MT Parameters") }}
+                                        </p>
+                                        <x-input-label for="uptime" :value="__('Uptime')" class="mt-4"></x-input-label>
+                                        <x-text-input id="uptime" name="uptime" type="text" class="mt-1 block w-full"
+                                            value="{{ $data['uptime'] ?? 'N/A' }}"></x-text-input>
+                                        <x-input-error class="mt-2" :messages="$errors->get('uptime')"></x-input-error>
+                                        <x-input-label for="router_name" :value="__('Router Name')"
+                                            class="mt-4"></x-input-label>
+                                        <x-text-input id="router_name" name="router_name" type="text"
+                                            class="mt-1 block w-full"
+                                            value="{{ $data['router']['name'] ?? 'Unknown' }}"></x-text-input>
+                                        <x-input-error class="mt-2"
+                                            :messages="$errors->get('router_name')"></x-input-error>
+
+                                        <x-input-label for="router_ip" :value="__('Router IP')"
+                                            class="mt-4"></x-input-label>
+                                        <x-text-input id="router_ip" name="router_ip" type="text"
+                                            class="mt-1 block w-full"
+                                            value="{{ $data['router']['ip'] ?? 'N/A' }}"></x-text-input>
+                                        <x-input-error class="mt-2"
+                                            :messages="$errors->get('router_ip')"></x-input-error>
+                                    </div>
+
+
+
+
+
+
+
+
+
                                 </div>
-
-                                <div>
-                                    <x-input-label for="pin" :value="__('Personal Identification Number')"
-                                        class="mt-4"></x-input-label>
-                                    <x-text-input id="pin" name="pin" type="text" class="mt-1 block w-full"
-                                        value="{{ $user->detail->pin }}"></x-text-input>
-                                    <x-input-error class="mt-2" :messages="$errors->get('pin')"></x-input-error>
-                                </div>
-
                                 <div class="flex items-center gap-4 mt-4">
                                     <x-primary-button>{{ __('Update') }}</x-primary-button>
+                                    <button
+                                        class="bg-red-500 text-white rounded-md px-3 py-1">{{ __('Archive') }}</button>
                                 </div>
+
                             </div>
                         </div>
+
                     </form>
                 </div>
             </div>
         </div>
     </div>
 </x-app-layout>
+@include('sweetalert::alert')
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
 <script>

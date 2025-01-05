@@ -29,17 +29,19 @@ class Detail extends Model
         'due',
         'status',
         'account_number',
-        'first_name',
-        'last_name',
+        'name',
+        'router_id',
         'area',
         'coordinates',
+        'is_lock',
         'subscription',
         'my_profile',
         'remarks',
         'router_name',
     ];
 
-    public function user(){
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
 }

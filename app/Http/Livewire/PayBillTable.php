@@ -22,6 +22,7 @@ class PayBillTable extends DataTableComponent
             ->setTableRowUrl(function ($row) {
                 return route('paybill.create', ['user' => $row->id]);
             });
+
         $this->setEagerLoadAllRelationsEnabled();
     }
 
@@ -50,6 +51,13 @@ class PayBillTable extends DataTableComponent
             Column::make("Due Date", "service_details.status")
                 ->sortable()
                 ->searchable()
+                ->format(function ($value) {
+                    return $value === 'Inactive'
+                        ? '<span class="text-red-500 font-bold">' . $value . '</span>'
+                        : $value;
+                })
+                ->html()
+
 
         ];
     }

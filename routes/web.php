@@ -41,10 +41,14 @@ Route::middleware('auth')->group(function () {
     Route::resource('/ticket', TicketController::class);
     Route::resource('/paybill', PayBillController::class);
     Route::resource('user-management', UserManagementController::class);
+    Route::get('/users', [UserController::class, 'index'])->name('users.index');
     Route::resource('/transaction', TransactionController::class);
     Route::resource('/router', RouterController::class);
     //myself
     Route::get('/paybill/create/{user}', [PaybillController::class, 'create'])->name('paybill.create');
+    Route::get('/paybill/update-due', [PaybillController::class, 'update_due'])->name('paybill.update-due');
+    Route::get('/due', [PaybillController::class, 'due'])->name('paybill.due');
+    Route::post('/paybill/due-update', [PayBillController::class, 'updateDue'])->name('paybill.due_update');
     //Users
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
     Route::delete('/users-delete/{user}', [UserController::class, 'destroyother'])->name('users.destroyother');

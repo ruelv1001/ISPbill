@@ -18,48 +18,41 @@ class UserTable extends DataTableComponent
     {
         $this->setPrimaryKey('id')
             ->setAdditionalSelects(['users.id as id']);
-            // ->setTableRowUrl(function ($row) {
-            //     return route('users.show', $row);
-            // });
+        // ->setTableRowUrl(function ($row) {
+        //     return route('users.show', $row);
+        // });
         $this->setEagerLoadAllRelationsEnabled();
+
     }
 
     public function columns(): array
     {
         return [
-            Column::make("Name", "detail.first_name")
+            Column::make("Name", "detail.name")
                 ->sortable()
-                ->searchable()
-                ->format(fn($value, $row) => ($row->detail?->first_name ?? '') . ' ' . ($row->detail?->last_name ?? '')),
+                ->searchable(),
 
-
-            // Column::make("Email", "email")
-            //     ->sortable()
-            //     ->searchable(),
             Column::make("Router", "detail.router_name")
                 ->sortable()
                 ->searchable(),
             Column::make("Package", "detail.package_name")
                 ->sortable()
                 ->searchable(),
-            // Column::make("Started", "detail.package_start")
-            //     ->sortable()
-            //     ->searchable(),
-            // Column::make("Status", "detail.status")
-            //     ->sortable(),
-            // Column::make("Package Price" )
-            //     ->sortable()
-            //     ->label(function ($row) {
-            //         return $row->due_amount($row->id);
-            //     }),
-            Column::make("Member Since", "created_at")
+
+            Column::make("Lock", "detail.is_lock")
+                ->sortable()
+                ->searchable()
                 ->format(function ($value) {
-                    return Carbon::parse($value)->format('Y-m-d');
-                }),
-            Column::make('Actions')
-                ->label(fn($row) => view('components.actions', ['row' => $row])),
+                    return $value === 'unlock' // Check for 'unlock'
+                        ? '<span class="text-green-500"><i class="fas fa-unlock fa-lg"></i> Unlock</span>'
+                        : '<span class="text-red-500"><i class="fas fa-lock fa-lg"></i> Lock</span>';
+                })
+                ->html(),
+            Column::make('Actions')->label(fn($row) => view('components.actions', ['row' => $row])),
         ];
     }
+
+
 
     public function builder(): Builder
     {

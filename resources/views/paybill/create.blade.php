@@ -53,7 +53,7 @@
 
                                 <div>
                                     <x-input-label for="payment_amount" :value="__(key: 'Amount Pay')" class="mt-4" />
-                                    <x-text-input id="payment_amount" name="payment_amount" type="text"
+                                    <x-text-input id="payment_amount" name="payment_amount" type="number"
                                         class="mt-1 block w-full bg-gray-100"
                                         value=" {{ $user->detail->package_price }}" aria-required="" />
                                 </div>
