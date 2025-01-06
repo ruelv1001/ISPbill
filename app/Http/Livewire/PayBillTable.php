@@ -32,10 +32,7 @@ class PayBillTable extends DataTableComponent
             Column::make("Customer ID", "id")
                 ->sortable()
                 ->searchable(),
-            Column::make("First Name", "detail.first_name")
-                ->sortable()
-                ->searchable(),
-            Column::make("Last Name", "detail.last_name")
+            Column::make("First Name", "detail.name")
                 ->sortable()
                 ->searchable(),
             Column::make("Package Name", "detail.package_name")

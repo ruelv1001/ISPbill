@@ -64,7 +64,7 @@ class User extends Authenticatable
         return $this->role == 'cashier';
     }
 
-    
+
     public function isTechnician()
     {
         return $this->role == 'technician';
@@ -98,5 +98,9 @@ class User extends Authenticatable
 
     public function transaction() {
         return $this->hasMany(Transaction::class);
+    }
+    public function archieve_details()
+    {
+        return $this->hasOne(ArchieveDetail::class); 
     }
 }
