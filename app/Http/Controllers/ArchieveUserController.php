@@ -17,7 +17,7 @@ use App\Models\User;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\Log;
 use phpseclib3\Net\SSH2;
-class UserController extends Controller
+class ArchieveUserController extends Controller
 {
     public function __construct()
     {
@@ -30,8 +30,8 @@ class UserController extends Controller
             return redirect('/');
         }
 
-        $users = User::with('detail')->where('role', 'user')->get();
-        return view('users.index', compact('users'));
+        $users = User::with('archieve_details')->where('role', 'user')->get();
+        return view('archieve.index', compact('users'));
     }
 
     public function create()
@@ -238,71 +238,8 @@ class UserController extends Controller
             return redirect('/');
         }
 
-        $myrouter = $user->detail->router_id;
-
-        // Fetch router details
-        $router = Router::where("id", $myrouter)->firstOrFail();
-
-        try {
-            $ssh = new SSH2($router->ip);
-
-            if (!$ssh->login($router->username, $router->password)) {
-                throw new \Exception("SSH login failed");
-            }
-
-            // Get system resource info (includes uptime)
-            $systemResources = $ssh->exec('/system resource print');
-
-            // Get profile information
-            $profiles = $ssh->exec('/ip hotspot user profile print');
-
-            // Get last logged-out timestamp (check logs for 'logout' events)
-            $logData = $ssh->exec('/log print where message~"logout"');
-
-            // Parse uptime
-            $uptime = '';
-            if (preg_match('/uptime: (.+?)(?=\n|$)/', $systemResources, $matches)) {
-                $uptime = trim($matches[1]);
-            }
-
-            // Parse profiles into structured data
-            $profileData = [];
-            $profileLines = explode("\n", trim($profiles));
-            foreach ($profileLines as $line) {
-                if (preg_match('/^\s*\d+\s+(\S+)\s+(.+)$/', $line, $matches)) {
-                    $profileData[] = [
-                        'name' => trim($matches[1]),
-                        'settings' => trim($matches[2])
-                    ];
-                }
-            }
-
-            // Parse the last logged-out entry
-            $lastLoggedOut = '';
-            if (preg_match('/(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})\s+.*logout/', $logData, $matches)) {
-                $lastLoggedOut = trim($matches[1]);
-            }
-
-            // Structure the data
-            $data = [
-                'uptime' => $uptime,
-                'profiles' => $profileData,
-                'router' => [
-                    'ip' => $router->ip,
-                    'name' => $router->name ?? 'Unknown'
-                ],
-                'lastLoggedOut' => $lastLoggedOut
-            ];
-
-
-        } catch (\Exception $e) {
-            return back()->with("error", __("Mikrotik connection failed: " . $e->getMessage()));
-        }
-        $routers = Router::all();
-        $packages = Package::all();
         // Pass data to the view
-        return view('users.edit', compact('user', 'data', 'routers', 'packages'));
-
+        return view('archieve.edit', compact('user'));
 
     }
 
@@ -395,7 +332,7 @@ class UserController extends Controller
     }
 
 
-    public function archieve_data(User $user)
+    public function restore_data(User $user)
     {
         try {
             // Check if the user has associated transactions
@@ -407,23 +344,23 @@ class UserController extends Controller
             }
 
             // Archive and delete details
-            $details = \DB::table('details')->where('user_id', $user->id)->get();
+            $details = \DB::table('archieve_details')->where('user_id', $user->id)->get();
             if ($details->isNotEmpty()) {
                 $archiveDetails = $details->map(function ($detail) {
                     return (array) $detail;
                 })->toArray();
 
-                \DB::table('archieve_details')->insert($archiveDetails);
-                \DB::table('details')->where('user_id', $user->id)->delete();
+                \DB::table('details')->insert($archiveDetails);
+                \DB::table('archieve_details')->where('user_id', $user->id)->delete();
             }
 
-            // Archive and delete service details
+            // Restore and delete service details archieve_details
 
 
             // Delete the user
             //$user->delete();
 
-            return redirect()->route('users.index')->with('success', 'User  data archived successfully.');
+            return redirect()->route('users.index')->with('success', 'User restored successfully.');
         } catch (\Exception $e) {
             return redirect()->route('users.index')->with('error', 'Error deleting user: ' . $e->getMessage());
         }

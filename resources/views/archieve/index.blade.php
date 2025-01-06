@@ -16,7 +16,7 @@
                     @endif
                     <div class="flex justify-between items-center mb-6 border-b-2 border-slate-100 pb-4">
                         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                            {{ __('Customer') }}
+                            {{ __('Archieve Customer') }}
                         </h2>
                         <div class="flex items-center  ">
                             @if (auth()->user()->isAdmin())
@@ -24,25 +24,22 @@
                                     @csrf
                                     <x-danger-button>{{ __('Disable all Customer with due') }}</x-danger-button>
                                 </form>
-                                <a href="{{ route('user.download') }}"
-                                    class="ml-2 inline-flex items-center px-4 py-2 bg-orange-400 text-white dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs rounded uppercase">
-                                    {{ __('Download') }}
-                                </a>
+                                <!-- <a href="{{ route('user.download') }}"
+                                        class="ml-2 inline-flex items-center px-4 py-2 bg-orange-400 text-white dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs rounded uppercase">
+                                        {{ __('Download') }}
+                                    </a> -->
 
-                                <a href="{{ route('users.create') }}"
+
+                                <a href="{{ route('users.index') }}"
                                     class="ml-2 inline-flex items-center px-4 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white rounded uppercase">
-                                    {{ __('Create') }}
-                                </a>
+                                    {{ __('Active Customer') }}
 
-                                <a href="{{ route('archieve-users.index') }}"
-                                    class="ml-2 inline-flex items-center px-4 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white uppercase">
-                                    {{ __('Archive') }}
                                 </a>
                             @endif
                         </div>
                     </div>
                     <div>
-                        <livewire:user-table />
+                        <livewire:archieve-user-table />
 
                     </div>
                 </div>

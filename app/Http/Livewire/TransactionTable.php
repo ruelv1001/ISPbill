@@ -30,12 +30,10 @@ class TransactionTable extends DataTableComponent
                 ->setTable('transaction')
                 ->sortable()
                 ->searchable(),
-            Column::make("First Name", "detail.first_name")
+            Column::make("Full Name", "detail.name")
                 ->sortable()
                 ->searchable(),
-            Column::make("Last Name", "detail.last_name")
-                ->sortable()
-                ->searchable(),
+
             Column::make("Payment  method", "payment_method")
                 ->setTable('transaction')
                 ->sortable()
