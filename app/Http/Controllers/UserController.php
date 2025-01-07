@@ -33,6 +33,7 @@ class UserController extends Controller
         $users = User::with('detail')->where('role', 'user')->get();
         return view('users.index', compact('users'));
     }
+    
 
     public function create()
     {

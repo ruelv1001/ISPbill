@@ -45,6 +45,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
     Route::post('/users/{user}/archive', [UserController::class, 'archieve_data'])->name('users.archive');
     Route::resource('/transaction', TransactionController::class);
+    Route::get('/transaction/user/{user}', [TransactionController::class, 'userTransactions'])->name('transaction.user');
+    // Route::get('transaction/user/{id}', [TransactionController::class, 'userTransactions']);
     Route::resource('/router', RouterController::class);
 
 

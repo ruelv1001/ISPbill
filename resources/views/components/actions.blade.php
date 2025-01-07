@@ -3,11 +3,12 @@
 
 <div class="flex space-x-4">
     <!-- View Button with Icon -->
-    <a href="{{ route('paybill.create', $row->id) }}"
-        class="text-blue-500 hover:text-blue-700 flex items-center space-x-2">
-        <i class="fas fa-wallet fa-lg"></i>
-        <span></span>
-    </a>
+    <a href="javascript:void(0)" onclick="openPaymentModal('{{ route('paybill.create', $row->id) }}')"
+    class="text-blue-500 hover:text-blue-700 flex items-center space-x-2">
+    <i class="fas fa-wallet fa-lg"></i>
+    <span>Pay Bill</span>
+</a>
+
 
     <a href="{{ route('users.edit', $row->id) }}" class="text-blue-500 hover:text-blue-700 flex items-center space-x-2">
         <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 20 20" fill="currentColor"
@@ -37,6 +38,28 @@
             </button>
         </form>
     @endif
+<div id="payment-modal" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50 hidden">
+    <div class="bg-white p-6 rounded-lg w-full max-w-3xl h-[600px]">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight border-b-2 border-slate-100 pb-4">
+                {{ __('Create Payment') }}
+            </h2>
+            <button onclick="closePaymentModal()" class="text-gray-500 hover:text-gray-700">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 20 20" fill="none" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <div id="modal-content">
+            <!-- Modal content will be injected here -->
+        </div>
+    </div>
+</div>
+
+
+     
+    </div>
+
 
 </div>
 <script>
@@ -59,4 +82,38 @@
             }
         });
     }
+</script>
+
+<script>
+    // Open Modal and Inject Content
+    function openPaymentModal(url) {
+        fetch(url)
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('payment-modal').classList.remove('hidden');
+                document.getElementById('modal-content').innerHTML = html;
+            })
+            .catch(error => console.log(error));
+    }
+
+    // Close Modal
+    function closePaymentModal() {
+        document.getElementById('payment-modal').classList.add('hidden');
+    }
+</script>
+<script>
+   function toggleRefCode() {
+    console.log("toggleRefCode function triggered"); // Debug message
+    const paymentMethod = document.getElementById('payment_method').value;
+    const refCodeContainer = document.getElementById('ref_code_container');
+    const refCodeInput = document.getElementById('ref_code');
+
+    if (paymentMethod === 'Cash') {
+        refCodeContainer.classList.add('hidden');
+        refCodeInput.removeAttribute('required');
+    } else {
+        refCodeContainer.classList.remove('hidden');
+        refCodeInput.setAttribute('required', 'required');
+    }
+}
 </script>
