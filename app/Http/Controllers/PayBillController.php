@@ -23,7 +23,13 @@ class PayBillController extends Controller
 
         $users = User::with('service_details')->where('role', 'user')->get();
         return view('paybill.index', compact('users'));
+
+        
     }
+
+    
+
+
 
 
 
