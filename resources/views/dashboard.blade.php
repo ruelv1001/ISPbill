@@ -69,11 +69,11 @@
                                     </thead>
                                     <tbody>
                                     @foreach ($recentUsers as $user)
-                                        <tr>
-                                            <td class="border-b border-slate-300 p-2">{{ $user->name }}</td>
-                                            <td class="border-b border-slate-300 p-2">{{ $user->detail->package_name }}</td>
-                                            <td class="border-b border-slate-300 p-2">{{ date('Y-m-d', strtotime($user->created_at)) }}</td>
-                                        </tr>
+                                    <tr>
+                                        <td class="border-b border-slate-300 p-2">{{ $user->name }}</td>
+                                        <td class="border-b border-slate-300 p-2">{{ $user->detail->package_name ?? 'N/A' }}</td>
+                                        <td class="border-b border-slate-300 p-2">{{ date('Y-m-d', strtotime($user->created_at)) }}</td>
+                                    </tr>
                                     @endforeach
                                     </tbody>
                                 </table>
