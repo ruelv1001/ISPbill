@@ -32,8 +32,7 @@
                                 <div>
                                     <x-input-label for="name" :value="__('Customer name')" class="mt-4" />
                                     <x-text-input id="name" name="name" type="text"
-                                        class="mt-1 block w-full bg-gray-100"
-                                        value="{{ $user->detail->first_name }} {{ $user->detail->last_name }}"
+                                        class="mt-1 block w-full bg-gray-100" value="{{ $user->detail->name }}"
                                         readonly />
                                 </div>
 

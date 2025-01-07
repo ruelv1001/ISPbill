@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AddComment;
+use App\Http\Controllers\ArchieveUserController;
 use App\Http\Controllers\BillingController;
 use App\Http\Controllers\BillingDownload;
 use App\Http\Controllers\ChangePackageController;
@@ -42,8 +43,15 @@ Route::middleware('auth')->group(function () {
     Route::resource('/paybill', PayBillController::class);
     Route::resource('user-management', UserManagementController::class);
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
+    Route::post('/users/{user}/archive', [UserController::class, 'archieve_data'])->name('users.archive');
     Route::resource('/transaction', TransactionController::class);
     Route::resource('/router', RouterController::class);
+
+
+    Route::resource('/archieve-users', ArchieveUserController::class);
+    Route::get('/archieve/edit/{user}', [ArchieveUserController::class, 'edit'])->name('archieve.edit');
+    Route::post('/archieve/{user}/archive', [ArchieveUserController::class, 'restore_data'])->name('archive.archive');
+
     //myself
     Route::get('/paybill/create/{user}', [PaybillController::class, 'create'])->name('paybill.create');
     Route::get('/paybill/update-due', [PaybillController::class, 'update_due'])->name('paybill.update-due');

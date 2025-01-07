@@ -12,6 +12,7 @@ use RouterOS\Query;
 use App\Models\Router;
 use RealRashid\SweetAlert\Facades\Alert;
 use Carbon\Carbon;
+use phpseclib3\Net\SSH2;
 class PayBillController extends Controller
 {
     public function index()
@@ -113,21 +114,23 @@ class PayBillController extends Controller
 
             if ($serviceDetails->status = "Inactive") {
 
-
                 $user = User::find($serviceDetails->user_id);
                 $router_name = $user->detail->router_name;
                 $router = Router::where("name", $router_name)->firstOrFail();
 
                 try {
-                    $client = new Client([
-                        "host" => $router->ip,
-                        "user" => $router->username,
-                        "pass" => $router->password,
-                    ]);
+                    $ssh = new SSH2($router->ip);
 
-                    $query = new Query("/ppp/secret/enable");
-                    $query->equal("numbers", $user->id);
-                    $client->query($query)->read();
+                    if (!$ssh->login($router->username, $router->password)) {
+                        throw new \Exception('Login failed');
+                    }
+
+                    $command = "/ppp/secret enable numbers={$user->id}";
+                    $result = $ssh->exec($command);
+
+                    // Optionally handle the result if needed
+                    // For example: return back()->with("success", __("Command executed"));
+
                 } catch (\Exception $e) {
                     return back()->with("error", __("Mikrotik connection fails"));
                 }

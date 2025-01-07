@@ -20,8 +20,10 @@
     </a>
 
     <!-- Delete Form with Icon -->
-    @if($row->detail && $row->detail->is_lock !== 'lock')
-        <form action="" method="POST" id="dynamic-delete-form" data-locked="{{ $row->detail->is_lock }}">
+
+    @if($row->is_lock !== 'lock')
+
+        <form action="" method="POST" id="dynamic-delete-form" data-locked="{{ $row->is_lock }}">
             @csrf
             @method('DELETE')
             <button type="button" class="text-red-500 hover:text-red-700 flex items-center space-x-2"
@@ -40,7 +42,7 @@
 <script>
     function confirmDelete(userId) {
         Swal.fire({
-            title: 'Are you sure?',
+            title: 'Are you sure to permanent deleted?',
             text: 'You won\'t be able to revert this!',
             icon: 'warning',
             showCancelButton: true,
