@@ -56,7 +56,8 @@ class TransactionUserTable extends DataTableComponent
     public function builder(): Builder
     {
         return Transaction::query()
-            ->where('transaction.user_id', $this->userId);  // Specify the table name
+            ->where('transaction.user_id', $this->userId)
+            ->orderBy('payment_date', 'desc');
     }
 
 }

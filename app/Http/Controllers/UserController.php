@@ -33,7 +33,7 @@ class UserController extends Controller
         $users = User::with('detail')->where('role', 'user')->get();
         return view('users.index', compact('users'));
     }
-    
+
 
     public function create()
     {
@@ -110,6 +110,7 @@ class UserController extends Controller
             $id = str_pad(User::max('id') + 1, 8, '0', STR_PAD_LEFT); // Get max ID and pad it
             $user = User::create([
                 'id' => $id,
+                'name' => $validatedData['name'],
                 'email' => $validatedData['email'],
                 'billing_address' => $validatedData['address'],
                 'role' => 'user',
@@ -332,7 +333,7 @@ class UserController extends Controller
         if (filled($validatedData['password'])) {
             $user->password = Hash::make($validatedData['password']);
         }
-
+        $user->name = $validatedData['name'] ?? $user->name;
         $user->email = $validatedData['email'] ?? $user->email;
         $user->save();
 

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AddComment;
 use App\Http\Controllers\ArchieveUserController;
+use App\Http\Controllers\AssignViewTicket;
 use App\Http\Controllers\BillingController;
 use App\Http\Controllers\BillingDownload;
 use App\Http\Controllers\ChangePackageController;
@@ -92,6 +93,9 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/open-ticket/{ticket}', OpenTicket::class)->name('open.ticket');
     Route::post('/close-ticket/{ticket}', CloseTicket::class)->name('close.ticket');
+    Route::get('/getassign-ticket/{ticket}', [AssignViewTicket::class, 'assignTicket'])->name('getassign.ticket');
+    Route::post('/assign-ticket/{ticket}', CloseTicket::class)->name('assign.ticket');
+
     Route::post('/add-comment', AddComment::class)->name('add.comment');
 
     Route::get('/user-download', UserDownload::class)->name('user.download');

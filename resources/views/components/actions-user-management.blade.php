@@ -3,15 +3,19 @@
 
 <div class="flex space-x-4">
     <!-- View Button with Icon -->
-    <a href="{{ route('user-management.edit', $row->id) }}" class="text-blue-500 hover:text-blue-700 flex items-center space-x-2">
+
+    <a href="{{ route('user-management.edit', $row->id) }}"
+        class="text-blue-500 hover:text-blue-700 flex items-center space-x-2">
         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor"
             aria-hidden="true">
             <path fill-rule="evenodd"
                 d="M10 4.5a5.5 5.5 0 10-.001 11.001A5.5 5.5 0 0010 4.5zm0 9a3.5 3.5 0 110-7 3.5 3.5 0 010 7zm6.5-4a6.978 6.978 0 01-1.5 4.5c-1.09 1.31-2.51 2.18-4.08 2.71A6.97 6.97 0 0110 15c-1.46 0-2.82-.49-3.92-1.29-1.57-.53-2.98-1.4-4.08-2.71a6.978 6.978 0 01-1.5-4.5c0-.9.26-1.78.73-2.53 1.36-1.82 3.42-2.97 5.77-2.97 2.35 0 4.41 1.15 5.77 2.97.47.75.73 1.63.73 2.53z"
                 clip-rule="evenodd" />
         </svg>
-        <span>View</span>
+        <span>View </span>
     </a>
+
+    
 
     <!-- Delete Form with Icon -->
     <form action="{{ route('users.destroyother', $row->id) }}" method="POST" id="delete-form-{{ $row->id }}">

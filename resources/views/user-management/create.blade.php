@@ -9,93 +9,155 @@
                         </div>
                     @endif
 
-                        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight border-b-2 border-slate-100 pb-4">
-                            {{ __('Create Users') }}
+                    <h2
+                        class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight border-b-2 border-slate-100 pb-4">
+                        {{ __('Create Users') }}
+                    </h2>
+
+                    <div>
+                        <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">{{ __('Account') }}
                         </h2>
+                        <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                            {{ __("Add user account information") }}
+                        </p>
+                    </div>
 
                     <form method="post" action="{{ route('user-management.store') }}" class="mt-6 space-y-6">
                         @csrf
 
-                        <div class="grid grid-cols-2 gap-4">
+                        <div class="grid grid-cols-4 gap-4">
+
+
                             <div>
-                                <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">{{ __('Account') }}</h2>
-                                <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">{{ __("Add user account information") }}</p>
+                                <x-input-label for="name" :value="__('Name')" class="mt-4"></x-input-label>
+                                <x-text-input id="name" name="name" type="text" class="mt-1 block w-full"
+                                    :value="old('name')" required></x-text-input>
+                                <x-input-error class="mt-2" :messages="$errors->get('name')"></x-input-error>
+                            </div>
+
+
+
+                            <div>
+                                <x-input-label for="phone" :value="__('Phone')" class="mt-4"></x-input-label>
+                                <x-text-input id="phone" name="phone" type="text" class="mt-1 block w-full"
+                                    :value="old('phone')" required></x-text-input>
+                                <x-input-error class="mt-2" :messages="$errors->get('phone')"></x-input-error>
                             </div>
 
                             <div>
+                                <x-input-label for="email" :value="__('Email address')" class="mt-4"></x-input-label>
+                                <x-text-input id="email" name="email" type="text" class="mt-1 block w-full"
+                                    :value="old('email')" required></x-text-input>
+                                <x-input-error class="mt-2" :messages="$errors->get('email')"></x-input-error>
+                            </div>
 
 
+
+                            <div>
+                                <x-input-label for="password" :value="__('Password')" class="mt-4"></x-input-label>
+                                <x-text-input name="password" type="password" class="mt-1 block w-full"></x-text-input>
+                                <x-input-error class="mt-2" :messages="$errors->get('password')"></x-input-error>
+                            </div>
+
+                            <div>
+                                <x-input-label for="password_confirmation" :value="__('Password confirm')"
+                                    class="mt-4"></x-input-label>
+                                <x-text-input name="password_confirmation" type="password"
+                                    class="mt-1 block w-full"></x-text-input>
+                                <x-input-error class="mt-2"
+                                    :messages="$errors->get('password_confirmation')"></x-input-error>
+                            </div>
+
+
+                               <div>
+                                <x-input-label for="role" :value="__('Role')" class="mt-4"></x-input-label>
+                                <x-text-input id="role" name="role" type="text" class="mt-1 block w-full"
+                                    :value="old('role')" required></x-text-input>
+                                <x-input-error class="mt-2" :messages="$errors->get('role')"></x-input-error>
+                            </div>
+
+
+
+
+                        </div>
+
+<div>
+    <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100 mt-10">{{ __('') }}
+    </h2>
+    <p class="text-lg font-medium text-gray-900 dark:text-gray-100 mt-14">
+        {{ __("User's Limitations") }}
+    </p>
+</div>
+
+
+
+                        <div class="grid grid-cols-4 gap-5">
+                            @php
+$permissions = [
+    'dashboard_create',
+    'dashboard_edit',
+    'dashboard_delete',
+    'dashboard_view',
+    'packages_create',
+    'packages_edit',
+    'packages_delete',
+    'packages_view',
+    'customer_create',
+    'customer_edit',
+    'customer_delete',
+    'customer_view',
+    'service_detail_create',
+    'service_detail_edit',
+    'service_detail_delete',
+    'service_detail_view',
+    'transaction_create',
+    'transaction_edit',
+    'transaction_delete',
+    'transaction_view',
+    'router_create',
+    'router_edit',
+    'router_delete',
+    'router_view',
+    'user_management_create',
+    'user_management_edit',
+    'user_management_delete',
+    'user_management_view',
+    'tickets_create',
+    'tickets_edit',
+    'tickets_delete',
+    'tickets_view',
+    'dashboard_table',
+    'package_table',
+    'customer_table',
+    'service_detail_table',
+    'transaction_table',
+    'router_table',
+    'user_management_table',
+    'ticket_table',
+];
+                            @endphp
+
+                            @foreach($permissions as $permission)
                                 <div>
-                                    <x-input-label for="first_name" :value="__('First name')" class="mt-4"></x-input-label>
-                                    <x-text-input id="first_name" name="first_name" type="text" class="mt-1 block w-full" :value="old('name')"
-                                        required></x-text-input>
-                                    <x-input-error class="mt-2" :messages="$errors->get('name')"></x-input-error>
-                                </div>
-
-                                <div>
-                                    <x-input-label for="last_name" :value="__('Last name')" class="mt-4"></x-input-label>
-                                    <x-text-input id="last_name" name="last_name" type="text" class="mt-1 block w-full" :value="old('name')"
-                                        required></x-text-input>
-                                    <x-input-error class="mt-2" :messages="$errors->get('name')"></x-input-error>
-                                </div>
-
-                                <div>
-                                    <x-input-label for="phone" :value="__('Phone')" class="mt-4"></x-input-label>
-                                    <x-text-input id="phone" name="phone" type="text" class="mt-1 block w-full" :value="old('phone')"
-                                        required></x-text-input>
-                                    <x-input-error class="mt-2" :messages="$errors->get('phone')"></x-input-error>
-                                </div>
-
-
-
-                                <div>
-                                    <x-input-label for="email" :value="__('Email address')" class="mt-4"></x-input-label>
-                                    <x-text-input id="email" name="email" type="text" class="mt-1 block w-full" :value="old('email')" required></x-text-input>
-                                    <x-input-error class="mt-2" :messages="$errors->get('email')"></x-input-error>
-                                </div>
-                                <div>
-                                    <x-input-label for="address" :value="__(' Address')" class="mt-4"></x-input-label>
-                                    <x-text-input id="address" name="address" type="text" class="mt-1 block w-full" :value="old('address')" required></x-text-input>
-                                    <x-input-error class="mt-2" :messages="$errors->get('address')"></x-input-error>
-                                </div>
-                                <div>
-                                    <x-input-label for="password" :value="__('Password')" class="mt-4"></x-input-label>
-                                    <x-text-input name="password" type="password" class="mt-1 block w-full" value=""></x-text-input>
-                                    <x-input-error class="mt-2" :messages="$errors->get('password')"></x-input-error>
-                                </div>
-
-                                <div>
-                                    <x-input-label for="password_confirmation" :value="__('Password confirm')" class="mt-4"></x-input-label>
-                                    <x-text-input name="password_confirmation" type="password" class="mt-1 block w-full" value=""></x-text-input>
-                                    <x-input-error class="mt-2" :messages="$errors->get('password_confirmation')"></x-input-error>
-                                </div>
-
-
-                                <div>
-                                    <x-input-label for="role" :value="__('Role')" class="mt-4"></x-input-label>
-                                    <select id="role" name="role" class="mt-1 block w-full">
-                                        <option value="" disabled selected>{{ __('Select Role') }}</option>
-                                        <option value="technician" {{ old('area') == 1 ? 'selected' : '' }}>Technician</option>
-                                        <option value="cashier" {{ old('area') == 2 ? 'selected' : '' }}>Cashier</option>
-                                        <option value="admin" {{ old('area') == 3 ? 'selected' : '' }}>Admin</option>
-                               
-                           
-
+                                    <x-input-label :for="$permission" :value="__(ucwords(str_replace('_', ' ', $permission)))"
+                                        class="mt-4"></x-input-label>
+                                    <select id="{{ $permission }}" name="{{ $permission }}" class="mt-1 block w-full">
+                                        <option value="0" selected>{{ __('No') }}</option>
+                                        <option value="1" {{ old($permission) == '1' ? 'selected' : '' }}>{{ __('Yes') }}</option>
                                     </select>
-                                    <x-input-error class="mt-2" :messages="$errors->get('role')"></x-input-error>
+                                    <x-input-error class="mt-2" :messages="$errors->get($permission)"></x-input-error>
                                 </div>
-                            
-                             
+                            @endforeach
+                        </div>
 
-                                <div class="flex items-center gap-4 mt-4">
-                                    <x-primary-button>{{ __('Save') }}</x-primary-button>
-                                </div>
-                            </div>
+                        <div class="flex items-center gap-4 col-span-4">
+                            <x-primary-button>{{ __('Save') }}</x-primary-button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
+
 </x-app-layout>
 @include('sweetalert::alert')
