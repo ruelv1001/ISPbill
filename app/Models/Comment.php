@@ -15,7 +15,7 @@ class Comment extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['comment', 'user_id', 'ticket_id'];
+    protected $fillable = ['comment', 'user_id', 'ticket_id', 'assign_id'];
 
     public function ticket()
     {

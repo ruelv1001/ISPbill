@@ -56,6 +56,7 @@ class TransactionTable extends DataTableComponent
     {
         return Transaction::query()
             ->with('detail')
-            ->select('transaction.*');
+            ->select('transaction.*')
+            ->orderBy('payment_date', 'desc');
     }
 }

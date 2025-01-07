@@ -28,15 +28,14 @@
                             </button>
                         </form>
 
-                        <form action="{{ route('transaction.user', $user->id) }}" method="GET"
-                           >
+                        <form action="{{ route('transaction.user', $user->id) }}" method="GET">
                             @csrf
                             <button type="submit" class="bg-red-500 text-white rounded-md px-3 py-1">
                                 {{ __('Transaction list') }}
                             </button>
                         </form>
 
-                        <a href="{{ route('transaction.user', $user->id) }}" class="text-blue-500">View</a>
+
                     </div>
 
                     <form method="post" action="{{ route('users.update', $user->id) }}" class="mt-6 space-y-6">

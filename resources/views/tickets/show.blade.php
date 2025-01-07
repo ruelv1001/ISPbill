@@ -8,20 +8,36 @@
                             {{ __('Ticket ID #') . $ticket->number }}
                         </h2>
 
-                        @if($ticket->status == "Open")
-                            <form action="{{ route('close.ticket', $ticket->id) }}" method="post">
-                                @csrf
-                                <x-text-input name="ticket_id" type="hidden" value="{{ $ticket->id }}"></x-text-input>
-                                <x-danger-button>{{ __('Close ticket') }}</x-danger-button>
-                            </form>
-                        @endif
-                        @if($ticket->status == "Close")
-                            <form action="{{ route('open.ticket', $ticket->id) }}" method="post">
-                                @csrf
-                                <x-text-input name="ticket_id" type="hidden" value="{{ $ticket->id }}"></x-text-input>
-                                <x-success-button>{{ __('Re-open ticket') }}</x-success-button>
-                            </form>
-                        @endif
+
+
+
+                        <div class="flex space-x-4">
+                            <div>
+                                @if($ticket->status == "Open")
+                                    <form action="{{ route('close.ticket', $ticket->id) }}" method="post">
+                                        @csrf
+                                        <x-text-input name="ticket_id" type="hidden"
+                                            value="{{ $ticket->id }}"></x-text-input>
+                                        <x-danger-button>{{ __('Close ticket') }}</x-danger-button>
+                                    </form>
+                                @endif
+                                @if($ticket->status == "Close")
+                                    <form action="{{ route('open.ticket', $ticket->id) }}" method="post">
+                                        @csrf
+                                        <x-text-input name="ticket_id" type="hidden"
+                                            value="{{ $ticket->id }}"></x-text-input>
+                                        <x-success-button>{{ __('Re-open ticket') }}</x-success-button>
+                                    </form>
+                                @endif
+                            </div>
+                            @if(auth()->user()->role === 'admin')
+                                <form action="{{ route('getassign.ticket', $ticket->id) }}" method="get">
+                                    @csrf
+                                    <x-text-input name="ticket_id" type="hidden" value="{{ $ticket->id }}"></x-text-input>
+                                    <x-danger-button>{{ __('Assign ticket') }}</x-danger-button>
+                                </form>
+                            @endif
+                        </div>
                     </div>
 
                     <div class="mt-6 font-semibold">
@@ -54,7 +70,9 @@
                                 @csrf
                                 <div>
                                     <x-input-label for="comment" :value="__('Add comment')" class="mt-4"></x-input-label>
-                                    <textarea name="comment" class="px-3 py-3 mt-1 rounded-lg border-gray-300 md:text-sm block w-full" rows="5"></textarea>
+                                    <textarea name="comment"
+                                        class="px-3 py-3 mt-1 rounded-lg border-gray-300 md:text-sm block w-full"
+                                        rows="5"></textarea>
                                     <x-input-error class="mt-2" :messages="$errors->get('comment')"></x-input-error>
                                 </div>
                                 <x-text-input name="ticket_id" type="hidden" value="{{ $ticket->id }}"></x-text-input>
