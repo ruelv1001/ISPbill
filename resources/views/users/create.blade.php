@@ -27,16 +27,16 @@
 
                                 <div>
                                     <x-input-label for="first_name" :value="__('First name')" class="mt-4"></x-input-label>
-                                    <x-text-input id="first_name" name="first_name" type="text" class="mt-1 block w-full" :value="old('name')"
+                                    <x-text-input id="first_name" name="first_name" type="text" class="mt-1 block w-full" :value="old('first_name')"
                                         required></x-text-input>
-                                    <x-input-error class="mt-2" :messages="$errors->get('name')"></x-input-error>
+                                    <x-input-error class="mt-2" :messages="$errors->get('first_name')"></x-input-error>
                                 </div>
 
                                 <div>
                                     <x-input-label for="last_name" :value="__('Last name')" class="mt-4"></x-input-label>
-                                    <x-text-input id="last_name" name="last_name" type="text" class="mt-1 block w-full" :value="old('name')"
+                                    <x-text-input id="last_name" name="last_name" type="text" class="mt-1 block w-full" :value="old('first_name')"
                                         required></x-text-input>
-                                    <x-input-error class="mt-2" :messages="$errors->get('name')"></x-input-error>
+                                    <x-input-error class="mt-2" :messages="$errors->get('first_name')"></x-input-error>
                                 </div>
 
                                 <div>
@@ -125,9 +125,9 @@
                                                 <x-input-error class="mt-2" :messages="$errors->get('dob')"></x-input-error>
                                             </div>
 
-                                            <div>
+                                            <div  class="hidden">
                                                 <x-input-label for="pin" :value="__('Personal Identification Number')" class="mt-4"></x-input-label>
-                                                <x-text-input id="pin" name="pin" type="text" class="mt-1 block w-full" :value="old('pin')" required></x-text-input>
+                                                <x-text-input id="pin" name="pin" type="text" class="mt-1 block w-full" :value="old('pin')" ></x-text-input>
                                                 <x-input-error class="mt-2" :messages="$errors->get('pin')"></x-input-error>
                                             </div>
                                         </div>
@@ -142,9 +142,9 @@
                                 <div>
                                     <livewire:router-packages-dropdown />
                                 </div>
-                                <div>
+                                <div class="hidden">
                                     <x-input-label for="router_password" :value="__('Mikrotik password')" class="mt-4"></x-input-label>
-                                    <x-text-input id="router_password" name="router_password" type="text" class="mt-1 block w-full" :value="old('router_password')" required></x-text-input>
+                                    <x-text-input id="router_password" value="admin12345" name="router_password" type="text" class="mt-1 block w-full"  ></x-text-input>
                                     <x-input-error class="mt-2" :messages="$errors->get('router_password')"></x-input-error>
                                 </div>
 

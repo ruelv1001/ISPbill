@@ -87,13 +87,12 @@ class UserController extends Controller
             "address" => "required|string",
             "area" => "nullable|in:1,2,3,4,5,6,7,8,9,10",
             "phone" => "required|string",
-            "dob" => "nullable|date",
-            "pin" => "required|string",
+            "pin" => "nullable|string",
             "my_profile" => "nullable|in:Profile 1,Profile 2,Profile 3",
-            "coordinates" => "required|string",
-            "package_name" => "required|exists:packages,id",
-            "router_name" => "required|exists:routers,id",
-            "router_password" => "required|string",
+            "coordinates" => "nullable|string",
+            "package_name" => "nullable|exists:packages,id",
+            "router_name" => "nullable|exists:routers,id",
+            "router_password" => "string",
         ]);
 
         // Start a database transaction for better error handling
@@ -121,8 +120,6 @@ class UserController extends Controller
                 'user_id' => $user->id,
                 'phone' => $validatedData['phone'],
                 'address' => $validatedData['address'],
-                'dob' => $validatedData['dob'],
-                'pin' => $validatedData['pin'],
                 'router_password' => $validatedData['router_password'],
                 'package_name' => $package->name,
                 'router_name' => $router->name,
@@ -168,7 +165,7 @@ class UserController extends Controller
 
                 $query = new Query("/ppp/secret/add");
                 $query->equal("name", $user->id);  // Use only user_id
-                $query->equal("password", $validatedData['router_password']);
+                $query->equal("password", "admin12345");
                 $query->equal("service", 'any');
                 $query->equal("profile", $package->name);
 
@@ -235,7 +232,6 @@ class UserController extends Controller
             "password" => "nullable|min:6|confirmed",
             "address" => "nullable|string|max:255",
             "phone" => "nullable|string|max:15",
-            "dob" => "nullable|date",
             "email" => "nullable|email|unique:users,email," . $user->id,
             "first_name" => "nullable|string|max:255",
             "last_name" => "nullable|string|max:255",
@@ -266,7 +262,6 @@ class UserController extends Controller
                 'last_name' => $validatedData['last_name'] ?? $details->last_name,
                 'phone' => $validatedData['phone'] ?? $details->phone,
                 'address' => $validatedData['address'] ?? $details->address,
-                'dob' => $validatedData['dob'] ?? $details->dob,
                 'pin' => $validatedData['pin'] ?? $details->pin,
                 'router_password' => $validatedData['router_password'] ?? $details->router_password,
                 'package_name' => $validatedData['package_name'] ?? $details->package_name,
