@@ -31,4 +31,14 @@ class Ticket extends Model
         }
         return $number;
     }
+
+    public function assignedUser()
+    {
+        return $this->belongsTo(User::class, 'assign');
+    }
+    
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }
