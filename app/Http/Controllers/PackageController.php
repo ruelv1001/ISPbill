@@ -7,7 +7,7 @@ use App\Models\Router;
 use Illuminate\Http\Request;
 use RouterOS\Query;
 use RouterOS\Client;
-
+use phpseclib3\Net\SSH2;
 class PackageController extends Controller
 {
     public function index()
@@ -44,6 +44,7 @@ class PackageController extends Controller
         return view('packages.create', compact('routers'));
     }
 
+
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -55,17 +56,22 @@ class PackageController extends Controller
         $router = Router::where("id", $request->router_id)->firstOrFail();
 
         try {
-            $client = new Client([
-                "host" => $router->ip,
-                "user" => $router->username,
-                "pass" => $router->password,
-            ]);
+            // Establish SSH connection using phpseclib
+            $ssh = new SSH2($router->ip);
 
-            $query = new Query("/ppp/profile/add");
-            $query->equal("name", $request->name);
-            $client->query($query)->read();
+            if (!$ssh->login($router->username, $router->password)) {
+                throw new \Exception("SSH login failed");
+            }
+
+            // Add PPP profile using Mikrotik CLI command
+            $command = sprintf(
+                "/ppp profile add name=\"%s\"",
+                addslashes($request->name)
+            );
+
+            $ssh->exec($command);
         } catch (\Exception $e) {
-            return back()->with("error", __("Mikrotik connection fails"));
+            return back()->with("error", __("Mikrotik connection failed: " . $e->getMessage()));
         }
 
         $package = new Package();
@@ -74,6 +80,8 @@ class PackageController extends Controller
 
         return redirect('packages')->with('success', __('Package successfully added'));
     }
+
+
 
     public function show(Package $package)
     {

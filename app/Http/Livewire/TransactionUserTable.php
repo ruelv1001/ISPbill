@@ -9,19 +9,21 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 
 use App\Models\Transaction;
 use App\Models\User;
-class TransactionTable extends DataTableComponent
+class TransactionUserTable extends DataTableComponent
 {
     protected $model = Transaction::class;
+    public $userId; // Renamed from $transactions to better reflect the content
+
+    public function mount($transactions)
+    {
+        $this->userId = $transactions; // We're actually receiving a user ID
+    }
 
     public function configure(): void
     {
-        $this->setPrimaryKey('id')
-            ->setAdditionalSelects(['transaction.id as transaction_id']);
-        // ->setTableRowUrl(function ($row) {
-        //     return route('transaction.create', ['user' => $row->id]);
-        // });
-        $this->setEagerLoadAllRelationsEnabled();
+        $this->setPrimaryKey('id');
     }
+
 
     public function columns(): array
     {
@@ -51,12 +53,11 @@ class TransactionTable extends DataTableComponent
 
         ];
     }
-
     public function builder(): Builder
     {
         return Transaction::query()
-            ->with('detail')
-            ->select('transaction.*')
+            ->where('transaction.user_id', $this->userId)
             ->orderBy('payment_date', 'desc');
     }
+
 }

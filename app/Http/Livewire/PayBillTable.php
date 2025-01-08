@@ -22,6 +22,7 @@ class PayBillTable extends DataTableComponent
             ->setTableRowUrl(function ($row) {
                 return route('paybill.create', ['user' => $row->id]);
             });
+
         $this->setEagerLoadAllRelationsEnabled();
     }
 
@@ -31,10 +32,7 @@ class PayBillTable extends DataTableComponent
             Column::make("Customer ID", "id")
                 ->sortable()
                 ->searchable(),
-            Column::make("First Name", "detail.first_name")
-                ->sortable()
-                ->searchable(),
-            Column::make("Last Name", "detail.last_name")
+            Column::make("First Name", "detail.name")
                 ->sortable()
                 ->searchable(),
             Column::make("Package Name", "detail.package_name")
@@ -50,6 +48,13 @@ class PayBillTable extends DataTableComponent
             Column::make("Status", "service_details.status")
                 ->sortable()
                 ->searchable()
+                ->format(function ($value) {
+                    return $value === 'Inactive'
+                        ? '<span class="text-red-500 font-bold">' . $value . '</span>'
+                        : $value;
+                })
+                ->html()
+
 
         ];
     }

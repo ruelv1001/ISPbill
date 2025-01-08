@@ -16,27 +16,16 @@
 
                     <h2
                         class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight border-b-2 border-slate-100 pb-4">
-                        {{ __('Edit user') }}
+                        {{ __('View Archieved Consumer') }}
                     </h2>
 
-                    <div class="flex space-x-4 mt-5">
-                        <form action="{{ route('users.archive', $user->id) }}" method="POST"
-                            onsubmit="return confirm('Are you sure you want to archive this user?');">
-                            @csrf
-                            <button type="submit" class="bg-red-500 text-white rounded-md px-3 py-1">
-                                {{ __('Archive') }}
-                            </button>
-                        </form>
-
-                        <form action="{{ route('transaction.user', $user->id) }}" method="GET">
-                            @csrf
-                            <button type="submit" class="bg-red-500 text-white rounded-md px-3 py-1">
-                                {{ __('Transaction list') }}
-                            </button>
-                        </form>
-
-
-                    </div>
+                    <form action="{{ route('archive.archive', $user->id) }}" method="POST"
+                        onsubmit="return confirm('Are you sure you want to Restore this user?');">
+                        @csrf
+                        <button type="submit" class="bg-red-500 text-white rounded-md px-3 py-1">
+                            {{ __('Restore') }}
+                        </button>
+                    </form>
 
                     <form method="post" action="{{ route('users.update', $user->id) }}" class="mt-6 space-y-6">
                         @csrf
@@ -47,7 +36,7 @@
                                 <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">{{ __('Account') }}
                                 </h2>
                                 <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                                    {{ __("Edit user account information") }}
+                                    {{ __("View user account information") }}
                                 </p>
 
 
@@ -65,7 +54,7 @@
                                             disabled></x-input-label>
                                         <x-text-input id="name" name="name" type="text"
                                             class="mt-1 block w-full bg-gray-100"
-                                            value="{{ $user->detail->name }}"></x-text-input>
+                                            value="{{ $user->archieve_details->name }}"></x-text-input>
                                     </div>
 
 
@@ -98,7 +87,7 @@
                                         <x-input-label for="phone" :value="__('Phone number')"
                                             class="mt-4"></x-input-label>
                                         <x-text-input id="phone" name="phone" type="number" class="mt-1 block w-full"
-                                            value="{{ $user->detail->phone }}"></x-text-input>
+                                            value="{{ $user->archieve_details->phone }}"></x-text-input>
                                         <x-input-error class="mt-2" :messages="$errors->get('phone')"></x-input-error>
                                     </div>
                                     <div>
@@ -110,29 +99,13 @@
                                         <x-input-error class="mt-2" :messages="$errors->get('email')"></x-input-error>
                                     </div>
 
-                                    <div>
-                                        <x-input-label for="password" :value="__('Password')"
-                                            class="mt-4"></x-input-label>
-                                        <x-text-input name="password" type="password" class="mt-1 block w-full"
-                                            value=""></x-text-input>
-                                        <x-input-error class="mt-2"
-                                            :messages="$errors->get('password')"></x-input-error>
-                                    </div>
 
-                                    <div>
-                                        <x-input-label for="password_confirmation" :value="__('Password confirm')"
-                                            class="mt-4"></x-input-label>
-                                        <x-text-input name="password_confirmation" type="password"
-                                            class="mt-1 block w-full" value=""></x-text-input>
-                                        <x-input-error class="mt-2"
-                                            :messages="$errors->get('password_confirmation')"></x-input-error>
-                                    </div>
 
                                     <div>
                                         <x-input-label for="address" :value="__('Address')"
                                             class="mt-4"></x-input-label>
                                         <x-text-input id="address" name="address" type="text" class="mt-1 block w-full"
-                                            value="{{ $user->detail->address }}"></x-text-input>
+                                            value="{{ $user->archieve_details->address }}"></x-text-input>
                                         <x-input-error class="mt-2" :messages="$errors->get('address')"></x-input-error>
                                     </div>
 
@@ -149,36 +122,13 @@
 
 
                                     <!-- Map -->
-                                    <div>
-                                        <x-input-label for="is_lock" :value="__('Lock')" class="mt-4"></x-input-label>
-                                        <select id="is_lock" name="is_lock" class="mt-1 block w-full bg-gray-100">
-                                            <option value="lock" {{ $user->detail->is_lock == "lock" ? 'selected' : '' }}>
-                                                {{ __('Lock') }}
-                                            </option>
-                                            <option value="unlock" {{ $user->detail->is_lock == "unlock" ? 'selected' : '' }}>
-                                                {{ __('Unlock') }}
-                                            </option>
-                                        </select>
-                                    </div>
-                                    <div id="map" style="height: 400px;" class="mt-6 rounded shadow"></div>
 
-                                    <div class="hidden">
-                                        <x-input-label for="dob" :value="__('Date of birth')"
-                                            class="mt-4"></x-input-label>
-                                        <x-text-input id="dob" name="dob" type="date" class="mt-1 block w-full"
-                                            value="{{ $user->detail->dob }}"></x-text-input>
-                                        <x-input-error class="mt-2" :messages="$errors->get('dob')"></x-input-error>
-                                    </div>
+                                    <div id="map" style="height: 400px;" class="mt-6 rounded shadow hidden"></div>
 
-                                    <div class="hidden">
-                                        <x-input-label for="pin" :value="__('Personal Identification Number')"
-                                            class="mt-4"></x-input-label>
-                                        <x-text-input id="pin" name="pin" type="text" class="mt-1 block w-full"
-                                            value="{{ $user->detail->pin }}"></x-text-input>
-                                        <x-input-error class="mt-2" :messages="$errors->get('pin')"></x-input-error>
-                                    </div>
 
-                                    <div class="mt-4">
+
+
+                                    <div class="mt-4 hidden">
                                         <p class="text-lg font-medium text-gray-900 dark:text-gray-100">
                                             {{ __("MT Parameters") }}
                                         </p>
@@ -212,10 +162,7 @@
 
 
                                 </div>
-                                <div class="flex items-center gap-4 mt-4">
-                                    <x-primary-button>{{ __('Update') }}</x-primary-button>
 
-                                </div>
 
                             </div>
                         </div>

@@ -65,6 +65,22 @@ class TransactionController extends Controller
     
         return view('transaction.index', compact('users', 'totalsByMethod', 'totalsPerDay', 'overallTotal'));
     }
+
+
+
+
+    public function userTransactions(User $user)
+    {
+        // Fetch transactions for the given user
+        $transactions = Transaction::where('user_id', $user->id)->get();
+    
+        // Pass the transactions and user to the view
+        return view('transaction.each-user', compact('transactions', 'user'));
+    }
+    
+
+    
+
     
 
     public function create(User $user)

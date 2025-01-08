@@ -64,13 +64,14 @@ class User extends Authenticatable
         return $this->role == 'cashier';
     }
 
-    
+
     public function isTechnician()
     {
         return $this->role == 'technician';
     }
 
-    public function due_amount($id){
+    public function due_amount($id)
+    {
         $user = self::where('id', $id)->firstOrFail();
 
         $bill = Billing::where('user_id', $user->id)->sum('package_price');
@@ -79,7 +80,8 @@ class User extends Authenticatable
         return $bill - $pay;
     }
 
-    public function detail() {
+    public function detail()
+    {
         return $this->hasOne(Detail::class);
     }
 
@@ -88,15 +90,41 @@ class User extends Authenticatable
         return $this->hasOne(ServiceDetails::class);
     }
 
-    public function billing() {
+    public function billing()
+    {
         return $this->hasMany(Billing::class);
     }
 
-    public function payment() {
+    public function payment()
+    {
         return $this->hasMany(Payment::class);
     }
 
-    public function transaction() {
+    public function transaction()
+    {
         return $this->hasMany(Transaction::class);
     }
+    public function archieve_details()
+    {
+        return $this->hasOne(ArchieveDetail::class);
+    }
+
+    public function userLimit()
+    {
+        return $this->hasOne(UserLimit::class);
+    }
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($user) {
+            $user->userLimit()->delete();
+        });
+    }
+    public function ticket()
+    {
+        return $this->hasOne(Ticket::class);
+    }
+    
+
 }

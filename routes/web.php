@@ -1,6 +1,9 @@
 <?php
 
 use App\Http\Controllers\AddComment;
+use App\Http\Controllers\ArchieveUserController;
+use App\Http\Controllers\AssignTicket;
+use App\Http\Controllers\AssignViewTicket;
 use App\Http\Controllers\BillingController;
 use App\Http\Controllers\BillingDownload;
 use App\Http\Controllers\ChangePackageController;
@@ -41,10 +44,23 @@ Route::middleware('auth')->group(function () {
     Route::resource('/ticket', TicketController::class);
     Route::resource('/paybill', PayBillController::class);
     Route::resource('user-management', UserManagementController::class);
+    Route::get('/users', [UserController::class, 'index'])->name('users.index');
+    Route::post('/users/{user}/archive', [UserController::class, 'archieve_data'])->name('users.archive');
     Route::resource('/transaction', TransactionController::class);
+    Route::get('/transaction/user/{user}', [TransactionController::class, 'userTransactions'])->name('transaction.user');
+    // Route::get('transaction/user/{id}', [TransactionController::class, 'userTransactions']);
     Route::resource('/router', RouterController::class);
+
+
+    Route::resource('/archieve-users', ArchieveUserController::class);
+    Route::get('/archieve/edit/{user}', [ArchieveUserController::class, 'edit'])->name('archieve.edit');
+    Route::post('/archieve/{user}/archive', [ArchieveUserController::class, 'restore_data'])->name('archive.archive');
+
     //myself
     Route::get('/paybill/create/{user}', [PaybillController::class, 'create'])->name('paybill.create');
+    Route::get('/paybill/update-due', [PaybillController::class, 'update_due'])->name('paybill.update-due');
+    Route::get('/due', [PaybillController::class, 'due'])->name('paybill.due');
+    Route::post('/paybill/due-update', [PayBillController::class, 'updateDue'])->name('paybill.due_update');
     //Users
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
     Route::delete('/users-delete/{user}', [UserController::class, 'destroyother'])->name('users.destroyother');
@@ -78,6 +94,9 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/open-ticket/{ticket}', OpenTicket::class)->name('open.ticket');
     Route::post('/close-ticket/{ticket}', CloseTicket::class)->name('close.ticket');
+    Route::get('/getassign-ticket/{ticket}', [AssignViewTicket::class, 'assignTicket'])->name('getassign.ticket');
+    Route::post('/assign-ticket/{ticket}', AssignTicket::class)->name('assign.ticket');
+
     Route::post('/add-comment', AddComment::class)->name('add.comment');
 
     Route::get('/user-download', UserDownload::class)->name('user.download');

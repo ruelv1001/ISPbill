@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Model;
  * @mixin Eloquent
  */
 
-class Detail extends Model
+class ArchieveDetail extends Model
 {
     use HasFactory;
 

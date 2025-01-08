@@ -7,11 +7,12 @@ use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\Ticket;
+use Workbench\App\Models\User;
 
 class TicketTable extends DataTableComponent
 {
     protected $model = Ticket::class;
-
+    
     public function configure(): void
     {
         $this->setPrimaryKey('id')
@@ -20,7 +21,7 @@ class TicketTable extends DataTableComponent
                 return route('ticket.show', $row);
             });
     }
-
+    
     public function columns(): array
     {
         return [
@@ -34,7 +35,15 @@ class TicketTable extends DataTableComponent
                 ->sortable(),
             Column::make("Priority", "priority")
                 ->sortable(),
-            Column::make("Created by", "user.name")
+            Column::make("Assignee", "assign")  
+                ->format(function($value, $row) {
+                    return $row->assignedUser->name ?? 'Unassigned';
+                })
+                ->sortable(),
+            Column::make("Created by", "user_id")
+                ->format(function($value, $row) {
+                    return $row->creator->name ?? 'Unknown';
+                })
                 ->sortable(),
             Column::make("Created at", "created_at")
                 ->format(function ($value) {
@@ -42,13 +51,13 @@ class TicketTable extends DataTableComponent
                 }),
         ];
     }
-
+    
     public function builder(): Builder
     {
-        if (auth()->user()->isUser()) {
-            return Ticket::query()->where('user_id', auth()->id());
-        }
-
-        return Ticket::query();
+        return Ticket::query()
+            ->with(['assignedUser', 'creator'])
+            ->when(auth()->user()->isUser(), function($query) {
+                $query->where('tickets.user_id', auth()->id());
+            });
     }
 }
