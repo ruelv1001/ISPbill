@@ -36,10 +36,19 @@
                                 </a>
 
 
-                                <a href="{{ route('archieve-users.index') }}"
-                                    class="ml-2 inline-flex items-center px-4 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white uppercase">
-                                    {{ __('Archive') }}
-                                </a>
+                                <form id="bulk-lock-form" method="POST" action="{{ route('users.bulk-lock') }}">
+                                    @csrf
+                                    <div class="flex justify-between mb-4">
+                                        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">
+                                            Bulk Lock/Unlock
+                                        </button>
+                                    </div>
+
+                                    <!-- Include hidden input for user IDs -->
+                                    <input type="hidden" name="user_ids" id="bulk-user-ids">
+                                </form>
+
+                                
                             @endif
                         </div>
                     </div>
@@ -64,5 +73,15 @@
     window.addEventListener('reloadPage', function () {
 
         location.reload();
+    });
+</script>
+<script>
+    document.addEventListener('livewire:load', () => {
+        const bulkLockForm = document.getElementById('bulk-lock-form');
+        const bulkUserIdsInput = document.getElementById('bulk-user-ids');
+
+        Livewire.on('updateSelectedUsers', (selectedUserIds) => {
+            bulkUserIdsInput.value = selectedUserIds.join(',');
+        });
     });
 </script>

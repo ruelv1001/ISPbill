@@ -13,19 +13,30 @@ use Illuminate\Database\Eloquent\Builder;
 
 class UserTable extends DataTableComponent
 {
-    protected $model = Detail::class; // Use the Detail model
+    protected $model = Detail::class; 
 
     public function configure(): void
     {
-        $this->setPrimaryKey('id') // Assuming 'id' is the primary key in the 'details' table
-            ->setAdditionalSelects(['details.user_id as id']); // Update with 'details' table's primary key
+        $this->setPrimaryKey('id') 
+            ->setAdditionalSelects(['details.user_id as id']); 
         $this->setEagerLoadAllRelationsEnabled();
     }
 
     public function columns(): array
     {
+        
         return [
-            Column::make("Name", "name") // Adjust to match 'details' table fields
+            Column::make("Lock", "is_lock")
+            ->sortable()
+            ->searchable()
+            ->format(function ($value) {
+                return $value === 'unlock'
+                    ? '<span class="text-green-500"><i class="fas fa-unlock fa-lg"></i> </span>'
+                    : '<span class="text-red-500"><i class="fas fa-lock fa-lg"></i> </span>';
+            })
+            ->html(),
+            
+            Column::make("Name", "name") 
                 ->sortable()
                 ->searchable(),
 
@@ -37,15 +48,7 @@ class UserTable extends DataTableComponent
                 ->sortable()
                 ->searchable(),
 
-            Column::make("Lock", "is_lock")
-                ->sortable()
-                ->searchable()
-                ->format(function ($value) {
-                    return $value === 'unlock'
-                        ? '<span class="text-green-500"><i class="fas fa-unlock fa-lg"></i> </span>'
-                        : '<span class="text-red-500"><i class="fas fa-lock fa-lg"></i> </span>';
-                })
-                ->html(),
+          
 
             Column::make('Actions')
                 ->label(fn($row) => view('components.actions', ['row' => $row])),

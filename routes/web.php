@@ -51,6 +51,11 @@ Route::middleware('auth')->group(function () {
     // Route::get('transaction/user/{id}', [TransactionController::class, 'userTransactions']);
     Route::resource('/router', RouterController::class);
 
+    //User Lock
+    Route::post('/users/bulk-lock', [UserController::class, 'bulkLock'])->name('users.bulk-lock');
+
+
+
 
     Route::resource('/archieve-users', ArchieveUserController::class);
     Route::get('/archieve/edit/{user}', [ArchieveUserController::class, 'edit'])->name('archieve.edit');

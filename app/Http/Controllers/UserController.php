@@ -84,13 +84,12 @@ class UserController extends Controller
         // Validate the request with more flexible rules
         $validatedData = $request->validate([
             "email" => "required|email|unique:users,email",
-            "password" => "required|min:6|confirmed",
+            "password" => "nullable|min:6",
             "name" => "required|string|max:255",
             "address" => "required|string",
             "area" => "nullable|in:1,2,3,4,5,6,7,8,9,10",
             "phone" => "required|string",
             "router_id" => "nullable",
-
             "dob" => "nullable|date",
             "my_profile" => "nullable|in:Profile 1,Profile 2,Profile 3",
             "coordinates" => "required|string",
@@ -99,7 +98,7 @@ class UserController extends Controller
             "router_password" => "required|string",
         ]);
 
-        // Start a database transaction for better error handling
+    
         DB::beginTransaction();
 
         $settings = Setting::firstOrFail();
@@ -107,20 +106,20 @@ class UserController extends Controller
 
         try {
             // Create user
-            $id = str_pad(User::max('id') + 1, 8, '0', STR_PAD_LEFT); // Get max ID and pad it
+            $id = str_pad(User::max('id') + 1, 8, '0', STR_PAD_LEFT);
             $user = User::create([
                 'id' => $id,
-                'name' => $validatedData['name'],
+                'name' => $validatedData['name'] = str_replace(' ', '_', $validatedData['name']) . '_' . date('m_d_y'),
                 'email' => $validatedData['email'],
                 'billing_address' => $validatedData['address'],
                 'role' => 'user',
                 'password' => Hash::make($validatedData['password']),
             ]);
 
-            // Retrieve package and router
+            
             $package = Package::findOrFail($validatedData['package_name']);
             $router = Router::findOrFail($validatedData['router_name']);
-            // Create user details
+           
             $accountNumber = $user->id . '-' . now()->format('YmdHis');
             $details = Detail::create([
                 'user_id' => $user->id,
@@ -135,7 +134,7 @@ class UserController extends Controller
                 'status' => 'active',
                 'is_lock' => 'unlock',
                 'account_number' => $accountNumber,
-                'name' => $validatedData['name'],
+                'name' => $validatedData['name'] = str_replace(' ', '_', $validatedData['name']) . '_' . date('m_d_y'),
                 'area' => $validatedData['area'] ?? null,
                 "my_profile" => "nullable|string|in:Profile 1,Profile 2,Profile 3",
                 'coordinates' => $validatedData['coordinates'],
@@ -203,14 +202,8 @@ class UserController extends Controller
             // Rollback the transaction
             DB::rollBack();
 
-            // Log the error
-            Log::error('User creation failed: ' . $e->getMessage(), [
-                'request_data' => $request->except('password', 'password_confirmation')
-            ]);
-
-            // Redirect back with error message
-            return back()->withInput($request->except(['password', 'password_confirmation']))
-                ->with('error', __('User creation failed: ') . $e->getMessage());
+    
+           
         }
     }
 
@@ -458,4 +451,7 @@ class UserController extends Controller
         }
     }
 
+
+   
+ 
 }
