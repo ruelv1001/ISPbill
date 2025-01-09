@@ -336,12 +336,7 @@ class ArchieveUserController extends Controller
     {
         try {
             // Check if the user has associated transactions
-            $hasTransaction = \DB::table('transaction')->where('user_id', $user->id)->exists();
 
-            if ($hasTransaction) {
-                Alert::warning('Warning!', 'Consumer has transaction data');
-                return redirect()->route('users.index');
-            }
 
             // Archive and delete details
             $details = \DB::table('archieve_details')->where('user_id', $user->id)->get();

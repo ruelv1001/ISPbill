@@ -24,10 +24,10 @@ class PayBillController extends Controller
         $users = User::with('service_details')->where('role', 'user')->get();
         return view('paybill.index', compact('users'));
 
-        
+
     }
 
-    
+
 
 
 
@@ -99,7 +99,7 @@ class PayBillController extends Controller
                 $noofdays = $request->payment_amount / $perdayAmount;
 
                 // Update active_due_date and billing_date
-                $newActiveDueDate = now()->addDays($noofdays);
+                $newActiveDueDate = $previousDueDate->addDays($noofdays);
                 $newBillingDate = $newActiveDueDate->copy()->addDays(10);
 
                 $serviceDetails->update([
