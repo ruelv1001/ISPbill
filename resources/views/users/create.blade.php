@@ -49,17 +49,9 @@
                                     <x-input-error class="mt-2" :messages="$errors->get('email')"></x-input-error>
                                 </div>
 
-                                <div>
-                                    <x-input-label for="password" :value="__('Password')" class="mt-4"></x-input-label>
-                                    <x-text-input name="password" type="password" class="mt-1 block w-full" value=""></x-text-input>
-                                    <x-input-error class="mt-2" :messages="$errors->get('password')"></x-input-error>
-                                </div>
 
-                                <div>
-                                    <x-input-label for="password_confirmation" :value="__('Password confirm')" class="mt-4"></x-input-label>
-                                    <x-text-input name="password_confirmation" type="password" class="mt-1 block w-full" value=""></x-text-input>
-                                    <x-input-error class="mt-2" :messages="$errors->get('password_confirmation')"></x-input-error>
-                                </div>
+
+
 
                                 <div>
                                     <x-input-label for="address" :value="__('Billing Address')" class="mt-4"></x-input-label>
@@ -113,7 +105,7 @@
 
 
                     <!-- Map -->
-                                <div id="map" style="height: 400px;" class="mt-6 rounded shadow"></div>
+                                <div id="map" style="height: 400px;" class="mt-6 rounded shadow hidden"></div>
                                             <div class="hidden">
                                                 <x-input-label for="dob" :value="__('Date of birth')" class="mt-4"></x-input-label>
                                                 <x-text-input id="dob" name="dob" type="date" class="mt-1 block w-full" :value="old('dob')" ></x-text-input>
