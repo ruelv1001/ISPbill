@@ -33,13 +33,12 @@
                                 <a href="{{ route('users.create') }}"
                                     class="ml-2 inline-flex items-center px-4 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white uppercase">
                                     {{ __('Create') }}
-                                </a>
+                                </a>  
 
-
-                                <a href="{{ route('archieve-users.index') }}"
+                                <a href="{{ route('user.mikrotik-refresh') }}"
                                     class="ml-2 inline-flex items-center px-4 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white uppercase">
-                                    {{ __('Archive') }}
-                                </a>
+                                    {{ __('Refresh') }}
+                                </a>  
                             @endif
                         </div>
                     </div>
@@ -64,5 +63,15 @@
     window.addEventListener('reloadPage', function () {
 
         location.reload();
+    });
+</script>
+<script>
+    document.addEventListener('livewire:load', () => {
+        const bulkLockForm = document.getElementById('bulk-lock-form');
+        const bulkUserIdsInput = document.getElementById('bulk-user-ids');
+
+        Livewire.on('updateSelectedUsers', (selectedUserIds) => {
+            bulkUserIdsInput.value = selectedUserIds.join(',');
+        });
     });
 </script>

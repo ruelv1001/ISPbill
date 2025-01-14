@@ -45,5 +45,13 @@ class Detail extends Model
         return $this->belongsTo(User::class);
     }
 
-    
+    public function service_details()
+    {
+        return $this->hasOne(ServiceDetails::class, 'user_id', 'user_id');
+    }
+
+    public function miktrotikParameters()
+{
+    return $this->hasOne(MikrotikParamter::class, 'user_id', 'user_id');
+}
 }

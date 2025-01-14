@@ -28,6 +28,7 @@ use App\Http\Controllers\UserDisable;
 use App\Http\Controllers\UserDownload;
 use App\Http\Controllers\UserEnable;
 use App\Http\Controllers\UserManagementController;
+use App\Http\Controllers\UserRefresh;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth')->group(function () {
@@ -50,6 +51,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/transaction/user/{user}', [TransactionController::class, 'userTransactions'])->name('transaction.user');
     // Route::get('transaction/user/{id}', [TransactionController::class, 'userTransactions']);
     Route::resource('/router', RouterController::class);
+
+    //User Lock
+    Route::post('/users/bulk-lock', [UserController::class, 'bulkLock'])->name('users.bulk-lock');
+
+
 
 
     Route::resource('/archieve-users', ArchieveUserController::class);
@@ -104,6 +110,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/payment-download', PaymentDownload::class)->name('payment.download');
     Route::get('/single-download/{user}', ShowUser::class)->name('single.download');
     Route::get('/invoice-download/{row}', InvoiceDownload::class)->name('invoice.download');
+
+    //refresh mikrotik
+
+    Route::get('/user-mikrotik', UserRefresh::class)->name('user.mikrotik-refresh');
+
 
     Route::group(['middleware' => ['web']], function () {
         // Payment Routes for bKash

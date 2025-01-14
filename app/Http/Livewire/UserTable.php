@@ -13,6 +13,8 @@ use Illuminate\Database\Eloquent\Builder;
 
 class UserTable extends DataTableComponent
 {
+
+    
     protected $model = Detail::class; // Use the Detail model
     public array $bulkActions = [
         'lockSelected' => 'Lock Selected',
@@ -25,7 +27,11 @@ class UserTable extends DataTableComponent
         $this->setPrimaryKey('id') // Assuming 'id' is the primary key in the 'details' table
             ->setAdditionalSelects(['details.user_id as id']); // Update with 'details' table's primary key
         $this->setEagerLoadAllRelationsEnabled();
+
+       
     }
+
+    
 
     public function columns(): array
     {
@@ -47,19 +53,14 @@ class UserTable extends DataTableComponent
             Column::make("Package", "package_name")
                 ->sortable()
                 ->searchable(),
-
             Column::make("Remarks", "remarks")
                 ->sortable()
                 ->searchable(),
-            Column::make("Expire", "remarks")
+            Column::make("Expire", "service_details.active_due_date")
                 ->sortable()
-                ->searchable()
-
-            ,
-
-
-
-
+                ->searchable(),
+                Column::make('Status')
+                ->label(fn($row) => view('components.mt-status', ['row' => $row])),
             Column::make('Actions')
                 ->label(fn($row) => view('components.actions', ['row' => $row])),
         ];
@@ -68,8 +69,9 @@ class UserTable extends DataTableComponent
     public function builder(): Builder
     {
         return Detail::query()
-            //    ->where('role', 'user') // Assuming 'role' exists in 'details' table
-            ->select(); // Specify additional selects as needed
+            ->join('service_details', 'service_details.user_id', '=', 'details.user_id')
+            ->join('miktrotik_parameters', 'miktrotik_parameters.user_id', '=', 'details.user_id')
+            ->select('details.*','miktrotik_parameters.*', 'service_details.active_due_date'); 
     }
 
     public function lockSelected()
