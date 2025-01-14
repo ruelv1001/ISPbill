@@ -44,14 +44,19 @@ class UserTable extends DataTableComponent
             Column::make("Name", "name") // Adjust to match 'details' table fields
                 ->sortable()
                 ->searchable(),
-
-            Column::make("Router", "router_name")
-                ->sortable()
-                ->searchable(),
-
             Column::make("Package", "package_name")
                 ->sortable()
                 ->searchable(),
+
+            Column::make("Remarks", "remarks")
+                ->sortable()
+                ->searchable(),
+            Column::make("Expire", "remarks")
+                ->sortable()
+                ->searchable()
+
+            ,
+
 
 
 

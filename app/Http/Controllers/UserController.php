@@ -84,7 +84,7 @@ class UserController extends Controller
         // Validate the request with more flexible rules
         $validatedData = $request->validate([
             "email" => "required|email|unique:users,email",
-            "password" => "required|min:6|confirmed",
+            "password" => "min:6|confirmed",
             "name" => "required|string|max:255",
             "address" => "required|string",
             "area" => "nullable|in:1,2,3,4,5,6,7,8,9,10",
@@ -106,14 +106,14 @@ class UserController extends Controller
 
         try {
             // Create user
-            $id = str_pad(User::max('id') + 1, 8, '0', STR_PAD_LEFT); // Get max ID and pad it
+            $id = str_pad(User::max('id') + 1, 8, '0', STR_PAD_LEFT);
             $user = User::create([
                 'id' => $id,
-                'name' => $validatedData['name'],
+                'name' => str_replace(' ', '_', $validatedData['name']) . '_' . date('Y-m-d'),
                 'email' => $validatedData['email'],
                 'billing_address' => $validatedData['address'],
                 'role' => 'user',
-                'password' => Hash::make($validatedData['password']),
+                //  'password' => Hash::make($validatedData['password']),
             ]);
 
             // Retrieve package and router
@@ -134,7 +134,7 @@ class UserController extends Controller
                 'status' => 'active',
                 'is_lock' => 'unlock',
                 'account_number' => $accountNumber,
-                'name' => $validatedData['name'],
+                'name' => str_replace(' ', '_', $validatedData['name']) . '_' . date('Y-m-d'),
                 'area' => $validatedData['area'] ?? null,
                 "my_profile" => "nullable|string|in:Profile 1,Profile 2,Profile 3",
                 'coordinates' => $validatedData['coordinates'],
@@ -171,7 +171,7 @@ class UserController extends Controller
                 ]);
 
                 $query = new Query("/ppp/secret/add");
-                $query->equal("name", $user->id);  // Use only user_id
+              $query->equal("name", str_replace(' ', '_', $user->name) . '_' . date('Y-m-d')); // Use only user_id
                 $query->equal("password", $validatedData['router_password']);
                 $query->equal("service", 'any');
                 $query->equal("profile", $package->name);
