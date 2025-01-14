@@ -76,17 +76,17 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($users as $user)
-                <tr>
-                    <td>{{ $user->detail->name }}</td>
-                    <td>{{ $user->email }}</td>
-                    <td>{{ $user->detail->phone }}</td>
-                    <td>{{ $user->detail->address }}</td>
-                    <td>{{ $user->detail->status }}</td>
-                    <td>{{ date('Y-m-d', strtotime($user->created_at)) }}</td>
-                </tr>
-            @endforeach
-        </tbody>
+    @foreach($users as $user)
+        <tr>
+            <td>{{ $user->detail->name ?? 'N/A' }}</td>
+            <td>{{ $user->email }}</td>
+            <td>{{ $user->detail->phone ?? 'N/A' }}</td>
+            <td>{{ $user->detail->address ?? 'N/A' }}</td>
+            <td>{{ $user->detail->status ?? 'N/A' }}</td>
+            <td>{{ date('Y-m-d', strtotime($user->created_at)) }}</td>
+        </tr>
+    @endforeach
+</tbody>
     </table>
 </body>
 

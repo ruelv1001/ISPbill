@@ -33,22 +33,12 @@
                                 <a href="{{ route('users.create') }}"
                                     class="ml-2 inline-flex items-center px-4 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white uppercase">
                                     {{ __('Create') }}
-                                </a>
+                                </a>  
 
-
-                                <form id="bulk-lock-form" method="POST" action="{{ route('users.bulk-lock') }}">
-                                    @csrf
-                                    <div class="flex justify-between mb-4">
-                                        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">
-                                            Bulk Lock/Unlock
-                                        </button>
-                                    </div>
-
-                                    <!-- Include hidden input for user IDs -->
-                                    <input type="hidden" name="user_ids" id="bulk-user-ids">
-                                </form>
-
-                                
+                                <a href="{{ route('user.mikrotik-refresh') }}"
+                                    class="ml-2 inline-flex items-center px-4 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white uppercase">
+                                    {{ __('Refresh') }}
+                                </a>  
                             @endif
                         </div>
                     </div>

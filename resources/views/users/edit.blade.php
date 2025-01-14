@@ -51,7 +51,7 @@
                                 </p>
 
 
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                                     <div>
                                         <x-input-label for="user_id" :value="__('User ID')" class="mt-4"
                                             disabled></x-input-label>
@@ -110,23 +110,7 @@
                                         <x-input-error class="mt-2" :messages="$errors->get('email')"></x-input-error>
                                     </div>
 
-                                    <div>
-                                        <x-input-label for="password" :value="__('Password')"
-                                            class="mt-4"></x-input-label>
-                                        <x-text-input name="password" type="password" class="mt-1 block w-full"
-                                            value=""></x-text-input>
-                                        <x-input-error class="mt-2"
-                                            :messages="$errors->get('password')"></x-input-error>
-                                    </div>
-
-                                    <div>
-                                        <x-input-label for="password_confirmation" :value="__('Password confirm')"
-                                            class="mt-4"></x-input-label>
-                                        <x-text-input name="password_confirmation" type="password"
-                                            class="mt-1 block w-full" value=""></x-text-input>
-                                        <x-input-error class="mt-2"
-                                            :messages="$errors->get('password_confirmation')"></x-input-error>
-                                    </div>
+                                  
 
                                     <div>
                                         <x-input-label for="address" :value="__('Address')"
@@ -149,7 +133,7 @@
 
 
                                     <!-- Map -->
-                                    <div>
+                                    <div class="hidden">
                                         <x-input-label for="is_lock" :value="__('Lock')" class="mt-4"></x-input-label>
                                         <select id="is_lock" name="is_lock" class="mt-1 block w-full bg-gray-100">
                                             <option value="lock" {{ $user->detail->is_lock == "lock" ? 'selected' : '' }}>
@@ -160,58 +144,48 @@
                                             </option>
                                         </select>
                                     </div>
-                                    <div id="map" style="height: 400px;" class="mt-6 rounded shadow"></div>
+                                    <div id="map" style="height: 400px;" class="mt-6 rounded shadow hidden"></div>
 
-                                    <div class="hidden">
-                                        <x-input-label for="dob" :value="__('Date of birth')"
-                                            class="mt-4"></x-input-label>
-                                        <x-text-input id="dob" name="dob" type="date" class="mt-1 block w-full"
-                                            value="{{ $user->detail->dob }}"></x-text-input>
-                                        <x-input-error class="mt-2" :messages="$errors->get('dob')"></x-input-error>
-                                    </div>
+                         
 
-                                    <div class="hidden">
-                                        <x-input-label for="pin" :value="__('Personal Identification Number')"
-                                            class="mt-4"></x-input-label>
-                                        <x-text-input id="pin" name="pin" type="text" class="mt-1 block w-full"
-                                            value="{{ $user->detail->pin }}"></x-text-input>
-                                        <x-input-error class="mt-2" :messages="$errors->get('pin')"></x-input-error>
-                                    </div>
-
-                                    <div class="mt-4">
-                                        <p class="text-lg font-medium text-gray-900 dark:text-gray-100">
-                                            {{ __("MT Parameters") }}
-                                        </p>
-                                        <x-input-label for="uptime" :value="__('Uptime')" class="mt-4"></x-input-label>
-                                        <x-text-input id="uptime" name="uptime" type="text" class="mt-1 block w-full"
-                                            value="{{ $data['uptime'] ?? 'N/A' }}"></x-text-input>
-                                        <x-input-error class="mt-2" :messages="$errors->get('uptime')"></x-input-error>
-                                        <x-input-label for="router_name" :value="__('Router Name')"
-                                            class="mt-4"></x-input-label>
-                                        <x-text-input id="router_name" name="router_name" type="text"
-                                            class="mt-1 block w-full"
-                                            value="{{ $data['router']['name'] ?? 'Unknown' }}"></x-text-input>
-                                        <x-input-error class="mt-2"
-                                            :messages="$errors->get('router_name')"></x-input-error>
-
-                                        <x-input-label for="router_ip" :value="__('Router IP')"
-                                            class="mt-4"></x-input-label>
-                                        <x-text-input id="router_ip" name="router_ip" type="text"
-                                            class="mt-1 block w-full"
-                                            value="{{ $data['router']['ip'] ?? 'N/A' }}"></x-text-input>
-                                        <x-input-error class="mt-2"
-                                            :messages="$errors->get('router_ip')"></x-input-error>
-                                    </div>
-
-
-
-
-
+                                 
 
 
 
 
                                 </div>
+                                <div class="mt-4">
+                                        <p class="text-lg font-medium text-gray-900 dark:text-gray-100">
+                                            {{ __("MT Parameters") }}
+                                        </p>
+                                        <div class="grid grid-cols-4 gap-4">
+                                        <x-input-label for="uptime" :value="__('Uptime')" class="mt-4"></x-input-label>
+                                        <x-text-input id="uptime" name="uptime" type="text" class="mt-1 block w-full" readonly
+                                            value="{{ $data['uptime'] ?? 'N/A' }}"></x-text-input>
+                                        <x-input-error class="mt-2" :messages="$errors->get('uptime')" readonly></x-input-error>
+                                        <x-input-label for="router_name" :value="__('Router Name')"
+                                            class="mt-4"></x-input-label>
+                                        <x-text-input id="router_name" name="router_name" type="text"
+                                            class="mt-1 block w-full"
+                                            value="{{ $data['router']['name'] ?? 'Unknown' }}" readonly></x-text-input>
+                                        <x-input-error class="mt-2" readonly
+                                            :messages="$errors->get('router_name')" readonly></x-input-error>
+
+                                        <x-input-label for="router_ip" :value="__('Router IP')" readonly
+                                            class="mt-4"></x-input-label>
+                                        <x-text-input id="router_ip" name="router_ip" type="text" readonly
+                                            class="mt-1 block w-full"
+                                            value="{{ $data['router']['ip'] ?? 'N/A' }}"></x-text-input>
+                                        <x-input-error class="mt-2"
+                                            :messages="$errors->get('router_ip')" readonly></x-input-error>
+                                        </div>
+                                      
+                                    </div>
+
+
+
+
+
                                 <div class="flex items-center gap-4 mt-4">
                                     <x-primary-button>{{ __('Update') }}</x-primary-button>
 

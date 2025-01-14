@@ -6,6 +6,7 @@ use App\Models\Setting;
 use Illuminate\Support\Facades\DB;
 use App\Models\Billing;
 use App\Models\Detail;
+use App\Models\MikrotikParamter;
 use App\Models\Package;
 use App\Models\Router;
 use Carbon\Carbon;
@@ -30,7 +31,7 @@ class UserController extends Controller
             return redirect('/');
         }
 
-        $users = User::with('detail')->where('role', 'user')->get();
+        $users = User::with(['detail', 'service_details'])->where('role', 'user')->get();
         return view('users.index', compact('users'));
     }
 
@@ -177,6 +178,29 @@ class UserController extends Controller
                 $query->equal("profile", $package->name);
 
                 $client->query($query)->read();
+
+
+                $query = new Query("/ppp/profile/print");
+
+                // Send the query and fetch the results
+                $profiles = $client->query($query)->read();
+
+                // Now filter the profiles based on the $package->name
+                foreach ($profiles as $profile) {
+                    $onUp = $profile['on-up'] ?? 'No script set';  // Check if 'on-up' is empty
+                    $onDown = $profile['on-down'] ?? 'No script set';  // Check if 'on-down' is empty
+                    
+                    // Print the values
+                    echo "On-Up: " . $onUp . "\n";
+                    echo "On-Down: " . $onDown . "\n";
+                
+
+                   
+                }
+
+                // Display the filtered profiles (this would print out the profile data)
+               
+                
             } catch (\Exception $e) {
                 // Log the error for debugging
                 Log::error('Failed to create Mikrotik user.', [
@@ -190,6 +214,14 @@ class UserController extends Controller
 
                 return back()->with("error", __("Mikrotik connection fails"));
             }
+
+            $mtDetails = MikrotikParamter::create([
+                'user_id' => $user->id,
+                'uptime' => $onUp,
+                'down_time' => $onDown,
+                'router_name' => $router->name,
+                'router_ip' => $router->ip,
+            ]);
 
             // Commit the transaction
             DB::commit();
@@ -311,16 +343,13 @@ class UserController extends Controller
     public function update(Request $request, User $user)
     {
         $validatedData = $this->validate($request, [
-            "password" => "nullable|min:6|confirmed",
             "address" => "nullable|string|max:255",
             "phone" => "nullable|string|max:15",
-            "dob" => "nullable|date",
             "email" => "nullable|email|unique:users,email," . $user->id,
             "name" => "nullable|string|max:255",
             "area" => "nullable|in:1,2,3,4,5,6,7,8,9,10",
             "my_profile" => "nullable|in:Profile 1,Profile 2,Profile 3",
             "coordinates" => "nullable|string",
-            "is_lock" => "nullable|string",
             "package_name" => "nullable|exists:packages,name",
             "router_name" => "nullable|exists:routers,name",
             "router_password" => "nullable|string",
@@ -329,9 +358,7 @@ class UserController extends Controller
             "billing_date" => "nullable|date",
         ]);
 
-        if (filled($validatedData['password'])) {
-            $user->password = Hash::make($validatedData['password']);
-        }
+      
         $user->name = $validatedData['name'] ?? $user->name;
         $user->email = $validatedData['email'] ?? $user->email;
         $user->save();
@@ -370,30 +397,35 @@ class UserController extends Controller
 
 
     public function destroy(User $user)
-    {
-        try {
+{
+    try {
+        $hasTransaction = \DB::table('transaction')->where('user_id', $user->id)->exists();
 
-
-            $hasTransaction = \DB::table('transaction')->where('user_id', $user->id)->exists();
-
-            if ($hasTransaction) {
-
-                Alert::warning('Warning!', 'Consumer has transaction data');
-                return redirect()->route('users.index');
-            }
-
-
-            \DB::table('details')->where('user_id', $user->id)->delete();
-            \DB::table('service_details')->where('user_id', $user->id)->delete();
-
-
-            $user->delete();
-
-            return redirect()->route('users.index')->with('success', 'User deleted successfully.');
-        } catch (\Exception $e) {
-            return redirect()->route('users.index')->with('error', 'Error deleting user: ' . $e->getMessage());
+        if ($hasTransaction) {
+            Alert::warning('Warning!', 'Consumer has transaction data');
+            return redirect()->route('users.index');
         }
+
+        // Check if there are any details with is_lock set to 'lock'
+        $lockedDetails = \DB::table('details')->where('user_id', $user->id)->where('is_lock', 'lock')->exists();
+
+        if ($lockedDetails) {
+            Alert::warning('Warning!', 'Cannot delete user because some details are locked.');
+            return redirect()->route('users.index');
+        }
+
+        // Proceed with deletion if no locked details
+        \DB::table('details')->where('user_id', $user->id)->where('is_lock', '!=', 'lock')->delete();
+        \DB::table('service_details')->where('user_id', $user->id)->delete();
+
+        $user->delete();
+
+        return redirect()->route('users.index')->with('success', 'User deleted successfully.');
+    } catch (\Exception $e) {
+        return redirect()->route('users.index')->with('error', 'Error deleting user: ' . $e->getMessage());
     }
+}
+
 
 
     public function archieve_data(User $user)
