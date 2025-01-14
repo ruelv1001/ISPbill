@@ -12,18 +12,17 @@
                         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight border-b-2 border-slate-100 pb-4">
                             {{ __('Create user') }}
                         </h2>
-                        <div>
-                                <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">{{ __('Account') }}</h2>
-                                <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">{{ __("Add user account information") }}</p>
-                            </div>
 
                     <form method="post" action="{{ route('users.store') }}" class="mt-6 space-y-6">
                         @csrf
 
-                        <div class="grid grid-cols-1 gap-4">
-                    
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">{{ __('Account') }}</h2>
+                                <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">{{ __("Add user account information") }}</p>
+                            </div>
 
-                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                            <div>
 
 
                                 <div>
@@ -50,17 +49,9 @@
                                     <x-input-error class="mt-2" :messages="$errors->get('email')"></x-input-error>
                                 </div>
 
-                                <div class="hidden"> 
-                                    <x-input-label for="password" :value="__('Password')" class="mt-4"></x-input-label>
-                                    <x-text-input name="password" type="password" class="mt-1 block w-full" value="test"></x-text-input>
-                                    <x-input-error class="mt-2" :messages="$errors->get('password')"></x-input-error>
-                                </div>
 
-                                <div class="hidden">
-                                    <x-input-label for="password_confirmation" :value="__('Password confirm')" class="mt-4"></x-input-label>
-                                    <x-text-input name="password_confirmation" type="password" class="mt-1 block w-full" value="test"></x-text-input>
-                                    <x-input-error class="mt-2" :messages="$errors->get('password_confirmation')"></x-input-error>
-                                </div>
+
+
 
                                 <div>
                                     <x-input-label for="address" :value="__('Billing Address')" class="mt-4"></x-input-label>
@@ -110,7 +101,10 @@
                                     <x-input-error class="mt-2" :messages="$errors->get('coordinates')" />
                                 </div>
 
-                
+                    <!-- Search Input -->
+
+
+                    <!-- Map -->
                                 <div id="map" style="height: 400px;" class="mt-6 rounded shadow hidden"></div>
                                             <div class="hidden">
                                                 <x-input-label for="dob" :value="__('Date of birth')" class="mt-4"></x-input-label>
@@ -123,34 +117,35 @@
                                                 <x-text-input id="pin" name="pin" type="text" class="mt-1 block w-full" :value="old('pin')" ></x-text-input>
                                                 <x-input-error class="mt-2" :messages="$errors->get('pin')"></x-input-error>
                                             </div>
-                                        
-                                
-                     
-                          
+                                        </div>
+                                    </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">{{ __('Subscription') }}</h2>
+                                <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">{{ __("Add subscription details") }}</p>
+                            </div>
 
-                     
-                         
+                            <div>
+                                <div>
+                                    <livewire:router-packages-dropdown />
+                                </div>
                                 <div class="hidden">
                                     <x-input-label for="router_password" :value="__('Mikrotik password')" class="mt-4"></x-input-label>
                                     <x-text-input id="router_password"  value="admin12345" name="router_password" type="text" class="mt-1 block w-full" ></x-text-input>
                                     <x-input-error class="mt-2" :messages="$errors->get('router_password')"></x-input-error>
                                 </div>
 
-                              
-                                </div>
-                                <div>
-                                    <livewire:router-packages-dropdown />
-                                </div>
                                 <div class="flex items-center gap-4 mt-4">
                                     <x-primary-button>{{ __('Save') }}</x-primary-button>
                                 </div>
+                            </div>
+                        </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
 </x-app-layout>
-@include('sweetalert::alert')
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
 <script>
@@ -225,4 +220,3 @@
         });
     });
 </script>
-

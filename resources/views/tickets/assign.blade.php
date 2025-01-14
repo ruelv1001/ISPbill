@@ -30,7 +30,7 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                
+
                                 <div class="flex items-center gap-4 mt-4">
                                     <x-success-button>{{ __('Assign') }}</x-success-button>
                                 </div>
