@@ -1,0 +1,106 @@
+// resources/scss/components/_button.scss
+.btn{
+    border-radius: 8px;
+    border: 1px  solid;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 20px;
+    padding: 10px 16px;
+    outline: none;
+    display: flex;
+    gap: 8px;
+
+    &-success{
+        color: #fff;
+        background-color: $text-color-green;
+        border-color: $text-color-green;
+    }
+
+    &-delete{
+        color: #fff;
+        background-color: #C03744;
+        border-color: #C03744;
+    }
+
+    &-outline{
+        color: #fff;
+        background-color: transparent;
+        border-color: #fff;
+    }
+
+    &-success:hover{
+        color: $text-color-green;
+        background-color: #fff;
+        border-color: $text-color-green;
+
+        svg,
+        path{
+            fill: $text-color-green;
+            stroke: $text-color-green;
+        }
+    }
+
+    &-delete:hover{
+        color: #C03744;
+        background-color: #fff;
+        border-color: #C03744;
+
+        svg{
+            fill: #C03744;
+        }
+    }
+
+    &-outline:hover{
+        color: #0EA5E9;
+        background-color: #fff;
+        border-color: #fff;
+    }
+    &[disabled] {
+        color: #a1a1a1;
+        background-color: #d3d3d3;
+        border-color: #d3d3d3;
+        cursor: not-allowed;
+
+        path{
+            stroke: currentColor;
+        }
+    }
+
+}
+
+
+.convention-action{
+    .action-container{
+        display: flex;
+        column-gap: 4px;
+
+        .action-icon{
+            padding: 0px;
+            border-radius: 4px;
+
+            &:hover{
+                path{
+                    stroke: $light-color;
+                }
+                path + path{
+                    fill: $light-color;
+                }
+            }
+
+            &.action-icon-billing:hover,
+            &.action-icon-proof-payment:hover {
+
+                background-color: $primary-color;
+                transition: 0.5s ease;
+
+                path {
+                    stroke: $light-color;
+                }
+                path + path{
+                    fill: $light-color;
+                }
+            }
+
+        }
+    }
+}

@@ -18,22 +18,65 @@ use App\Models\User;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\Log;
 use phpseclib3\Net\SSH2;
+use App\Services\BreadcrumbService;
 class UserController extends Controller
 {
-    public function __construct()
+    public function __construct(BreadcrumbService $breadcrumbs)
     {
-        //
+        $this->breadcrumbs = $breadcrumbs;
+    }
+    private function generateFilterData($data, $item = 'id')
+    {
+        $filter = array();
+        foreach ($data as $value) {
+            if ($item == 'id') {
+                $filter[$value->id] = $value->name;
+            } elseif ($item == 'value') {
+                $filter[$value] = $value;
+            }
+        }
+        return $filter;
     }
 
-    public function index()
+
+    public function index(Request $request)
     {
-        if (auth()->user()->isUser()) {
-            return redirect('/');
+        $tabActive = $request->input('tab-active', 'users');
+        $per_page = $request->input('per_page', 10);
+        $searchTerm = $request->input('search');
+
+        // Query setup
+        $usersListQuery = User::join('service_details', 'users.id', '=', 'service_details.user_id');
+
+        // Apply filters based on tab active status and search term
+        if ($tabActive === 'winner') {
+            if ($request->filled('search')) {
+                $usersListQuery->where('users.name', 'LIKE', "%{$searchTerm}%");
+            }
+            if ($request->filled('status')) {
+                $usersListQuery->where('service_details.status', $request->input('status'));
+            }
         }
 
-        $users = User::with(['detail', 'service_details'])->where('role', 'user')->get();
-        return view('users.index', compact('users'));
+        // Get status options for the filter dropdown
+        $userFilter = [
+            'Status' => ServiceDetails::distinct()
+                ->pluck('status', 'status')
+                ->toArray(),
+        ];
+
+        // Pagination setup
+        $per_page = $request->input('per_page', 10);  // Consistent variable name
+        $capPage = $request->input('cap-page', 1);
+
+        // Get paginated results
+        $users = $usersListQuery->paginate($per_page, ['*'], 'cap-page', $capPage)->withQueryString();
+
+        // Pass the filter data and results to the view
+        return view('users.index', compact('users', 'userFilter'));
     }
+
+
 
 
     public function create()
@@ -153,7 +196,17 @@ class UserController extends Controller
                 'status' => "Active",
             ]);
 
+            // Create billing record
+            // $billing = Billing::create([
+            //     'user_id' => $user->id,
+            //     'invoice' => $this->generateUniqueInvoiceNumber(),
+            //     'package_name' => $details->package_name,
+            //     'package_price' => $details->package_price,
+            //     'package_start' => $details->package_start,
 
+            // ]);
+
+            // Now, run the Mikrotik query with user_id only
             try {
                 $client = new Client([
                     "host" => $settings->router_ip,
@@ -162,7 +215,7 @@ class UserController extends Controller
                 ]);
 
                 $query = new Query("/ppp/secret/add");
-              $query->equal("name", str_replace(' ', '_', $user->name) . '_' . date('Y-m-d')); // Use only user_id
+                $query->equal("name", str_replace(' ', '_', $user->name) . '_' . date('Y-m-d')); // Use only user_id
                 $query->equal("password", $validatedData['router_password']);
                 $query->equal("service", 'any');
                 $query->equal("profile", $package->name);
@@ -179,18 +232,18 @@ class UserController extends Controller
                 foreach ($profiles as $profile) {
                     $onUp = $profile['on-up'] ?? 'No script set';  // Check if 'on-up' is empty
                     $onDown = $profile['on-down'] ?? 'No script set';  // Check if 'on-down' is empty
-                    
+
                     // Print the values
                     echo "On-Up: " . $onUp . "\n";
                     echo "On-Down: " . $onDown . "\n";
-                
 
-                   
+
+
                 }
 
                 // Display the filtered profiles (this would print out the profile data)
-               
-                
+
+
             } catch (\Exception $e) {
                 // Log the error for debugging
                 Log::error('Failed to create Mikrotik user.', [
@@ -348,7 +401,7 @@ class UserController extends Controller
             "billing_date" => "nullable|date",
         ]);
 
-      
+
         $user->name = $validatedData['name'] ?? $user->name;
         $user->email = $validatedData['email'] ?? $user->email;
         $user->save();
@@ -387,34 +440,34 @@ class UserController extends Controller
 
 
     public function destroy(User $user)
-{
-    try {
-        $hasTransaction = \DB::table('transaction')->where('user_id', $user->id)->exists();
+    {
+        try {
+            $hasTransaction = \DB::table('transaction')->where('user_id', $user->id)->exists();
 
-        if ($hasTransaction) {
-            Alert::warning('Warning!', 'Consumer has transaction data');
-            return redirect()->route('users.index');
+            if ($hasTransaction) {
+                Alert::warning('Warning!', 'Consumer has transaction data');
+                return redirect()->route('users.index');
+            }
+
+            // Check if there are any details with is_lock set to 'lock'
+            $lockedDetails = \DB::table('details')->where('user_id', $user->id)->where('is_lock', 'lock')->exists();
+
+            if ($lockedDetails) {
+                Alert::warning('Warning!', 'Cannot delete user because some details are locked.');
+                return redirect()->route('users.index');
+            }
+
+            // Proceed with deletion if no locked details
+            \DB::table('details')->where('user_id', $user->id)->where('is_lock', '!=', 'lock')->delete();
+            \DB::table('service_details')->where('user_id', $user->id)->delete();
+
+            $user->delete();
+
+            return redirect()->route('users.index')->with('success', 'User deleted successfully.');
+        } catch (\Exception $e) {
+            return redirect()->route('users.index')->with('error', 'Error deleting user: ' . $e->getMessage());
         }
-
-        // Check if there are any details with is_lock set to 'lock'
-        $lockedDetails = \DB::table('details')->where('user_id', $user->id)->where('is_lock', 'lock')->exists();
-
-        if ($lockedDetails) {
-            Alert::warning('Warning!', 'Cannot delete user because some details are locked.');
-            return redirect()->route('users.index');
-        }
-
-        // Proceed with deletion if no locked details
-        \DB::table('details')->where('user_id', $user->id)->where('is_lock', '!=', 'lock')->delete();
-        \DB::table('service_details')->where('user_id', $user->id)->delete();
-
-        $user->delete();
-
-        return redirect()->route('users.index')->with('success', 'User deleted successfully.');
-    } catch (\Exception $e) {
-        return redirect()->route('users.index')->with('error', 'Error deleting user: ' . $e->getMessage());
     }
-}
 
 
 

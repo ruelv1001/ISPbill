@@ -1,0 +1,142 @@
+.logo{
+    padding: 16px;
+    background-color: $primary-color;
+    border-bottom: 1px solid $border-color;
+    min-height: 90px;
+}
+
+
+.navigation-menu{
+    background-color: $primary-color;
+    color: white;
+
+    .menu-items{
+        padding: 32px 16px;
+
+        .menu-item{
+            padding: 8px 12px;
+            margin-bottom: 4px;
+            span{
+                line-height: 24px;
+                font-weight: 600;
+                text-align: left;
+                white-space: nowrap;
+            }
+
+            svg{
+                path{
+                    stroke: $svg-color-muted ;
+                }
+            }
+
+            &-active{
+                border-radius: 6px;
+                background-color:#F0FDF4;
+                color: $svg-color;
+                svg{
+                    path{
+                        stroke: $svg-color;
+                    }
+                }
+            }
+
+            &:hover{
+                border-radius: 6px;
+                background-color:#F0FDF4;
+                color: $svg-color;
+                svg{
+                    path{
+                        stroke: $svg-color ;
+                    }
+                }
+            }
+
+
+
+        }
+    }
+}
+
+
+header{
+    padding: 16px;
+    background-color:$border-color;
+    border-bottom: 1px solid $border-color;
+    .notif-group{
+        button,
+        a{
+            background-color: #fff;
+            border-radius: 16px;
+            padding: 16px;
+            -webkit-appearance: button;
+            background-image: none;
+        }
+
+        .count{
+           background-color: #C03744;
+           color:#fff;
+           border-radius: 16px;
+           position: absolute;
+           font-size: 14px;
+           font-weight: 500;
+           line-height: 20px;
+           top: -10px;
+           right: -10px;
+           padding: 2px 10px;
+        }
+    }
+
+    .user-details{
+        background-color: #fff;
+        border-radius: 16px;
+        padding:  8px 16px;
+        gap: 60px;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .header-svg{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}
+
+
+.breadcrumb-container{
+    border-width: 1px;
+    border-color: $border-color;
+    border-style: solid;
+    border-left: 0px;
+    border-right: 0px;
+    padding: 16px 32px;
+    .breadcrumb{
+        column-gap: 36px;
+
+        &-item{
+            position: relative;
+            font-weight: 600;
+            color: #726C6C;
+            &:after{
+                content: "";
+                position: absolute;
+                background-image: url('../../../public/storage/images/arrow.svg');
+                background-repeat: no-repeat;
+                background-position: center;
+                width: 20px;
+                height: 20px;
+                right: -32px;
+                top: 50%;
+                transform: translateY(-50%);
+            }
+
+            &:last-child:after{
+                display: none;
+            }
+        }
+
+        &-item a:hover{
+            color: $text-color-green;
+        }
+
+    }
+}

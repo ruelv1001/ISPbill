@@ -1,0 +1,19 @@
+// resources/scss/base/_typography.scss
+
+body {
+    font-family: $font-primary;  // Use primary font for body text
+    font-size: 16px;              // Base font size
+    line-height: 1.5;             // Line height
+    color: $text-color;           // Text color from variables
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: $font-primary;   // Use heading font for all headings
+    font-weight: bold;             // Bold font weight
+}
+
+p {
+    font-family: $font-primary;  // Use secondary font for paragraphs
+    font-size: 16px;               // Font size for paragraphs
+    color: $muted-color;           // Muted text color from variables
+}

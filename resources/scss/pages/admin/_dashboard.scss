@@ -1,0 +1,301 @@
+.tabs {
+    background-color: #E7EBEF;
+    padding: 6px;
+    border-radius: 8px;
+
+    .tab {
+        a {
+            border-radius: 4px;
+            color: #5A5555;
+            font-weight: 600;
+            padding: 8px 16px;
+
+            &:hover,
+            &.active {
+                color: #0A0A0B;
+                background-color: #fff;
+            }
+        }
+    }
+
+    &.style2 {
+        background-color: transparent;
+        padding: 0px;
+        border-radius: 0px;
+
+        .tab {
+            a {
+                color: #667085;
+                padding: 0 4px 14px 4px;
+                border-radius: 0;
+
+                &:hover,
+                &.active {
+                    color: #004729;
+                    background-color: transparent;
+                    border-bottom: 2px solid #004729;
+                }
+            }
+        }
+    }
+}
+
+.inline-tabs {
+
+    .tab.active {
+        border-bottom: 2px solid #004729;
+    }
+}
+
+.stats {
+    background-color: #fff;
+    border: 1px $border-color solid;
+    border-radius: 16px;
+
+    .stat {
+        border-right: 1px $border-color solid;
+        padding: 16px 24px;
+
+        &:last-of-type {
+            border: 0px;
+        }
+
+        &-num {
+            color: #004729;
+        }
+
+        &-text {
+            text-transform: capitalize;
+        }
+    }
+
+
+}
+
+.announcements,
+.notifications {
+    border: 1px $border-color solid;
+    border-radius: 16px;
+    overflow: hidden;
+
+    .announcement,
+    .notification {
+        background-color: #fff;
+        border-bottom: 1px $border-color solid;
+
+        &:hover,
+        &.active {
+            background-color: #F7F7F7;
+        }
+
+        &.active>div {
+            position: relative;
+        }
+
+        &.active>div::before {
+            position: absolute;
+            content: "";
+            width: 10px;
+            height: 10px;
+            background-color: #15B097;
+            border-radius: 6px;
+            right: 15px;
+            top: 15px;
+        }
+
+        &:last-of-type {
+            border: 0px;
+        }
+    }
+}
+
+.announcement-card {
+    .card-header {
+        align-items: center;
+
+        .card-view-link {
+            color: $primary-color;
+            text-decoration: underline;
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 16.8px;
+        }
+    }
+}
+
+#announcement-table table thead tr th.id{ width: 70px; }
+#announcement-table table thead tr th.title{ width: 45%;}
+#announcement-table table thead tr th.posted_by{ width: 15%; }
+#announcement-table table thead tr th.date{ width: 15%; }
+#announcement-table table thead tr th.status{ width: 10%; }
+#announcement-table table thead tr th.action{ width: 10%; }
+
+.breadcrumb-item+.breadcrumb-item::before {
+    content: none !important;
+}
+
+// User Management
+#userList table thead tr th.action {
+    width: 6%;
+}
+
+form {
+    select {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        background-image: url('../../../public/images/select-caret.svg') !important;
+        background-position: calc(100% - 15px) !important;
+        background-repeat: no-repeat !important;
+    }
+}
+
+// Trash Hover
+.trash-icon:hover {
+    svg {
+        path {
+            stroke: $svg-color-muted;
+        }
+    }
+}
+
+// WYSIWYG CUSTOM
+.ql-editor,
+.ql-container.ql-snow{
+    background-color:  #ffffff;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+.ql-toolbar{
+    background-color:  #ffffff;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+.quill-body {
+    blockquote,
+    dl,
+    dd,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    hr,
+    figure,
+    p,
+    pre {
+        margin: 0; // Reset margin to avoid extra spacing
+        padding: 0; // Reset padding if needed
+    }
+    p {
+        margin-bottom: 1rem; // Add space between paragraphs if required
+    }
+    h1, h2, h3, h4, h5, h6 {
+        margin-top: 1rem; // Optional: Add spacing above headings
+        margin-bottom: 0.5rem; // Optional: Add spacing below headings
+    }
+    blockquote {
+        padding-left: 1rem; // Indent blockquotes
+        border-left: 3px solid #ccc; // Add a visual indicator for blockquotes
+    }
+    ol {
+        display: block;
+        list-style-type: disc;
+        margin-block-start: 1em;
+        margin-block-end: 1em;
+        margin-inline-start: 0px;
+        margin-inline-end: 0px;
+        padding-inline-start: 40px;
+        unicode-bidi: isolate;
+    }
+    ul {
+        display: block;
+        list-style-type: decimal;
+        margin-block-start: 1em;
+        margin-block-end: 1em;
+        margin-inline-start: 0px;
+        margin-inline-end: 0px;
+        padding-inline-start: 40px;
+        unicode-bidi: isolate;
+    }
+}
+
+// Swal Custom style
+.swal2-html-container{
+   &.notif-html-container{
+    margin: 0!important;
+   } 
+}
+
+/* Adjust Toastr width */
+#toast-container {
+    .notif-toast {
+        width: 375px;
+        &.toast-success{
+            background-image: url('../../../public/images/bell.svg')!important;
+            background-size: 30px;
+            padding-left: 65px;
+            background-color: #14532D;
+        }
+    }
+}
+
+
+.account-settings.role-school-admin {
+
+    @media(min-width: 1024px) {
+        .as-form-group {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+        }
+
+        .profile-uploader {
+            width: 512px;
+            justify-content: space-between;
+            align-items: center;
+
+        }
+    }
+
+    @media (max-width: 1023px) {
+        .as-form-group {
+            .address-group > div {
+                align-items: unset !important;
+                justify-content: unset !important;
+            }
+            div {
+                input {
+                    width: 100%;
+                }
+                select {
+                    width: 100%;
+                }
+                div.citiesDropdownContainer {
+                    width: 100%;
+                    
+                }
+            }
+
+            .profile-uploader {
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .inputContainer.w500 {
+                width: 100% !important;
+                
+            }
+
+        }
+        
+    }
+
+    @media(max-width: 1280px) {
+        margin-left: unset !important;
+
+    }
+
+}

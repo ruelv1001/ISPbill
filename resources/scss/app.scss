@@ -1,0 +1,29 @@
+// resources/sass/main.scss
+@import "/node_modules/toastr/build/toastr.min.css";
+@import "/node_modules/flatpickr/dist/flatpickr.min.css";
+@import "/node_modules/select2/dist/css/select2.min.css";
+
+// Abstracts
+@import 'abstracts/variables';
+@import 'abstracts/fonts';
+@import 'abstracts/mixins';
+@import 'abstracts/breakpoints';
+// Base
+@import 'base/typography';
+
+// Components
+@import 'components/buttons';
+@import 'components/alert';
+@import 'components/menu';
+@import 'components/table';
+@import 'components/toggle-slider';
+@import 'components/input';
+@import 'components/date-no-icon';
+
+// Layouts
+@import 'layouts/main';
+@import 'layouts/header';
+@import 'layouts/footer';
+
+// Pages
+@import 'pages/admin/dashboard';

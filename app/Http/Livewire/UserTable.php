@@ -32,10 +32,10 @@ class UserTable extends DataTableComponent
         $packages = Detail::distinct()
         ->pluck('package_name', 'package_name')
         ->toArray();
-    
+
     // Add "All" option
     $packageOptions = ['' => 'All'] + $packages;
-    
+
         return [
             SelectFilter::make('Lock Status')
                 ->options([
@@ -46,7 +46,7 @@ class UserTable extends DataTableComponent
                 ->filter(function(Builder $builder, string $value) {
                     $builder->where('is_lock', $value);
                 }),
-            
+
                 SelectFilter::make('Package')
                 ->options($packageOptions)
                 ->filter(function(Builder $builder, string $value) {
