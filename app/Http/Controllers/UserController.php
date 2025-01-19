@@ -153,17 +153,7 @@ class UserController extends Controller
                 'status' => "Active",
             ]);
 
-            // Create billing record
-            // $billing = Billing::create([
-            //     'user_id' => $user->id,
-            //     'invoice' => $this->generateUniqueInvoiceNumber(),
-            //     'package_name' => $details->package_name,
-            //     'package_price' => $details->package_price,
-            //     'package_start' => $details->package_start,
 
-            // ]);
-
-            // Now, run the Mikrotik query with user_id only
             try {
                 $client = new Client([
                     "host" => $settings->router_ip,
