@@ -41,39 +41,49 @@ class UserController extends Controller
 
     public function index(Request $request)
     {
-        $tabActive = $request->input('tab-active', 'users'); // Default to 'users' if not provided
-        $searchTerm = $request->input('search');            // Get the search term if provided
-        $isLock = $request->input('is_lock');               // Get the 'is_lock' filter value
-    
+        $tabActive = $request->input('tab-active', 'users');
+        $searchTerm = $request->input('search');
+        $isLock = $request->input('is_lock');
+
         // Base query with necessary joins
         $usersListQuery = User::join('service_details', 'users.id', '=', 'service_details.user_id')
-                              ->join('details', 'users.id', '=', 'details.user_id'); // Ensure the details table is joined
-    
-        // Apply tab-specific filters
+            ->join('details', 'users.id', '=', 'details.user_id')
+            ->leftJoin('miktrotik_parameters', 'users.id', '=', 'miktrotik_parameters.user_id')
+            ->select(
+                'users.*',
+                'service_details.*',
+                'details.user_id as id',
+                'miktrotik_parameters.uptime',
+                'miktrotik_parameters.down_time',
+                DB::raw("CONCAT(miktrotik_parameters.uptime, ' / ', miktrotik_parameters.down_time) AS uptime_info"),
+                DB::raw("CONCAT(miktrotik_parameters.last_login, ' / ', miktrotik_parameters.last_logout) AS log_info")
+            );
+
+        
         if ($tabActive === 'user') {
             if ($request->filled('Lock')) {
                 $usersListQuery->where('details.is_lock', $request->input('Lock'));
             }
-            
+
             if ($request->filled('status')) {
                 $usersListQuery->where('service_details.status', $request->input('status'));
             }
         }
-    
+
         // Other filters (e.g., status) if applicable
         if ($request->filled('status')) {
             $usersListQuery->where('service_details.status', $request->input('status'));
         }
-    
+
         // Prepare filter options for the dropdown
         $userFilter = [
             'status' => ServiceDetails::distinct()->pluck('status', 'status')->toArray(),
             'Lock' => Detail::distinct()->pluck('is_lock', 'is_lock')->toArray(), // Fetch `is_lock` options
         ];
-    
+
         // Paginate the results
         $users = $usersListQuery->paginate(10)->withQueryString();
-    
+
         // Return the view with data
         return view('users.index', compact('users', 'userFilter'));
     }
@@ -531,6 +541,57 @@ class UserController extends Controller
             return redirect()->route('user-management.index')->with('success', 'User deleted successfully.');
         } catch (\Exception $e) {
             return redirect()->route('user-management.index')->with('error', 'Error deleting user: ' . $e->getMessage());
+        }
+    }
+
+
+    public function bulkLock(Request $request)
+    {
+        try {
+            if (!$request->has('ids') || empty($request->ids)) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'No users selected for locking'
+                ], 400);
+            }
+
+            $ids = explode(',', $request->ids);
+
+            // Validate that we have valid IDs
+            if (empty($ids)) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Invalid selection of users'
+                ], 400);
+            }
+
+            Log::info('Locking users with IDs:', ['ids' => $ids]);
+
+            $updated = Detail::whereIn('user_id', $ids)->update([
+                'is_lock' => "lock"
+            ]);
+
+            if ($updated) {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Selected users have been locked successfully'
+                ]);
+            } else {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'No users were updated'
+                ]);
+            }
+        } catch (\Exception $e) {
+            Log::error('Error in bulkLock:', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return response()->json([
+                'status' => 'error',
+                'message' => 'An error occurred while locking users'
+            ], 500);
         }
     }
 
