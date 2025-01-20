@@ -23,29 +23,29 @@ $searchField = filter_var($searchField, FILTER_VALIDATE_BOOLEAN);
                         <div class="table-filters relative flex items-center space-x-2 ">
                             <x-image src="/images/filter.svg" alt="Placeholder Image" class="filter-svg" width="18"
                                 height="18" />
-                            <div class="table-filter-items relative flex items-center space-x-1">
-                                @foreach ($filters as $filter => $values)
-                                        @if ($filter == 'date' || str_contains($filter, 'date'))
-                                            <input type="text"
-                                                placeholder="{{ ucfirst(preg_replace('/[^A-Za-z0-9 ]/', ' ', $filter)) }}"
-                                                placeholder="{{ ucfirst(preg_replace('/[^A-Za-z0-9 ]/', ' ', $filter)) }}"
-                                                name="{{ $filter }}" value="{{ request($filter) }}"
-                                                class="has-datepicker date-filter filter-item">
-                                        @else
-                                            <select class="p-2 table-filter-item filter-item select2-filter" name="{{ $filter }}"
-                                                data-value="{{ $tablename == request('tab-active') ? request($filter) : '' }}"
-                                                data-placeholder="{{ ucfirst($filter) }}">
-                                                <option disabled selected="selected">{{ ucfirst($filter) }}</option>
-                                                @foreach ($values as $value => $item)
-                                                    <option value="{{ $value }}">{{ $item }}</option>
-                                                @endforeach
-                                            </select>
-                                        @endif
-                                @endforeach
-                                <button type="submit" class="table-filter-btn table-filter-apply">Apply</button>
-                                <button type="button" class="table-filter-btn table-filter-clear"
-                                    onclick="clearForm(this.form)">Clear</button>
-                            </div>
+                                <div class="table-filter-items relative flex items-center space-x-1">
+    @foreach ($filters as $filter => $values)
+        @if ($filter == 'date' || str_contains($filter, 'date'))
+            <input type="text"
+                placeholder="{{ ucfirst(preg_replace('/[^A-Za-z0-9 ]/', ' ', $filter)) }}"
+                name="{{ $filter }}" value="{{ request($filter) }}"
+                class="has-datepicker date-filter filter-item">
+        @else
+            <select class="p-2 table-filter-item filter-item select2-filter" name="{{ $filter }}"
+                data-value="{{ $tablename == request('tab-active') ? request($filter) : '' }}"
+                data-placeholder="{{ ucfirst($filter) }}">
+                <option disabled {{ !request($filter) ? 'selected' : '' }}>{{ ucfirst($filter) }}</option>
+                @foreach ($values as $value => $item)
+                    <option value="{{ $value }}" {{ request($filter) == $value ? 'selected' : '' }}>
+                        {{ $item }}
+                    </option>
+                @endforeach
+            </select>
+        @endif
+    @endforeach
+    <button type="submit" class="table-filter-btn table-filter-apply">Apply</button>
+    <button type="button" class="table-filter-btn table-filter-clear" onclick="clearForm(this.form)">Clear</button>
+</div>
                         </div>
 
                     </form>
@@ -86,7 +86,7 @@ $searchField = filter_var($searchField, FILTER_VALIDATE_BOOLEAN);
                             @endforeach
                         </select>
                     @endif
-        {{--
+    
         @if (!empty($dltAllbtn))
         <form id="delete-{{ strtolower($tablename) }}tbl-ids" action="{{ route($dltAllbtn[1]) }}" method="POST" class="hidden">
             @csrf
@@ -97,7 +97,7 @@ $searchField = filter_var($searchField, FILTER_VALIDATE_BOOLEAN);
             <x-image src="/images/delete.svg" alt="Placeholder Image" class="" width="16" height="16" /> {{ $dltAllbtn[0] }}
         </button>
         @endif
-        --}}
+       
                     <span class="separator">|</span>
                     <button class="btn btn-outline clear-checkbox">Cancel</button>
                 </div>
@@ -127,106 +127,111 @@ $searchField = filter_var($searchField, FILTER_VALIDATE_BOOLEAN);
                 @if (count($data) > 0)
                         @foreach ($data as $row)
                                     <tr data-trid="{{ $tablename }}-{{ $row['id'] }}" class="border-b">
+                                        
                                         @foreach ($headers as $index => $header)
-                                                            <td
-                                                                class="px-6 py-3 {{ $index }} {{ $index == 'address' ? 'overflow-hidden truncate ' : '' }} {{ $index == 'id' ? 'flex items-center ' : '' }}">
-                                                                @if ($index == 'id' && $tableCheckedbox)
-                                                                    <input id="checkbox-{{ $tablename }}-{{ $row['id'] }}" type="checkbox"
-                                                                        class="checkbox-input" />
-                                                                    <label for="checkbox-{{ $tablename }}-{{ $row['id'] }}"
-                                                                        class="checkbox-label">checkbox</label>
-                                                                    {{ $row[$index] }}
-                                                                @else
-                                                                                            @php
-                $viewOnly =
-                    isset($row['registration_closed']) && $row['registration_closed']
-                    ? $row['registration_closed']
-                    : false;
+                                        <td
+                                            class="px-6 py-3 {{ $index }} {{ $index == 'address' ? 'overflow-hidden truncate ' : '' }} {{ $index == 'id' ? 'flex items-center ' : '' }}">
+                                          
+                                            @if ($index == 'id' && $tableCheckedbox)
+                                                <input id="checkbox-{{ $tablename }}-{{ $row['id'] }}" type="checkbox"
+                                                    class="checkbox-input" />
+                                                <label for="checkbox-{{ $tablename }}-{{ $row['id'] }}"
+                                                    class="checkbox-label">checkbox</label>
+                                                {{ $row[$index] }}
+                                            @else
+                                                @php
+                                            $viewOnly =
+                                                isset($row['registration_closed']) && $row['registration_closed']
+                                                ? $row['registration_closed']
+                                                : false;
 
-                                                                                            @endphp
+                                                @endphp
 
-                                                                                            @if ($index == 'status' || $index == 'classification')
-                                                                                                <span class="{{ strtolower($row[$index]) }}">
-                                                                                            @endif
+                                            @if ($index == 'status' || $index == 'classification')
+                                                <span class="{{ strtolower($row[$index]) }}">
+                                            @endif
 
-                                                                                            @if ($index == 'action')
-                                                                                                <div class="action-container">
-                                                                                                    @foreach ($actions as $action => $route)
-                                                                                                        @if ($action == 'edit' && !$viewOnly)
-                                                                                                            <a href="{{ route($route, $row['id']) }}"
-                                                                                                                class="{{ $action }} action-icon action-icon-{{ $action }} transition-transform duration-200">
-                                                                                                                <x-image src="/images/edit.svg" alt="edit svg"
-                                                                                                                    class="transition duration-100 group-hover:fill-green-100"
-                                                                                                                    width="20" height="20" />
-                                                                                                            </a>
-                                                                                                        @elseif ($action == 'edit-schedule')
-                                                                                                            <a href="{{ route($route, $row['id']) }}"
-                                                                                                                class="{{ $action }} action-icon action-icon-{{ $action }} transition-transform duration-200">
-                                                                                                                <x-image src="/images/view.svg" alt="edit svg"
-                                                                                                                    class="" width="20" height="20" />
-                                                                                                            </a>
-                                                                                                        @elseif ($action == 'delete')
-                                                                                                            <form
-                                                                                                                id="delete-{{ strtolower($tablename) }}tbl-{{ isset($itemName) && $itemName != '' ? strtolower($itemName) : 'item' }}-{{ $row['id'] }}"
-                                                                                                                action="{{ route($route, $row['id']) }}" method="POST"
-                                                                                                                style="display: none;">
-                                                                                                                @csrf
-                                                                                                                @method('DELETE')
-                                                                                                            </form>
-                                                                                                            <button type="button"
-                                                                                                                onclick="openDeleteModal('{{ isset($itemName) && $itemName != '' ? $itemName : 'Item' }}', 'delete-{{ strtolower($tablename) }}tbl-{{ isset($itemName) && $itemName != '' ? strtolower($itemName) : 'item' }}-{{ $row['id'] }}','{{ isset($message) && isset($message['delete']) ? $message['delete'] : '' }}')"
-                                                                                                                class="{{ $action }} action-icon action-icon-{{ $action }} transition-transform duration-200 ">
-                                                                                                                <x-image src="/images/delete-big.svg" alt="delete svg"
-                                                                                                                    class="transition duration-200 group-hover:fill-green-500"
-                                                                                                                    width="20" height="20" />
-                                                                                                            </button>
-                                                                                                        @elseif ($action == 'view')
-                                                                                                            <a href="{{ $route }}"
-                                                                                                                class="{{ $action }} action-icon action-icon-{{ $action }}">
-                                                                                                                <x-image src="/images/view.svg" alt="edit svg"
-                                                                                                                    class="" width="20" height="20" />
-                                                                                                            </a>
-                                                                                                        @elseif ($action == 'view-participating-schools')
-                                                                                                            <a href="{{ route('convention.participating-schools', $row['id']) }}"
-                                                                                                                class="{{ $action }} action-icon action-icon-{{ $action }}">
-                                                                                                                <x-image src="/images/view.svg" alt="edit svg"
-                                                                                                                    class="" width="20" height="20" />
-                                                                                                            </a>
-                                                                                                        @elseif ($action == 'view-participants')
-                                                                                                            <a href="{{ route('participants.edit', $row['id']) }}"
-                                                                                                                class="{{ $action }} action-icon action-icon-{{ $action }}"
-                                                                                                                onclick="event.stopPropagation();">
-                                                                                                                <x-image src="/images/view.svg" alt="edit svg"
-                                                                                                                    class="" width="20" height="20" />
-                                                                                                            </a>
-                                                                                                        @elseif ($action == 'reward')
-                                                                                                            <a href="{{ route($route, $row['id']) }}"
-                                                                                                                class="{{ $action }} action-icon action-icon-{{ $action }}">
-                                                                                                                <x-image src="/images/reward.svg"
-                                                                                                                    alt="view participants svg" width="20"
-                                                                                                                    height="20" />
-                                                                                                            </a>
-                                                                                                        @endif
-                                                                                                    @endforeach
-                                                                                                </div>
-                                                                                            @else
-                                                                                                @if (isset($isDropdown) and in_array($index, $isDropdown))
-                                                                                                    <select id="{{ $index }}" data-id="{{ $row['id'] }}" name="{{ $index }}" required
-                                                                                                        class="{{ $index . '_dropdown' }} block w-full rounded-lg border-0 px-[0.875rem] py-[0.625rem] text-base text-[#101828] shadow-sm ring-1 ring-inset ring-[#D0D5DD] placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600">
-                                                                                                        @foreach ($isDropdownOptions[$index] as $option)
-                                                                                                            <option value="{{ $option }}"  @if($option == $row[$index]) selected @endif>{{ $option }}</option>
-                                                                                                        @endforeach
-                                                                                                    </select>
-                                                                                                @else
-                                                                                                    {{ $row[$index] }}
-                                                                                                @endif
-                                                                                            @endif
+              
+                                          
 
-                                                                                            @if ($index == 'status' || $index == 'classification')
-                                                                                                </span>
-                                                                                            @endif
-                                                                @endif
-                                                            </td>
+                                            
+
+                                            @if ($index == 'action')
+                                                <div class="action-container">
+                                                    @foreach ($actions as $action => $route)
+                                                        @if ($action == 'edit' && !$viewOnly)
+                                                            <a href="{{ route($route, $row['id']) }}"
+                                                                class="{{ $action }} action-icon action-icon-{{ $action }} transition-transform duration-200">
+                                                                <x-image src="/images/edit.svg" alt="edit svg"
+                                                                    class="transition duration-100 group-hover:fill-green-100"
+                                                                    width="20" height="20" />
+                                                            </a>
+                                                        @elseif ($action == 'edit-schedule')
+                                                            <a href="{{ route($route, $row['id']) }}"
+                                                                class="{{ $action }} action-icon action-icon-{{ $action }} transition-transform duration-200">
+                                                                <x-image src="/images/view.svg" alt="edit svg"
+                                                                    class="" width="20" height="20" />
+                                                            </a>
+                                                        @elseif ($action == 'delete')
+                                                            <form
+                                                                id="delete-{{ strtolower($tablename) }}tbl-{{ isset($itemName) && $itemName != '' ? strtolower($itemName) : 'item' }}-{{ $row['id'] }}"
+                                                                action="{{ route($route, $row['id']) }}" method="POST"
+                                                                style="display: none;">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                            </form>
+                                                            <button type="button"
+                                                                onclick="openDeleteModal('{{ isset($itemName) && $itemName != '' ? $itemName : 'Item' }}', 'delete-{{ strtolower($tablename) }}tbl-{{ isset($itemName) && $itemName != '' ? strtolower($itemName) : 'item' }}-{{ $row['id'] }}','{{ isset($message) && isset($message['delete']) ? $message['delete'] : '' }}')"
+                                                                class="{{ $action }} action-icon action-icon-{{ $action }} transition-transform duration-200 ">
+                                                                <x-image src="/images/delete-big.svg" alt="delete svg"
+                                                                    class="transition duration-200 group-hover:fill-green-500"
+                                                                    width="20" height="20" />
+                                                            </button>
+                                                        @elseif ($action == 'view')
+                                                            <a href="{{ $route }}"
+                                                                class="{{ $action }} action-icon action-icon-{{ $action }}">
+                                                                <x-image src="/images/view.svg" alt="edit svg"
+                                                                    class="" width="20" height="20" />
+                                        
+                       
+                                                        @elseif ($action == 'reward')
+                                                            <a href="{{ route($route, $row['id']) }}"
+                                                                class="{{ $action }} action-icon action-icon-{{ $action }}">
+                                                                <x-image src="/images/reward.svg"
+                                                                    alt="view participants svg" width="20"
+                                                                    height="20" />
+                                                            </a>
+                                                        @endif
+                                                    @endforeach
+
+                                                    @if ($row['is_lock'] == 'lock')
+                                    <span class="lock-icon mt-1">
+                                    <i class="fas fa-lock text-red-500"></i>
+                                    </span>
+                                @elseif ($row['is_lock'] == 'unlock')
+                                    <span class="unlock-icon mt-1">
+                                        <i class="fas fa-unlock"></i>
+                                    </span>
+                                @endif
+                                                </div>
+                                            @else
+                                                @if (isset($isDropdown) and in_array($index, $isDropdown))
+                                                    <select id="{{ $index }}" data-id="{{ $row['id'] }}" name="{{ $index }}" required
+                                                        class="{{ $index . '_dropdown' }} block w-full rounded-lg border-0 px-[0.875rem] py-[0.625rem] text-base text-[#101828] shadow-sm ring-1 ring-inset ring-[#D0D5DD] placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600">
+                                                        @foreach ($isDropdownOptions[$index] as $option)
+                                                            <option value="{{ $option }}"  @if($option == $row[$index]) selected @endif>{{ $option }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                @else
+                                                    {{ $row[$index] }}
+                                                @endif
+                                            @endif
+
+                                            @if ($index == 'status' || $index == 'classification')
+                                                </span>
+                                            @endif
+                                            @endif
+                                        </td>
                                         @endforeach
                                     </tr>
                         @endforeach
@@ -285,4 +290,30 @@ $searchField = filter_var($searchField, FILTER_VALIDATE_BOOLEAN);
             });
         }
     </script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+    const selectAllCheckbox = document.getElementById('checkbox-all-{{ $tablename }}');
+    const checkboxes = document.querySelectorAll('.checkbox-input');
+
+    selectAllCheckbox.addEventListener('change', function () {
+        checkboxes.forEach(function (checkbox) {
+            checkbox.checked = selectAllCheckbox.checked;
+        });
+    });
+
+    checkboxes.forEach(function (checkbox) {
+        checkbox.addEventListener('change', function () {
+            const allChecked = Array.from(checkboxes).every(function (checkbox) {
+                return checkbox.checked;
+            });
+
+            selectAllCheckbox.checked = allChecked;
+            selectAllCheckbox.indeterminate = !allChecked && Array.from(checkboxes).some(function (checkbox) {
+                return checkbox.checked;
+            });
+        });
+    });
+});
+</script>
+    
 @endpush

@@ -41,38 +41,40 @@ class UserController extends Controller
 
     public function index(Request $request)
     {
-        $tabActive = $request->input('tab-active', 'users');
-        $per_page = $request->input('per_page', 10);
-        $searchTerm = $request->input('search');
-
-        // Query setup
-        $usersListQuery = User::join('service_details', 'users.id', '=', 'service_details.user_id');
-
-        // Apply filters based on tab active status and search term
-        if ($tabActive === 'winner') {
-            if ($request->filled('search')) {
-                $usersListQuery->where('users.name', 'LIKE', "%{$searchTerm}%");
+        $tabActive = $request->input('tab-active', 'users'); // Default to 'users' if not provided
+        $searchTerm = $request->input('search');            // Get the search term if provided
+        $isLock = $request->input('is_lock');               // Get the 'is_lock' filter value
+    
+        // Base query with necessary joins
+        $usersListQuery = User::join('service_details', 'users.id', '=', 'service_details.user_id')
+                              ->join('details', 'users.id', '=', 'details.user_id'); // Ensure the details table is joined
+    
+        // Apply tab-specific filters
+        if ($tabActive === 'user') {
+            if ($request->filled('Lock')) {
+                $usersListQuery->where('details.is_lock', $request->input('Lock'));
             }
+            
             if ($request->filled('status')) {
                 $usersListQuery->where('service_details.status', $request->input('status'));
             }
         }
-
-        // Get status options for the filter dropdown
+    
+        // Other filters (e.g., status) if applicable
+        if ($request->filled('status')) {
+            $usersListQuery->where('service_details.status', $request->input('status'));
+        }
+    
+        // Prepare filter options for the dropdown
         $userFilter = [
-            'Status' => ServiceDetails::distinct()
-                ->pluck('status', 'status')
-                ->toArray(),
+            'status' => ServiceDetails::distinct()->pluck('status', 'status')->toArray(),
+            'Lock' => Detail::distinct()->pluck('is_lock', 'is_lock')->toArray(), // Fetch `is_lock` options
         ];
-
-        // Pagination setup
-        $per_page = $request->input('per_page', 10);  // Consistent variable name
-        $capPage = $request->input('cap-page', 1);
-
-        // Get paginated results
-        $users = $usersListQuery->paginate($per_page, ['*'], 'cap-page', $capPage)->withQueryString();
-
-        // Pass the filter data and results to the view
+    
+        // Paginate the results
+        $users = $usersListQuery->paginate(10)->withQueryString();
+    
+        // Return the view with data
         return view('users.index', compact('users', 'userFilter'));
     }
 

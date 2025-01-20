@@ -1,23 +1,25 @@
-<x-app-layout>
-        <section>
-                            @php
-$headers = [
+                        <x-app-layout>
+                                <section>
+                                    @php
+                    $headers = [
     'id' => 'ID',
+     // Empty string for just the icon
     'name' => 'Name',
     'email' => 'Email',
     'status' => 'Status',
     'created_at' => 'Date Created',
     'action' => ''
 ];
-$dropdownActions = [];
-$dltAllbtn = ["Delete All", "users.delete-bulk"];
-$tableActions = ['view' => '', 'edit' => 'users.edit', 'delete' => 'users.destroy'];
-$addButton = ['Add User', 'users.create'];
-$customMessage = [
-    'success' => '',
-    'delete' => 'This User will be permanently deleted if you proceed.',
-];
-                            @endphp
+                        $dropdownActions = [];
+                        $dltAllbtn = ["Delete All", "users.bulk-lock"];
+                        $tableActions = ['view' => '', 'edit' => 'users.edit', 'delete' => 'users.destroy'];
+                        $addButton = ['Add User', 'users.create'];
+                        $customMessage = [
+                            'success' => '',
+                            'delete' => 'This User will be permanently deleted if you proceed.',
+                        ];
+                        
+                                                    @endphp
                             <x-table :headers="$headers" :data="$users" title="Users" :dropdown="$dropdownActions"
                                 :actions="$tableActions" tablename="user" :addbtn="$addButton" :filters="$userFilter" :searchField="true"
                                 :dltAllbtn="$dltAllbtn" itemName="User" :message="$customMessage" />
