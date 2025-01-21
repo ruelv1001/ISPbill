@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AddComment;
 use App\Http\Controllers\ArchieveUserController;
+use App\Http\Controllers\AreaLocationController;
 use App\Http\Controllers\AssignTicket;
 use App\Http\Controllers\AssignViewTicket;
 use App\Http\Controllers\BillingController;
@@ -45,6 +46,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('/ticket', TicketController::class);
     Route::resource('/paybill', PayBillController::class);
     Route::resource('user-management', UserManagementController::class);
+    Route::resource('area-location', AreaLocationController::class);
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
     Route::post('/users/{user}/archive', [UserController::class, 'archieve_data'])->name('users.archive');
     Route::resource('/transaction', TransactionController::class);

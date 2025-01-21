@@ -53,6 +53,7 @@ class UserController extends Controller
                 'users.*',
                 'service_details.*',
                 'details.user_id as id',
+                'details.is_lock as is_lock',
                 'miktrotik_parameters.uptime',
                 'miktrotik_parameters.down_time',
                 DB::raw("CONCAT(miktrotik_parameters.uptime, ' / ', miktrotik_parameters.down_time) AS uptime_info"),

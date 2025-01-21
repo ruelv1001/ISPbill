@@ -199,8 +199,20 @@
                                                                             <x-image src="/images/reward.svg" alt="view participants svg" width="20"
                                                                                 height="20" />
                                                                         </a>
-                                                                    @endif
+                                                                        @endif
+                                                                   
+
+                                                                    
                                                                 @endforeach
+                                                                @if ($row['is_lock'] == 'lock')
+                                    <span class="lock-icon mt-1">
+                                    <i class="fas fa-lock text-red-500"></i>
+                                    </span>
+                                @elseif ($row['is_lock'] == 'unlock')
+                                    <span class="unlock-icon mt-1">
+                                        <i class="fas fa-unlock"></i>
+                                    </span>
+                                @endif
                                                             </div>
                                                         @else
                                                             @if (isset($isDropdown) and in_array($index, $isDropdown))

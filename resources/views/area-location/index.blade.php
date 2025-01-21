@@ -6,40 +6,39 @@
                 <div class="p-6 text-gray-900">
                     <div class="flex justify-between items-center mb-6 border-b-2 border-slate-100 pb-4">
                         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                            {{ __('Customer List') }}
+                            {{ __('Area List') }}
                         </h2>
 
                         <a href="{{ route('area-location.index') }}"
                                     class="ml-2 inline-flex items-center px-4 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white rounded uppercase">
                                     {{ __('Area') }}
                                 </a>
+
+                                
                     </div>
                     <div>
                     <section>
         @php
             $headers = [
                 'id' => 'ID',
-                // Empty string for just the icon
-                'name' => 'Name',
-                'email' => 'Email',
-                'status' => 'Status',
-                'uptime_info' => 'Up-time/Down-Time',
-                'log_info' => 'Last login/Last logout',
+                'area' => 'Area',
+                'desription' => 'Desceiption',
                 'action' => ''
             ];
             $dropdownActions = ['Lock Selected' => 'lock']; // Add lock action to dropdown
             $dltAllbtn = ["Lock Selected", "users.bulk-lock"];
             $tableActions = ['view' => 'paybill.create', 'edit' => 'users.edit', 'delete' => 'users.bulk-lock'];
-            $addButton = ['Add Customer', 'users.create'];
+            $addButton = ['Add Area', 'area-location.create'];
+        
             $customMessage = [
                 'success' => '',
                 'delete' => 'This User will be permanently deleted if you proceed.',
             ];
 
         @endphp
-        <x-table :headers="$headers" :data="$users" title="" :dropdown="$dropdownActions" :actions="$tableActions"
-            tablename="user" :addbtn="$addButton" :filters="$userFilter" :searchField="true" :dltAllbtn="$dltAllbtn"
-            itemName="User" :message="$customMessage" />
+        <x-table :headers="$headers" :data="$data" title="Area" :dropdown="$dropdownActions" :actions="$tableActions"
+            tablename="Area" :addbtn="$addButton" :filters="$areaFilter" :searchField="true" :dltAllbtn="$dltAllbtn"
+            itemName="Area" :message="$customMessage" />
     </section>
                     </div>
                 </div>
