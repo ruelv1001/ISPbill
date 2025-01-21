@@ -69,6 +69,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/paybill/update-due', [PaybillController::class, 'update_due'])->name('paybill.update-due');
     Route::get('/due', [PaybillController::class, 'due'])->name('paybill.due');
     Route::post('/paybill/due-update', [PayBillController::class, 'updateDue'])->name('paybill.due_update');
+    Route::get('/get-user/{id}', [PayBillController::class, 'getUser'])->name('get.user');
     //Users
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
     Route::delete('/users-delete/{user}', [UserController::class, 'destroyother'])->name('users.destroyother');

@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Model;
 class AreaLocation extends Model
 {
     use HasFactory;
+    public $timestamps = false;
     protected $table = 'area_location';
     protected $fillable = [
         'area',
@@ -22,5 +23,5 @@ class AreaLocation extends Model
 
     ];
 
-  
+
 }

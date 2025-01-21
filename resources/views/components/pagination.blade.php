@@ -14,7 +14,7 @@
 
             @endif
             <select id="eventsPerPageSelector"
-                class="w-16 border border-gray-300 rounded-lg p-2 mr-2 focus:outline-none focus:ring-2" name="per_page"
+                class="w-20 border border-gray-300 rounded-lg p-2 mr-2 focus:outline-none focus:ring-2" name="per_page"
                 required onchange="this.form.submit()">
                 <option value="10" {{ request()->get('per_page', 10) == 10 ? 'selected' : '' }}>10</option>
                 <option value="25" {{ request()->get('per_page', 10) == 25 ? 'selected' : '' }}>25</option>

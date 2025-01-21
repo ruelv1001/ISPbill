@@ -1,6 +1,6 @@
 <x-app-layout>
 
-<div class="py-6">
+    <div class="py-6">
         <div class="max-w-8xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
@@ -10,36 +10,36 @@
                         </h2>
 
                         <a href="{{ route('area-location.index') }}"
-                                    class="ml-2 inline-flex items-center px-4 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white rounded uppercase">
-                                    {{ __('Area') }}
-                                </a>
+                            class="ml-2 inline-flex items-center px-4 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white rounded uppercase">
+                            {{ __('Area') }}
+                        </a>
 
-                                
+
                     </div>
                     <div>
-                    <section>
-        @php
-            $headers = [
-                'id' => 'ID',
-                'area' => 'Area',
-                'desription' => 'Desceiption',
-                'action' => ''
-            ];
-            $dropdownActions = ['Lock Selected' => 'lock']; // Add lock action to dropdown
-            $dltAllbtn = ["Lock Selected", "users.bulk-lock"];
-            $tableActions = ['view' => 'paybill.create', 'edit' => 'users.edit', 'delete' => 'users.bulk-lock'];
-            $addButton = ['Add Area', 'area-location.create'];
-        
-            $customMessage = [
-                'success' => '',
-                'delete' => 'This User will be permanently deleted if you proceed.',
-            ];
+                        <section>
+                            @php
+$headers = [
+    'id' => 'ID',
+    'area' => 'Area',
+    'description' => 'Description',
+    'action' => ''
+];
+$dropdownActions = ['Lock Selected' => 'lock']; // Add lock action to dropdown
+$dltAllbtn = ["Lock Selected", "users.bulk-lock"];
+$tableActions = ['edit' => 'area-location.edit', 'delete-item' => 'area-location.destroy'];
+$addButton = ['Add Area', 'area-location.create'];
 
-        @endphp
-        <x-table :headers="$headers" :data="$data" title="Area" :dropdown="$dropdownActions" :actions="$tableActions"
-            tablename="Area" :addbtn="$addButton" :filters="$areaFilter" :searchField="true" :dltAllbtn="$dltAllbtn"
-            itemName="Area" :message="$customMessage" />
-    </section>
+$customMessage = [
+    'success' => '',
+    'delete' => 'This User will be permanently deleted if you proceed.',
+];
+
+                            @endphp
+                            <x-table :headers="$headers" :data="$data" title="Area" :dropdown="$dropdownActions"
+                                :actions="$tableActions" tablename="Area" :addbtn="$addButton" :filters="$areaFilter"
+                                :searchField="true" :dltAllbtn="$dltAllbtn" itemName="Area" :message="$customMessage" />
+                        </section>
                     </div>
                 </div>
             </div>
@@ -71,3 +71,52 @@
         });
     });
 </script>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
+<script>
+    // Event listener for delete confirmation using Swal
+    function confirmDelete(id) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'This AreaLocation will be permanently deleted if you proceed.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'No, cancel!',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Proceed to delete the AreaLocation
+                deleteAreaLocation(id);
+            }
+        });
+    }
+
+    // Function to send AJAX delete request
+    function deleteAreaLocation(id) {
+        // Perform the delete request using AJAX
+        axios.delete(`/area-location/${id}`)
+            .then(response => {
+                // Show success alert
+                Swal.fire('Deleted!', 'The AreaLocation has been deleted.', 'success');
+                // Reload or update the page
+                location.reload();
+            })
+            .catch(error => {
+                // Handle errors (if any)
+                Swal.fire('Error!', 'There was an issue deleting the AreaLocation.', 'error');
+            });
+    }
+
+    window.addEventListener('updatePaginationUrl', function (event) {
+        const url = new URL(window.location);
+        url.searchParams.set('page', event.detail.page);
+        history.pushState(null, '', url);
+    });
+
+    window.addEventListener('reloadPage', function () {
+        location.reload();
+    });
+</script>
+

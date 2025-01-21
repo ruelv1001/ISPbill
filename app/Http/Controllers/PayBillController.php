@@ -31,13 +31,23 @@ class PayBillController extends Controller
 
 
 
+    public function getUser($id)
+    {
+        $user = User::with('detail')->findOrFail($id);
+        return response()->json([
+            'id' => $user->id,
+            'name' => $user->detail->name ?? '',
+            'package_name' => $user->detail->package_name ?? '',
+            'package_price' => $user->detail->package_price ?? ''
+        ]);
+    }
 
-
-    public function create(User $user)
+    public function create(User $user,$id)
     {
         if (!auth()->user()->isAdmin()) {
             return redirect('/');
         }
+
 
 
         return view('paybill.create', compact('user'));
