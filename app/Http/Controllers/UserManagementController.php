@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\UserType;
 use Illuminate\Http\Request;
 use App\Models\ServiceDetails;
 use App\Models\Setting;
@@ -41,9 +42,10 @@ class UserManagementController extends Controller
         if (!auth()->user()->isAdmin()) {
             return redirect('/');
         }
-
+        $userType = UserType::all();
         $packages = Package::orderBy('name')->get();
-        return view('user-management.create', compact('packages'));
+
+        return view('user-management.create', compact('packages','userType'));
     }
 
     /**
@@ -118,6 +120,8 @@ class UserManagementController extends Controller
 
         // Insert into user_limit table
         DB::table('user_limit')->insert($userLimitData);
+
+
 
         return redirect()->route('user-management.index')
             ->with('success', __('User added successfully'));
@@ -248,6 +252,8 @@ class UserManagementController extends Controller
             'user_management_table',
             'ticket_table',
         ];
+
+
 
         $validatedData = $request->validate([
             "email" => "nullable|email|unique:users,email,$id",

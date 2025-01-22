@@ -6,7 +6,7 @@
                 <div class="p-6 text-gray-900">
                     <div class="flex justify-between items-center mb-6 border-b-2 border-slate-100 pb-4">
                         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                            {{ __('Area List') }}
+                            {{ __('OLT List') }}
                         </h2>
 
 
@@ -16,26 +16,26 @@
                     <div>
                         <section>
                             @php
-                                $headers = [
-                           
-                                    'area' => 'Area',
-                                    'description' => 'Description',
-                                    'action' => 'Action'
-                                ];
-                                $dropdownActions = []; // Add lock action to dropdown
-                                $dltAllbtn = [];
-                                $tableActions = ['edit' => 'area-location.edit', 'delete-item' => 'area-location.destroy'];
-                                $addButton = ['Add Area', 'area-location.create'];
+$headers = [
+  
+    'olt_device' => 'OLT Device',
+    'description' => 'Description',
+    'action' => 'Action'
+];
+$dropdownActions = []; // Add lock action to dropdown
+$dltAllbtn = [];
+$tableActions = ['edit' => 'olt-device.edit', 'delete-item' => 'olt-device.destroy'];
+$addButton = ['Add OLT Device', 'olt-device.create'];
 
-                                $customMessage = [
-                                    'success' => '',
-                                    'delete' => 'This User will be permanently deleted if you proceed.',
-                                ];
+$customMessage = [
+    'success' => '',
+    'delete' => 'This User will be permanently deleted if you proceed.',
+];
 
                             @endphp
-                            <x-table :headers="$headers" :data="$data" title="Area" :dropdown="$dropdownActions"
-                                :actions="$tableActions" tablename="Area" :addbtn="$addButton"
-                               :searchField="false" :dltAllbtn="$dltAllbtn" itemName="Area" :message="$customMessage" />
+                            <x-table :headers="$headers" :data="$data" title="OLT Device" :dropdown="$dropdownActions"
+                                :actions="$tableActions" tablename="OLT Device" :addbtn="$addButton"
+                                :searchField="false" :dltAllbtn="$dltAllbtn" itemName="Area" :message="$customMessage" />
                         </section>
                     </div>
                 </div>
@@ -76,10 +76,10 @@
     function confirmDelete(id) {
         Swal.fire({
             title: 'Are you sure?',
-            text: 'This AreaLocation will be permanently deleted if you proceed.',
+            text: 'This OLT Device will be permanently deleted if you proceed.',
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#d33',
+     confirmButtonColor: '#d33',
             confirmButtonText: 'Yes, delete it!',
             cancelButtonText: 'No, cancel!',
             reverseButtons: true
@@ -97,13 +97,13 @@
         axios.delete(`/area-location/${id}`)
             .then(response => {
                 // Show success alert
-                Swal.fire('Deleted!', 'The AreaLocation has been deleted.', 'success');
+                Swal.fire('Deleted!', 'The OLT Device has been deleted.', 'success');
                 // Reload or update the page
                 location.reload();
             })
             .catch(error => {
                 // Handle errors (if any)
-                Swal.fire('Error!', 'There was an issue deleting the AreaLocation.', 'error');
+                Swal.fire('Error!', 'There was an issue deleting the OLT Device.', 'error');
             });
     }
 

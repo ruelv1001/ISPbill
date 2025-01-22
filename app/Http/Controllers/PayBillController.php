@@ -154,7 +154,7 @@ class PayBillController extends Controller
             }
         }
         Alert::success('Success!', 'Payment Successful.');
-        return redirect('paybill');
+        return redirect('users');
     }
 
 

@@ -64,7 +64,7 @@ class UserController extends Controller
                 DB::raw("CONCAT(miktrotik_parameters.last_login, ' / ', miktrotik_parameters.last_logout) AS log_info")
             );
 
-        
+
         if ($tabActive === 'user') {
             if ($request->filled('Lock')) {
                 $usersListQuery->where('details.is_lock', $request->input('Lock'));
@@ -73,7 +73,7 @@ class UserController extends Controller
             if ($request->filled('status')) {
                 $usersListQuery->where('service_details.status', $request->input('status'));
             }
-            
+
             if ($request->filled('Area')) {
                 $usersListQuery->where('details.area', $request->input('Area'));
             }
@@ -87,7 +87,7 @@ class UserController extends Controller
         // Prepare filter options for the dropdown
         $userFilter = [
             'status' => ServiceDetails::distinct()->pluck('status', 'status')->toArray(),
-            'Area' => Detail::distinct()->pluck('area', 'area')->toArray(), 
+            'Area' => Detail::distinct()->pluck('area', 'area')->toArray(),
             'Lock' => Detail::distinct()->pluck('is_lock', 'is_lock')->toArray(), // Fetch `is_lock` options
         ];
 
@@ -106,10 +106,10 @@ class UserController extends Controller
         if (!auth()->user()->isAdmin()) {
             return redirect('/');
         }
-    
+
         $areas = AreaLocation::all(); // Ensure this retrieves data
         $packages = Package::orderBy('name')->get();
-    
+
         return view('users.create', compact('packages', 'areas'));// Ensure 'areas' is passed
     }
 
@@ -461,7 +461,7 @@ class UserController extends Controller
 
 
 
-    public function destroy(User $user)
+    public function destroynew(User $user)
     {
         try {
             $hasTransaction = \DB::table('transaction')->where('user_id', $user->id)->exists();
@@ -528,29 +528,41 @@ class UserController extends Controller
     }
 
 
-    public function destroyother(User $user)
+    public function destroy(User $user)
     {
+        \Log::info('Deleting user:', ['user_id' => $user->id]); // Log the user ID
+
         try {
-
-
+            // Check if the user has transaction data
             $hasTransaction = \DB::table('transaction')->where('user_id', $user->id)->exists();
 
             if ($hasTransaction) {
-
-                Alert::warning('Warning!', 'Consumer has transaction data');
-                return redirect()->route('users.index');
+                \Log::warning('User has transaction data:', ['user_id' => $user->id]); // Log warning
+                return response()->json(['message' => 'Consumer has transaction data'], 400);
             }
 
+            // Check if any detail record is locked
+            $isLocked = \DB::table('details')
+                ->where('user_id', $user->id)
+                ->where('is_lock', 'lock')
+                ->exists();
 
+            if ($isLocked) {
+                \Log::warning('User details are locked:', ['user_id' => $user->id]); // Log warning
+                return response()->json(['message' => 'User details are locked and cannot be deleted'], 400);
+            }
+
+            // Proceed with deletion if no locks are found
             \DB::table('details')->where('user_id', $user->id)->delete();
             \DB::table('service_details')->where('user_id', $user->id)->delete();
 
-
             $user->delete();
+            \Log::info('User deleted successfully:', ['user_id' => $user->id]); // Log success
+            return response()->json(['message' => 'User deleted successfully'], 200);
 
-            return redirect()->route('user-management.index')->with('success', 'User deleted successfully.');
         } catch (\Exception $e) {
-            return redirect()->route('user-management.index')->with('error', 'Error deleting user: ' . $e->getMessage());
+            \Log::error('Error deleting user:', ['user_id' => $user->id, 'error' => $e->getMessage()]); // Log error
+            return response()->json(['message' => 'User deletion failed'], 500);
         }
     }
 

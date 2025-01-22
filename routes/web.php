@@ -13,6 +13,7 @@ use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DisableDueUser;
 use App\Http\Controllers\InvoiceDownload;
+use App\Http\Controllers\OltDeviceController;
 use App\Http\Controllers\OpenTicket;
 use App\Http\Controllers\PackageController;
 use App\Http\Controllers\PayBillController;
@@ -48,6 +49,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('/paybill', PayBillController::class);
     Route::resource('user-management', UserManagementController::class);
     Route::resource('area-location', AreaLocationController::class);
+    Route::resource('olt-device', OltDeviceController::class);
+    Route::get('/olt-device', [OltDeviceController::class, 'index'])->name('olt-device.index');
     Route::resource('user-type', UserTypeController::class);
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
     Route::post('/users/{user}/archive', [UserController::class, 'archieve_data'])->name('users.archive');

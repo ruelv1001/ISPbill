@@ -8,34 +8,56 @@
                             {{ __('Customer List') }}
                         </h2>
 
-                        <a href="{{ route('area-location.index') }}"
-                            class="ml-2 inline-flex items-center px-4 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white rounded uppercase">
-                            {{ __('Area') }}
-                        </a>
 
+<div class="flex space-x-2">
+    <a href="{{ route('area-location.index') }}"
+        class="inline-flex items-center px-3 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white uppercase">
+        {{ __('Refresh') }}
+    </a>
+    <a href="{{ route('area-location.index') }}"
+        class="inline-flex items-center px-3 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white uppercase">
+        {{ __('Area') }}
+    </a>
+    <a href="{{ route('olt-device.index') }}"
+        class="inline-flex items-center px-3 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white uppercase">
+        {{ __('OLT') }}
+    </a>
+    <a href="{{ route('olt-device.index') }}"
+        class="inline-flex items-center px-3 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white uppercase">
+        {{ __('PON') }}
+    </a>
+    <a href="{{ route('olt-device.index') }}"
+        class="inline-flex items-center px-3 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white uppercase">
+        {{ __('NAP') }}
+    </a>
+    <a href="{{ route('olt-device.index') }}"
+        class="inline-flex items-center px-3 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white uppercase">
+        {{ __('Port') }}
+    </a>
+</div>
 
                     </div>
                     <div>
                         <section>
                             @php
-                            $headers = [
-                                'id' => 'ID',
-                                'name' => 'Name',
-                                'active_due_date' => 'Expire',
-                                'status' => 'Status',
-                                'area'=> 'area',
-                                'uptime_info' => 'Up-time/Down-Time',
-                                'log_info' => 'Last login/Last logout',
-                                'action' => ''
-                            ];
-                            $dropdownActions = ['Lock Selected' => 'lock'];
-                            $dltAllbtn = ["Lock Selected", "users.bulk-lock"];
-                            $tableActions = ['pay' => 'paybill.create', 'edit' => 'users.edit', 'delete' => 'users.bulk-lock'];
-                            $addButton = ['Add Customer', 'users.create'];
-                            $customMessage = [
-                                'success' => '',
-                                'delete' => 'This User will be permanently deleted if you proceed.',
-                            ];
+$headers = [
+    'id' => 'ID',
+    'name' => 'Name',
+    'active_due_date' => 'Expire',
+    'status' => 'Status',
+    'area' => 'area',
+    'uptime_info' => 'Up-time/Down-Time',
+    'log_info' => 'Last login/Last logout',
+    'action' => ''
+];
+$dropdownActions = ['Lock Selected' => 'lock'];
+$dltAllbtn = ["Lock Selected", "users.bulk-lock"];
+$tableActions = ['pay' => 'paybill.create', 'edit' => 'users.edit', 'delete-item' => 'users.destroy'];
+$addButton = ['Add Customer', 'users.create'];
+$customMessage = [
+    'success' => '',
+    'delete' => 'This User will be permanently deleted if you proceed.',
+];
                             @endphp
                             <x-table :headers="$headers" :data="$users" title="" :dropdown="$dropdownActions" :actions="$tableActions"
                                 tablename="user" :addbtn="$addButton" :filters="$userFilter" :searchField="true" :dltAllbtn="$dltAllbtn"
@@ -174,5 +196,60 @@
                     document.getElementById('payment-modal').classList.remove('hidden');
                 })
                 .catch(error => console.error('Error:', error));
+        }
+</script>
+<script>
+    // Event listener for delete confirmation using Swal
+    function confirmDelete(id) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'This user will be permanently deleted if you proceed.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'No, cancel!',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Proceed to delete the user
+                deleteUser(id);
+            }
+        });
+    }
+
+    // Function to send AJAX delete request
+    function deleteUser(id) {
+            // Log the start of the delete operation
+            console.log(`Attempting to delete user with ID: ${id}`);
+
+            // Perform the delete request using AJAX
+            axios.delete(`/users/${id}`)
+                .then(response => {
+                    // Log success
+                    console.log(`User with ID: ${id} deleted successfully. Response:`, response.data);
+
+                    // Show success alert
+                    Swal.fire('Deleted!', 'The user has been deleted.', 'success');
+
+                    // Option 1: Reload the page
+                    location.reload();
+
+                    // Option 2: Remove the user from the DOM without reloading
+                    // document.getElementById(`user-${id}`).remove();
+                })
+                .catch(error => {
+                    // Log the error
+                    console.error(`Error deleting user with ID: ${id}. Error:`, error);
+
+                    // Handle errors (if any)
+                    if (error.response && error.response.status === 400) {
+                        Swal.fire('Warning!', error.response.data.message, 'warning');
+                    }
+                    if (error.response && error.response.status === 405) {
+                             Swal.fire('Warning!', error.response.data.message, 'warning');
+                    }
+
+                });
         }
 </script>

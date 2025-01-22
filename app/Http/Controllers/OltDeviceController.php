@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\AreaLocation;
+use App\Models\OltDevice;
 use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
-class AreaLocationController extends Controller
+class OltDeviceController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,36 +15,33 @@ class AreaLocationController extends Controller
     public function index(Request $request)
     {
 
-        $tabActive = $request->input('tab-active', 'users');
+        $tabActive = $request->input('tab-active', 'olt');
         $searchTerm = $request->input('search');
-        $area = $request->input('area');
+        $area = $request->input('olt');
 
         // Base query with necessary joins
-        $usersListQuery = AreaLocation::select(
-            'area_location.*'
+        $usersListQuery = OltDevice::select(
+            'olt.*'
         );
 
 
-        if ($tabActive === 'area') {
-            if ($request->filled('Lock')) {
-                $usersListQuery->where('details.is_lock', $request->input('Lock'));
+        if ($tabActive === 'olt_device') {
+            if ($request->filled('olt_device')) {
+                $usersListQuery->where('olt.olt_device', $request->input('olt'));
             }
 
-            if ($request->filled('status')) {
-                $usersListQuery->where('service_details.status', $request->input('status'));
-            }
+
         }
 
-
         $areaFilter = [
-            'area' => AreaLocation::distinct()->pluck('area', 'area')->toArray(),
+            'olt' => OltDevice::distinct()->pluck('olt_device', 'olt_device')->toArray(),
         ];
 
         // Paginate the results
         $data = $usersListQuery->paginate(10)->withQueryString();
 
         // Return the view with data
-        return view('area-location.index', compact('data', 'areaFilter'));
+        return view('olt-device.index', compact('data', 'areaFilter'));
 
     }
 
@@ -57,9 +55,9 @@ class AreaLocationController extends Controller
         }
 
 
-        $area = AreaLocation::orderBy('area')->get();
+        $area = OltDevice::orderBy('olt_device')->get();
 
-        return view('area-location.create', compact('area'));
+        return view('olt-device.create', compact('area'));
     }
 
     /**
@@ -73,15 +71,15 @@ class AreaLocationController extends Controller
     public function store(Request $request)
     {
 
-        $area = new AreaLocation();
-        $area->area = $request->area;
+        $area = new OltDevice();
+        $area->olt_device = $request->olt_device;
         $area->description = $request->description;
 
         $area->save();
 
 
         Alert::success('Success!', 'Area Save Successful.');
-        return redirect('area-location');
+        return redirect('olt-device');
 
 
 
@@ -90,14 +88,14 @@ class AreaLocationController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(AreaLocation $areaLocation)
+    public function edit(OltDevice $oltDevice)
     {
         if (!auth()->user()->isAdmin()) {
             return redirect('/');
         }
 
 
-        return view('area-location.edit', compact('areaLocation'));
+        return view('olt-device.edit', compact('oltDevice'));
     }
 
     /**
@@ -110,12 +108,12 @@ class AreaLocationController extends Controller
             'area' => 'required|string|max:255',
             'description' => 'nullable|string|max:255',
         ]);
-        $area = AreaLocation::findOrFail($id);
+        $area = OltDevice::findOrFail($id);
         $area->update([
             'area' => $validatedData['area'],
             'description' => $validatedData['description'] ?? $area->description,
         ]);
-        return redirect("/area-location/{$area->id}/edit")
+        return redirect("/olt-device/{$area->id}/edit")
             ->with("success", __("Area updated successfully"));
     }
 
@@ -130,13 +128,13 @@ class AreaLocationController extends Controller
 
         if (!$areaLocation) {
 
-            return response()->json(['message' => 'AreaLocation not found'], 404);
+            return response()->json(['message' => 'OLT not found'], 404);
         }
 
 
         $areaLocation->delete();
 
 
-        return response()->json(['message' => 'AreaLocation deleted successfully'], 200);
+        return response()->json(['message' => 'OLT deleted successfully'], 200);
     }
 }
