@@ -30,6 +30,7 @@ use App\Http\Controllers\UserDownload;
 use App\Http\Controllers\UserEnable;
 use App\Http\Controllers\UserManagementController;
 use App\Http\Controllers\UserRefresh;
+use App\Http\Controllers\UserTypeController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth')->group(function () {
@@ -47,6 +48,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('/paybill', PayBillController::class);
     Route::resource('user-management', UserManagementController::class);
     Route::resource('area-location', AreaLocationController::class);
+    Route::resource('user-type', UserTypeController::class);
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
     Route::post('/users/{user}/archive', [UserController::class, 'archieve_data'])->name('users.archive');
     Route::resource('/transaction', TransactionController::class);

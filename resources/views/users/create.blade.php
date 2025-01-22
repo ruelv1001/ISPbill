@@ -60,19 +60,15 @@
                                 </div>
                                 <div>
                                     <x-input-label for="area" :value="__('Area')" class="mt-4"></x-input-label>
-                                    <select id="area" name="area" class="mt-1 block w-full">
-                                        <option value="" disabled selected>{{ __('Select Area') }}</option>
-                                        <option value="1" {{ old('area') == 1 ? 'selected' : '' }}>Area 1</option>
-                                        <option value="2" {{ old('area') == 2 ? 'selected' : '' }}>Area 2</option>
-                                        <option value="3" {{ old('area') == 3 ? 'selected' : '' }}>Area 3</option>
-                                        <option value="4" {{ old('area') == 4 ? 'selected' : '' }}>Area 4</option>
-                                        <option value="5" {{ old('area') == 5 ? 'selected' : '' }}>Area 5</option>
-                                        <option value="6" {{ old('area') == 6 ? 'selected' : '' }}>Area 6</option>
-                                        <option value="7" {{ old('area') == 7 ? 'selected' : '' }}>Area 7</option>
-                                        <option value="8" {{ old('area') == 8 ? 'selected' : '' }}>Area 8</option>
-                                        <option value="9" {{ old('area') == 9 ? 'selected' : '' }}>Area 9</option>
-                                        <option value="10" {{ old('area') == 10 ? 'selected' : '' }}>Area 10</option>
-                                    </select>
+                                    <select name="area" id="area">
+                                    @if ($areas && $areas->isNotEmpty())
+                                    @foreach($areas as $area)
+                                        <option value="{{ $area->area }}">{{ $area->area }}</option>
+                                    @endforeach
+                                @else
+                                    <option disabled>No areas available</option>
+                                @endif
+                                </select>
                                     <x-input-error class="mt-2" :messages="$errors->get('area')"></x-input-error>
                                 </div>
 

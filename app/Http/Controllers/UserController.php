@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use App\Models\AreaLocation;
 use App\Models\ServiceDetails;
 use App\Models\Setting;
 use Illuminate\Support\Facades\DB;
@@ -44,6 +46,7 @@ class UserController extends Controller
         $tabActive = $request->input('tab-active', 'users');
         $searchTerm = $request->input('search');
         $isLock = $request->input('is_lock');
+        $arearequest = $request->input('area');
 
         // Base query with necessary joins
         $usersListQuery = User::join('service_details', 'users.id', '=', 'service_details.user_id')
@@ -54,6 +57,7 @@ class UserController extends Controller
                 'service_details.*',
                 'details.user_id as id',
                 'details.is_lock as is_lock',
+                'details.area as area',
                 'miktrotik_parameters.uptime',
                 'miktrotik_parameters.down_time',
                 DB::raw("CONCAT(miktrotik_parameters.uptime, ' / ', miktrotik_parameters.down_time) AS uptime_info"),
@@ -69,6 +73,10 @@ class UserController extends Controller
             if ($request->filled('status')) {
                 $usersListQuery->where('service_details.status', $request->input('status'));
             }
+            
+            if ($request->filled('Area')) {
+                $usersListQuery->where('details.area', $request->input('Area'));
+            }
         }
 
         // Other filters (e.g., status) if applicable
@@ -79,6 +87,7 @@ class UserController extends Controller
         // Prepare filter options for the dropdown
         $userFilter = [
             'status' => ServiceDetails::distinct()->pluck('status', 'status')->toArray(),
+            'Area' => Detail::distinct()->pluck('area', 'area')->toArray(), 
             'Lock' => Detail::distinct()->pluck('is_lock', 'is_lock')->toArray(), // Fetch `is_lock` options
         ];
 
@@ -97,12 +106,12 @@ class UserController extends Controller
         if (!auth()->user()->isAdmin()) {
             return redirect('/');
         }
-
+    
+        $areas = AreaLocation::all(); // Ensure this retrieves data
         $packages = Package::orderBy('name')->get();
-
-        return view('users.create', compact('packages'));
+    
+        return view('users.create', compact('packages', 'areas'));// Ensure 'areas' is passed
     }
-
 
     private function generateUniqueInvoiceNumber()
     {
@@ -144,7 +153,7 @@ class UserController extends Controller
             "password" => "min:6|confirmed",
             "name" => "required|string|max:255",
             "address" => "required|string",
-            "area" => "nullable|in:1,2,3,4,5,6,7,8,9,10",
+            "area" => "nullable",
             "phone" => "required|string",
             "router_id" => "nullable",
             "dob" => "nullable|date",

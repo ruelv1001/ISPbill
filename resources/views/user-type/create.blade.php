@@ -10,23 +10,23 @@
                     @endif
 
                         <h2 class="font-semibold text-xl text-gray-800 leading-tight border-b-2 border-slate-100 pb-4">
-                            {{ __('Create Area') }}
+                            {{ __('Create Role') }}
                         </h2>
 
-                    <form method="post" action="{{ route('area-location.store') }}" class="space-y-6">
+                    <form method="post" action="{{ route('user-type.store') }}" class="space-y-6">
                         @csrf
 
                         <div class="grid grid-cols-2 gap-4">
                             <div>
-                                <h2 class="text-lg font-medium text-gray-900">{{ __('Area') }}</h2>
-                                <p class="mt-1 text-sm text-gray-600">{{ __("Create a new Area") }}</p>
+                                <h2 class="text-lg font-medium text-gray-900">{{ __('User Role') }}</h2>
+                                <p class="mt-1 text-sm text-gray-600">{{ __("Create a new role") }}</p>
                             </div>
 
                             <div>
                                 <div>
-                                    <x-input-label for="area" :value="__('Area')"></x-input-label>
-                                    <x-text-input id="area" name="area" type="text" class="mt-1  md:text-sm block w-full" :value="old('area')" required></x-text-input>
-                                    <x-input-error class="mt-2" :messages="$errors->get('area')"></x-input-error>
+                                    <x-input-label for="role" :value="__('Role')"></x-input-label>
+                                    <x-text-input id="role" name="role" type="text" class="mt-1  md:text-sm block w-full" :value="old('role')" required></x-text-input>
+                                    <x-input-error class="mt-2" :messages="$errors->get('role')"></x-input-error>
                                 </div>
                                 <div>
                                     <x-input-label for="description" :value="__('Description')" class="mt-4"></x-input-label>

@@ -18,23 +18,24 @@
                     <div>
                         <section>
                             @php
-$headers = [
-    'id' => 'ID',
-    'name' => 'Name',
-    'email' => 'Email',
-    'status' => 'Status',
-    'uptime_info' => 'Up-time/Down-Time',
-    'log_info' => 'Last login/Last logout',
-    'action' => ''
-];
-$dropdownActions = ['Lock Selected' => 'lock'];
-$dltAllbtn = ["Lock Selected", "users.bulk-lock"];
-$tableActions = ['pay' => 'paybill.create', 'edit' => 'users.edit', 'delete' => 'users.bulk-lock'];
-$addButton = ['Add Customer', 'users.create'];
-$customMessage = [
-    'success' => '',
-    'delete' => 'This User will be permanently deleted if you proceed.',
-];
+                            $headers = [
+                                'id' => 'ID',
+                                'name' => 'Name',
+                                'active_due_date' => 'Expire',
+                                'status' => 'Status',
+                                'area'=> 'area',
+                                'uptime_info' => 'Up-time/Down-Time',
+                                'log_info' => 'Last login/Last logout',
+                                'action' => ''
+                            ];
+                            $dropdownActions = ['Lock Selected' => 'lock'];
+                            $dltAllbtn = ["Lock Selected", "users.bulk-lock"];
+                            $tableActions = ['pay' => 'paybill.create', 'edit' => 'users.edit', 'delete' => 'users.bulk-lock'];
+                            $addButton = ['Add Customer', 'users.create'];
+                            $customMessage = [
+                                'success' => '',
+                                'delete' => 'This User will be permanently deleted if you proceed.',
+                            ];
                             @endphp
                             <x-table :headers="$headers" :data="$users" title="" :dropdown="$dropdownActions" :actions="$tableActions"
                                 tablename="user" :addbtn="$addButton" :filters="$userFilter" :searchField="true" :dltAllbtn="$dltAllbtn"

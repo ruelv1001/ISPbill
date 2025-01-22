@@ -61,6 +61,7 @@ class AreaLocationController extends Controller
             return redirect('/');
         }
 
+     
         $area = AreaLocation::orderBy('area')->get();
 
         return view('area-location.create', compact('area'));
