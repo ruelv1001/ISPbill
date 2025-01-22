@@ -89,6 +89,10 @@ class UserController extends Controller
             'status' => ServiceDetails::distinct()->pluck('status', 'status')->toArray(),
             'Area' => Detail::distinct()->pluck('area', 'area')->toArray(),
             'Lock' => Detail::distinct()->pluck('is_lock', 'is_lock')->toArray(), // Fetch `is_lock` options
+            'OLT' => Detail::distinct()->pluck('is_lock', 'is_lock')->toArray(),
+            'PON' => Detail::distinct()->pluck('is_lock', 'is_lock')->toArray(),
+            'NAP' => Detail::distinct()->pluck('is_lock', 'is_lock')->toArray(),
+            'PORT' => Detail::distinct()->pluck('is_lock', 'is_lock')->toArray(),
         ];
 
         // Paginate the results
