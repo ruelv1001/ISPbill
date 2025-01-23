@@ -10,23 +10,23 @@
                     @endif
 
                         <h2 class="font-semibold text-xl text-gray-800 leading-tight border-b-2 border-slate-100 pb-4">
-                            {{ __('Create PON') }}
+                            {{ __('Create PORT') }}
                         </h2>
 
-                    <form method="post" action="{{ route('olt-device.store') }}" class="space-y-6">
+                    <form method="post" action="{{ route('port.store') }}" class="space-y-6">
                         @csrf
 
                         <div class="grid grid-cols-2 gap-4">
                             <div>
-                                <h2 class="text-lg font-medium text-gray-900">{{ __('OLT') }}</h2>
-                                <p class="mt-1 text-sm text-gray-600">{{ __("Create a new OLT Device") }}</p>
+                                <h2 class="text-lg font-medium text-gray-900">{{ __('Port') }}</h2>
+                                <p class="mt-1 text-sm text-gray-600">{{ __("Create a new Port") }}</p>
                             </div>
 
                             <div>
                                 <div>
-                                    <x-input-label for="olt_device" :value="__('OLT Device')"></x-input-label>
-                                    <x-text-input id="olt_device" name="olt_device" type="text" class="mt-1  md:text-sm block w-full" :value="old('olt_device')" required></x-text-input>
-                                    <x-input-error class="mt-2" :messages="$errors->get('olt_device')"></x-input-error>
+                                    <x-input-label for="port" :value="__('Port')"></x-input-label>
+                                    <x-text-input id="port" name="port" type="text" class="mt-1  md:text-sm block w-full" :value="old('port')" required></x-text-input>
+                                    <x-input-error class="mt-2" :messages="$errors->get('port')"></x-input-error>
                                 </div>
                                 <div>
                                     <x-input-label for="description" :value="__('Description')" class="mt-4"></x-input-label>

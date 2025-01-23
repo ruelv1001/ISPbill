@@ -22,15 +22,15 @@
         class="inline-flex items-center px-3 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white uppercase">
         {{ __('OLT') }}
     </a>
-    <a href="{{ route('olt-device.index') }}"
+    <a href="{{ route('pon.index') }}"
         class="inline-flex items-center px-3 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white uppercase">
         {{ __('PON') }}
     </a>
-    <a href="{{ route('olt-device.index') }}"
+    <a href="{{ route('nap.index') }}"
         class="inline-flex items-center px-3 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white uppercase">
         {{ __('NAP') }}
     </a>
-    <a href="{{ route('olt-device.index') }}"
+    <a href="{{ route('port.index') }}"
         class="inline-flex items-center px-3 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white uppercase">
         {{ __('Port') }}
     </a>

@@ -13,20 +13,20 @@
                             {{ __('Create PON') }}
                         </h2>
 
-                    <form method="post" action="{{ route('olt-device.store') }}" class="space-y-6">
+                    <form method="post" action="{{ route('pon.store') }}" class="space-y-6">
                         @csrf
 
                         <div class="grid grid-cols-2 gap-4">
                             <div>
-                                <h2 class="text-lg font-medium text-gray-900">{{ __('OLT') }}</h2>
-                                <p class="mt-1 text-sm text-gray-600">{{ __("Create a new OLT Device") }}</p>
+                                <h2 class="text-lg font-medium text-gray-900">{{ __('PON') }}</h2>
+                                <p class="mt-1 text-sm text-gray-600">{{ __("Create a new PON") }}</p>
                             </div>
 
                             <div>
                                 <div>
-                                    <x-input-label for="olt_device" :value="__('OLT Device')"></x-input-label>
-                                    <x-text-input id="olt_device" name="olt_device" type="text" class="mt-1  md:text-sm block w-full" :value="old('olt_device')" required></x-text-input>
-                                    <x-input-error class="mt-2" :messages="$errors->get('olt_device')"></x-input-error>
+                                    <x-input-label for="pon" :value="__('PON')"></x-input-label>
+                                    <x-text-input id="pon" name="pon" type="text" class="mt-1  md:text-sm block w-full" :value="old('pon')" required></x-text-input>
+                                    <x-input-error class="mt-2" :messages="$errors->get('pon')"></x-input-error>
                                 </div>
                                 <div>
                                     <x-input-label for="description" :value="__('Description')" class="mt-4"></x-input-label>

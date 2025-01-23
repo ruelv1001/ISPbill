@@ -9,7 +9,11 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Billing;
 use App\Models\Detail;
 use App\Models\MikrotikParamter;
+use App\Models\Nap;
+use App\Models\OltDevice;
 use App\Models\Package;
+use App\Models\Pon;
+use App\Models\Port;
 use App\Models\Router;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -111,10 +115,14 @@ class UserController extends Controller
             return redirect('/');
         }
 
-        $areas = AreaLocation::all(); // Ensure this retrieves data
+        $areas = AreaLocation::all(); 
+        $olt = OltDevice::all(); 
+        $pon = Pon::all(); 
+        $port = Port::all(); 
+        $nap = Nap::all(); 
         $packages = Package::orderBy('name')->get();
 
-        return view('users.create', compact('packages', 'areas'));// Ensure 'areas' is passed
+        return view('users.create', compact('packages', 'areas','olt','pon','port','nap'));// Ensure 'areas' is passed
     }
 
     private function generateUniqueInvoiceNumber()
@@ -166,6 +174,10 @@ class UserController extends Controller
             "package_name" => "required|exists:packages,id",
             "router_name" => "required|exists:routers,id",
             "router_password" => "required|string",
+            "olt" => "nullable",
+            "pon" => "nullable",
+            "port" => "nullable",
+            "nap" => "nullable",
         ]);
 
         // Start a database transaction for better error handling
@@ -210,6 +222,10 @@ class UserController extends Controller
                 'coordinates' => $validatedData['coordinates'],
                 'router_id' => $router->id,
                 'package_start' => Carbon::now(),
+                'olt' => $validatedData['olt'],
+                'pon' => $validatedData['pon'],
+                'port' => $validatedData['port'],
+                'nap' => $validatedData['nap'],
             ]);
             $currentDateAndTime = Carbon::now();
             $oneMonthdateAndTime = Carbon::now()->addMonth();
@@ -385,7 +401,13 @@ class UserController extends Controller
                 $lastLoggedOut = trim($matches[1]);
             }
 
-            // Structure the data
+            $areas = AreaLocation::all(); 
+            $olt = OltDevice::all(); 
+            $pon = Pon::all(); 
+            $port = Port::all(); 
+            $nap = Nap::all(); 
+
+
             $data = [
                 'uptime' => $uptime,
                 'profiles' => $profileData,
@@ -403,7 +425,7 @@ class UserController extends Controller
         $routers = Router::all();
         $packages = Package::all();
         // Pass data to the view
-        return view('users.edit', compact('user', 'data', 'routers', 'packages'));
+        return view('users.edit', compact('user', 'data', 'routers', 'packages', 'areas', 'olt', 'nap', 'port', 'pon'));
 
 
     }
@@ -425,6 +447,10 @@ class UserController extends Controller
             "subscription_date" => "nullable|date",
             "active_due_date" => "nullable|date",
             "billing_date" => "nullable|date",
+            "olt" => "nullable",
+            "pon" => "nullable",
+            "port" => "nullable",
+            "nap" => "nullable",
         ]);
 
 
@@ -447,6 +473,10 @@ class UserController extends Controller
                 'my_profile' => $validatedData['my_profile'] ?? $details->my_profile,
                 'coordinates' => $validatedData['coordinates'] ?? $details->coordinates,
                 'is_lock' => $validatedData['is_lock'] ?? $details->is_lock,
+                'olt' => $validatedData['olt'] ?? $details->olt,
+                'pon' => $validatedData['pon'] ?? $details->pon,
+                'port' =>  $validatedData['port'] ?? $details->port,
+                'nap' =>  $validatedData['nap'] ?? $details->nap,
             ]);
         }
 
