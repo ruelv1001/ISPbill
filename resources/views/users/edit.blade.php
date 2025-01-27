@@ -154,6 +154,31 @@
 
 
                                 </div>
+
+                                <div class="mt-4">
+                                        <p class="text-lg font-medium text-gray-900 dark:text-gray-100">
+                                            {{ __("PON management") }}
+                                        </p>
+                                        <div class="grid grid-cols-4 gap-4">
+                                        <x-input-label for="olt" :value="__('OLT Device')" class="mt-4"></x-input-label>
+                             
+                                        <select>
+                                        <option value="" disabled selected>{{$user->detail->olt}}</option>
+                                        @if ($olt && $olt->isNotEmpty())
+                                            @foreach($olt as $data)
+                                                @if ($data->olt_device !== $user->detail->olt)
+                                                    <option value="{{ $data->olt_device }}">{{ $data->olt_device }}</option>
+                                                @endif
+                                            @endforeach
+                                        @else
+                                            <option disabled>No olt available</option>
+                                        @endif
+                                    </select>
+
+                                        </div>
+                                      
+                                    </div>
+
                                 <div class="mt-4">
                                         <p class="text-lg font-medium text-gray-900 dark:text-gray-100">
                                             {{ __("MT Parameters") }}

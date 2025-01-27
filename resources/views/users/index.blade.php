@@ -46,7 +46,6 @@ $headers = [
     'active_due_date' => 'Expire',
     'status' => 'Status',
     'area' => 'area',
-    'uptime_info' => 'Up-time/Down-Time',
     'log_info' => 'Last login/Last logout',
     'action' => ''
 ];
