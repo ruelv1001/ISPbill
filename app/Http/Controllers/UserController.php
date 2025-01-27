@@ -115,11 +115,11 @@ class UserController extends Controller
             return redirect('/');
         }
 
-        $areas = AreaLocation::all(); 
-        $olt = OltDevice::all(); 
-        $pon = Pon::all(); 
-        $port = Port::all(); 
-        $nap = Nap::all(); 
+        $areas = AreaLocation::all();
+        $olt = OltDevice::all();
+        $pon = Pon::all();
+        $port = Port::all();
+        $nap = Nap::all();
         $packages = Package::orderBy('name')->get();
 
         return view('users.create', compact('packages', 'areas','olt','pon','port','nap'));// Ensure 'areas' is passed
@@ -401,12 +401,12 @@ class UserController extends Controller
                 $lastLoggedOut = trim($matches[1]);
             }
 
-            $areas = AreaLocation::all(); 
-            $olt = OltDevice::all(); 
-            $pon = Pon::all(); 
-            $port = Port::all(); 
-            $nap = Nap::all(); 
-
+            $areas = AreaLocation::all();
+            $olt = OltDevice::all();
+            $pon = Pon::all();
+            $port = Port::all();
+            $nap = Nap::all();
+            $area = AreaLocation::all();
 
             $data = [
                 'uptime' => $uptime,
@@ -425,7 +425,7 @@ class UserController extends Controller
         $routers = Router::all();
         $packages = Package::all();
         // Pass data to the view
-        return view('users.edit', compact('user', 'data', 'routers', 'packages', 'areas', 'olt', 'nap', 'port', 'pon'));
+        return view('users.edit', compact('user', 'data', 'routers', 'packages', 'areas', 'olt', 'nap', 'port', 'pon','area'));
 
 
     }
@@ -441,17 +441,18 @@ class UserController extends Controller
             "area" => "nullable|in:1,2,3,4,5,6,7,8,9,10",
             "my_profile" => "nullable|in:Profile 1,Profile 2,Profile 3",
             "coordinates" => "nullable|string",
-            "package_name" => "nullable|exists:packages,name",
-            "router_name" => "nullable|exists:routers,name",
-            "router_password" => "nullable|string",
+            // "package_name" => "nullable|exists:packages,name",
+            // "router_name" => "nullable|exists:routers,name",
+            // "router_password" => "nullable|string",
             "subscription_date" => "nullable|date",
             "active_due_date" => "nullable|date",
             "billing_date" => "nullable|date",
-            "olt" => "nullable",
-            "pon" => "nullable",
-            "port" => "nullable",
-            "nap" => "nullable",
+            "olt" => "nullable|string",
+            "pon" => "nullable|string",
+            "port" => "nullable|string",
+            "nap" => "nullable|string",
         ]);
+       
 
 
         $user->name = $validatedData['name'] ?? $user->name;
@@ -466,9 +467,9 @@ class UserController extends Controller
                 'phone' => $validatedData['phone'] ?? $details->phone,
                 'address' => $validatedData['address'] ?? $details->address,
                 'dob' => $validatedData['dob'] ?? $details->dob,
-                'router_password' => $validatedData['router_password'] ?? $details->router_password,
-                'package_name' => $validatedData['package_name'] ?? $details->package_name,
-                'router_name' => $validatedData['router_name'] ?? $details->router_name,
+                // 'router_password' => $validatedData['router_password'] ?? $details->router_password,
+                // 'package_name' => $validatedData['package_name'] ?? $details->package_name,
+                // 'router_name' => $validatedData['router_name'] ?? $details->router_name,
                 'area' => $validatedData['area'] ?? $details->area,
                 'my_profile' => $validatedData['my_profile'] ?? $details->my_profile,
                 'coordinates' => $validatedData['coordinates'] ?? $details->coordinates,
@@ -479,6 +480,8 @@ class UserController extends Controller
                 'nap' =>  $validatedData['nap'] ?? $details->nap,
             ]);
         }
+
+
 
         ServiceDetails::updateOrCreate(
             ['user_id' => $user->id],

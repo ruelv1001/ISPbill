@@ -110,7 +110,7 @@
                                         <x-input-error class="mt-2" :messages="$errors->get('email')"></x-input-error>
                                     </div>
 
-                                  
+
 
                                     <div>
                                         <x-input-label for="address" :value="__('Address')"
@@ -127,6 +127,23 @@
                                             class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
                                             :value="old('coordinates')" readonly />
                                         <x-input-error class="mt-2" :messages="$errors->get('coordinates')" />
+                                    </div>
+
+                                    <div>
+                                        <x-input-label for="area" :value="__('area')" class="mt-4"></x-input-label>
+                                        <select>
+                                            <option value="" disabled selected>{{$user->detail->area}}</option>
+                                            @if ($area && $area->isNotEmpty())
+                                                @foreach($nap as $data)
+                                                    @if ($data->area !== $user->detail->area)
+                                                        <option value="{{ $data->area }}">{{ $data->area }}</option>
+                                                    @endif
+                                                @endforeach
+                                            @else
+                                                <option disabled>No Area available</option>
+                                            @endif
+                                        </select>
+
                                     </div>
 
                                     <!-- Search Input -->
@@ -146,38 +163,88 @@
                                     </div>
                                     <div id="map" style="height: 400px;" class="mt-6 rounded shadow hidden"></div>
 
-                         
 
-                                 
+
+
 
 
 
 
                                 </div>
 
-                                <div class="mt-4">
-                                        <p class="text-lg font-medium text-gray-900 dark:text-gray-100">
-                                            {{ __("PON management") }}
-                                        </p>
-                                        <div class="grid grid-cols-4 gap-4">
-                                        <x-input-label for="olt" :value="__('OLT Device')" class="mt-4"></x-input-label>
-                             
-                                        <select>
-                                        <option value="" disabled selected>{{$user->detail->olt}}</option>
-                                        @if ($olt && $olt->isNotEmpty())
-                                            @foreach($olt as $data)
-                                                @if ($data->olt_device !== $user->detail->olt)
-                                                    <option value="{{ $data->olt_device }}">{{ $data->olt_device }}</option>
+                        <div class="grid grid-cols-5 gap-4">
+                            <p class="text-lg font-medium text-gray-900 dark:text-gray-100">
+                                {{ __("PON management") }}
+                            </p>
+                            <div>
+                            <x-input-label for="olt" :value="__('OLT Device')" class="mt-4"></x-input-label>
+                            <select id="olt" name="olt">
+                                <option value="{{ $user->detail->olt }}" selected>{{ $user->detail->olt }}</option>
+                                @if ($olt && $olt->isNotEmpty())
+                                    @foreach($olt as $data)
+                                        @if ($data->olt_device !== $user->detail->olt)
+                                            <option value="{{ $data->olt_device }}">{{ $data->olt_device }}</option>
+                                        @endif
+                                    @endforeach
+                                @else
+                                    <option disabled>No OLT available</option>
+                                @endif
+                            </select>
+
+
+                                    <x-input-label for="pon" :value="__('Select PON')" class="mt-4"></x-input-label>
+                                    <select id="pon" name="pon">
+                                        <option value="{{ $user->detail->pon }}" selected>{{ $user->detail->pon }}</option>
+                                        @if ($pon && $pon->isNotEmpty())
+                                            @foreach($pon as $data)
+                                                @if ($data->pon !== $user->detail->pon)
+                                                    <option value="{{ $data->pon }}">{{ $data->pon }}</option>
                                                 @endif
                                             @endforeach
                                         @else
-                                            <option disabled>No olt available</option>
+                                            <option disabled>No PON available</option>
                                         @endif
                                     </select>
 
-                                        </div>
-                                      
-                                    </div>
+                                            <x-input-label for="nap" :value="__('Select NAP')" class="mt-4"></x-input-label>
+                                            <select id="nap" name="nap">
+                                                <option value="{{ $user->detail->nap }}" selected>{{ $user->detail->nap }}</option>
+                                                @if ($nap && $nap->isNotEmpty())
+                                                    @foreach($nap as $data)
+                                                        @if ($data->nap !== $user->detail->nap)
+                                                            <option value="{{ $data->nap }}">{{ $data->nap }}</option>
+                                                        @endif
+                                                    @endforeach
+                                                @else
+                                                    <option disabled>No NAP available</option>
+                                                @endif
+                                            </select>
+
+                                <x-input-label for="port" :value="__('Select PORT')" class="mt-4"></x-input-label>
+                                <select id="port" name="port">
+                                    <option value="{{ $user->detail->port }}" selected>{{ $user->detail->port }}</option>
+                                    @if ($port && $port->isNotEmpty())
+                                        @foreach($port as $data)
+                                            @if ($data->port !== $user->detail->port)
+                                                <option value="{{ $data->port }}">{{ $data->port }}</option>
+                                            @endif
+                                        @endforeach
+                                    @else
+                                        <option disabled>No PORT available</option>
+                                    @endif
+                                </select>
+
+                            </div>
+
+
+                            <div>
+
+                            </div>
+
+                            <div>
+
+                            </div>
+                        </div>
 
                                 <div class="mt-4">
                                         <p class="text-lg font-medium text-gray-900 dark:text-gray-100">
@@ -204,7 +271,7 @@
                                         <x-input-error class="mt-2"
                                             :messages="$errors->get('router_ip')" readonly></x-input-error>
                                         </div>
-                                      
+
                                     </div>
 
 
