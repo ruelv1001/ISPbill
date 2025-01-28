@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="py-6">
+<div class="py-6">
         <div class="max-w-8xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
@@ -8,55 +8,53 @@
                             {{ __('Customer List') }}
                         </h2>
 
-
-<div class="flex space-x-2">
-    <a href="{{ route('area-location.index') }}"
-        class="inline-flex items-center px-3 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white uppercase">
-        {{ __('Refresh') }}
-    </a>
-    <a href="{{ route('area-location.index') }}"
-        class="inline-flex items-center px-3 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white uppercase">
-        {{ __('Area') }}
-    </a>
-    <a href="{{ route('olt-device.index') }}"
-        class="inline-flex items-center px-3 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white uppercase">
-        {{ __('OLT') }}
-    </a>
-    <a href="{{ route('pon.index') }}"
-        class="inline-flex items-center px-3 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white uppercase">
-        {{ __('PON') }}
-    </a>
-    <a href="{{ route('nap.index') }}"
-        class="inline-flex items-center px-3 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white uppercase">
-        {{ __('NAP') }}
-    </a>
-    <a href="{{ route('port.index') }}"
-        class="inline-flex items-center px-3 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white uppercase">
-        {{ __('Port') }}
-    </a>
-</div>
-
+                        <div class="flex space-x-2">
+                            <a href="{{ route('area-location.index') }}"
+                                class="inline-flex items-center px-3 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white uppercase">
+                                {{ __('Refresh') }}
+                            </a>
+                            <a href="{{ route('area-location.index') }}"
+                                class="inline-flex items-center px-3 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white uppercase">
+                                {{ __('Area') }}
+                            </a>
+                            <a href="{{ route('olt-device.index') }}"
+                                class="inline-flex items-center px-3 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white uppercase">
+                                {{ __('OLT') }}
+                            </a>
+                            <a href="{{ route('pon.index') }}"
+                                class="inline-flex items-center px-3 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white uppercase">
+                                {{ __('PON') }}
+                            </a>
+                            <a href="{{ route('nap.index') }}"
+                                class="inline-flex items-center px-3 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white uppercase">
+                                {{ __('NAP') }}
+                            </a>
+                            <a href="{{ route('port.index') }}"
+                                class="inline-flex items-center px-3 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white uppercase">
+                                {{ __('Port') }}
+                            </a>
+                        </div>
                     </div>
                     <div>
                         <section>
                             @php
-$headers = [
-    'id' => 'ID',
-    'name' => 'Name',
-    'active_due_date' => 'Expire',
-    'status' => 'Status',
-    'area' => 'area',
-    'log_info' => 'Last login/Last logout',
-    'action' => ''
-];
-$dropdownActions = ['Lock Selected' => 'lock'];
-$dltAllbtn = ["Lock Selected", "users.bulk-lock"];
-$tableActions = ['pay' => 'paybill.create', 'edit' => 'users.edit', 'delete-item' => 'users.destroy'];
-$addButton = ['Add Customer', 'users.create'];
-$customMessage = [
-    'success' => '',
-    'delete' => 'This User will be permanently deleted if you proceed.',
-];
+                            $headers = [
+                                'id' => 'ID',
+                                'name' => 'Name',
+                                'active_due_date' => 'Expire',
+                                'status' => 'Status',
+                                'area' => 'area',
+                                'log_info' => 'Last login/Last logout',
+                                'action' => ''
+                            ];
+                            $dropdownActions = ['Lock Selected' => 'lock'];
+                            $dltAllbtn = ["Lock Selected", "users.bulk-lock"];
+                            $tableActions = ['pay' => 'paybill.create', 'edit' => 'users.edit', 'delete-item' => 'users.destroy'];
+                            $addButton = ['Add Customer', 'users.create'];
+                            $customMessage = [
+                                'success' => '',
+                                'delete' => 'This User will be permanently deleted if you proceed.',
+                            ];
                             @endphp
                             <x-table :headers="$headers" :data="$users" title="" :dropdown="$dropdownActions" :actions="$tableActions"
                                 tablename="user" :addbtn="$addButton" :filters="$userFilter" :searchField="true" :dltAllbtn="$dltAllbtn"
@@ -69,9 +67,9 @@ $customMessage = [
     </div>
 
     <!-- Payment Modal -->
-    <div id="payment-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full" x-show="open">
-        <div class="relative top-20 mx-auto p-5 border w-3/4 shadow-lg rounded-md bg-white">
-            <div class="flex justify-between items-center pb-4 border-b">
+    <div id="payment-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full flex items-center justify-center p-4">
+        <div class="relative mx-auto p-5 border w-3/4 shadow-lg rounded-md bg-white">
+            <div class="flex justify-between items-center pb-4 border-b p-2">
                 <h3 class="text-xl font-semibold">Payment Details</h3>
                 <button onclick="closePaymentModal()" class="text-gray-400 hover:text-gray-500">
                     <span class="text-2xl">&times;</span>
@@ -79,7 +77,7 @@ $customMessage = [
             </div>
 
             <div class="py-4">
-                <form method="post" action="{{ route('paybill.store') }}" class="space-y-1">
+                <form method="post" action="{{ route('paybill.store') }}" class="space-y-1 p-3">
                     @csrf
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
