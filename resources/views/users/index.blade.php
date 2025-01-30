@@ -3,65 +3,67 @@
         <div class="max-w-8xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
-                    <div class="flex justify-between items-center mb-6 border-b-2 border-slate-100 pb-4">
-                        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                            {{ __('Customer List') }}
-                        </h2>
+                    <!-- Scrollable container -->
+                    <div style="max-height: 80vh; overflow-y: auto;">
+                        <div class="flex justify-between items-center mb-6 border-b-2 border-slate-100 pb-4">
+                            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                                {{ __('Customer List') }}
+                            </h2>
 
+                            <div class="flex space-x-2">
+                                <a href="{{ route('area-location.index') }}"
+                                    class="inline-flex items-center px-3 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white uppercase">
+                                    {{ __('Refresh') }}
+                                </a>
+                                <a href="{{ route('area-location.index') }}"
+                                    class="inline-flex items-center px-3 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white uppercase">
+                                    {{ __('Area') }}
+                                </a>
+                                <a href="{{ route('olt-device.index') }}"
+                                    class="inline-flex items-center px-3 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white uppercase">
+                                    {{ __('OLT') }}
+                                </a>
+                                <a href="{{ route('pon.index') }}"
+                                    class="inline-flex items-center px-3 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white uppercase">
+                                    {{ __('PON') }}
+                                </a>
+                                <a href="{{ route('nap.index') }}"
+                                    class="inline-flex items-center px-3 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white uppercase">
+                                    {{ __('NAP') }}
+                                </a>
+                                <a href="{{ route('port.index') }}"
+                                    class="inline-flex items-center px-3 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white uppercase">
+                                    {{ __('Port') }}
+                                </a>
+                            </div>
+                        </div>
 
-<div class="flex space-x-2">
-    <a href="{{ route('area-location.index') }}"
-        class="inline-flex items-center px-3 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white uppercase">
-        {{ __('Refresh') }}
-    </a>
-    <a href="{{ route('area-location.index') }}"
-        class="inline-flex items-center px-3 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white uppercase">
-        {{ __('Area') }}
-    </a>
-    <a href="{{ route('olt-device.index') }}"
-        class="inline-flex items-center px-3 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white uppercase">
-        {{ __('OLT') }}
-    </a>
-    <a href="{{ route('pon.index') }}"
-        class="inline-flex items-center px-3 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white uppercase">
-        {{ __('PON') }}
-    </a>
-    <a href="{{ route('nap.index') }}"
-        class="inline-flex items-center px-3 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white uppercase">
-        {{ __('NAP') }}
-    </a>
-    <a href="{{ route('port.index') }}"
-        class="inline-flex items-center px-3 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white uppercase">
-        {{ __('Port') }}
-    </a>
-</div>
-
-                    </div>
-                    <div>
-                        <section>
-                            @php
-$headers = [
-    'id' => 'ID',
-    'name' => 'Name',
-    'active_due_date' => 'Expire',
-    'status' => 'Status',
-    'area' => 'area',
-    'log_info' => 'Last login/Last logout',
-    'action' => ''
-];
-$dropdownActions = ['Lock Selected' => 'lock'];
-$dltAllbtn = ["Lock Selected", "users.bulk-lock"];
-$tableActions = ['pay' => 'paybill.create', 'edit' => 'users.edit', 'delete-item' => 'users.destroy'];
-$addButton = ['Add Customer', 'users.create'];
-$customMessage = [
-    'success' => '',
-    'delete' => 'This User will be permanently deleted if you proceed.',
-];
-                            @endphp
-                            <x-table :headers="$headers" :data="$users" title="" :dropdown="$dropdownActions" :actions="$tableActions"
-                                tablename="user" :addbtn="$addButton" :filters="$userFilter" :searchField="true" :dltAllbtn="$dltAllbtn"
-                                itemName="User" :message="$customMessage" />
-                        </section>
+                        <div>
+                            <section>
+                                @php
+                                $headers = [
+                                    'id' => 'ID',
+                                    'name' => 'Name',
+                                    'active_due_date' => 'Expire',
+                                    'status' => 'Status',
+                                    'area' => 'area',
+                                    'log_info' => 'Last login/Last logout',
+                                    'action' => ''
+                                ];
+                                $dropdownActions = ['Lock Selected' => 'lock'];
+                                $dltAllbtn = ["Lock Selected", "users.bulk-lock"];
+                                $tableActions = ['pay' => 'paybill.create', 'edit' => 'users.edit', 'delete-item' => 'users.destroy'];
+                                $addButton = ['Add Customer', 'users.create'];
+                                $customMessage = [
+                                    'success' => '',
+                                    'delete' => 'This User will be permanently deleted if you proceed.',
+                                ];
+                                @endphp
+                                <x-table :headers="$headers" :data="$users" title="" :dropdown="$dropdownActions" :actions="$tableActions"
+                                    tablename="user" :addbtn="$addButton" :filters="$userFilter" :searchField="true" :dltAllbtn="$dltAllbtn"
+                                    itemName="User" :message="$customMessage" />
+                            </section>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -140,7 +142,6 @@ $customMessage = [
         </div>
     </div>
 </x-app-layout>
-
 @include('sweetalert::alert')
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 

@@ -3,22 +3,24 @@
 namespace App\Http\Controllers;
 
 use App\Models\Detail;
+use App\Models\ServiceDetails;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 class TransactionController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
         if (auth()->user()->isUser()) {
             return redirect('/');
         }
-    
+
         // Fetch users with their transactions
         $users = User::with('transaction')->where('role', 'user')->get();
-    
+
         // Calculate totals based on payment method
         $totalsByMethod = [
             'Cash' => 0,
@@ -26,44 +28,73 @@ class TransactionController extends Controller
             'Maya' => 0,
             'Bank Transfer' => 0,
         ];
-    
+
         // Total amounts per day
         $totalsPerDay = [];
-    
+
         // Overall total
         $overallTotal = 0;
-    
+
         foreach ($users as $user) {
             foreach ($user->transaction as $transaction) {
                 $paymentMethod = $transaction->payment_method;
                 $paymentAmount = $transaction->payment_amount;
-                
+
                 // Use payment_date if available, fallback to created_at
-                $transactionDate = $transaction->payment_date 
-                    ? Carbon::parse($transaction->payment_date)->format('Y-m-d') 
+                $transactionDate = $transaction->payment_date
+                    ? Carbon::parse($transaction->payment_date)->format('Y-m-d')
                     : ($transaction->created_at ? $transaction->created_at->format('Y-m-d') : null);
-        
+
                 if (!$transactionDate) {
                     continue; // Skip transactions without a valid date
                 }
-        
+
                 // Update totals by payment method
                 if (isset($totalsByMethod[$paymentMethod])) {
                     $totalsByMethod[$paymentMethod] += $paymentAmount;
                 }
-        
+
                 // Update totals per day
                 if (!isset($totalsPerDay[$transactionDate])) {
                     $totalsPerDay[$transactionDate] = 0;
                 }
                 $totalsPerDay[$transactionDate] += $paymentAmount;
-        
+
                 // Update overall total
                 $overallTotal += $paymentAmount;
             }
         }
-    
-        return view('transaction.index', compact('users', 'totalsByMethod', 'totalsPerDay', 'overallTotal'));
+
+        $tabActive = $request->input('tab-active', 'transaction');
+        $searchTerm = $request->input('search');
+        $area = $request->input('transaction');
+
+        // Base query with necessary joins
+        $usersListQuery = Transaction::select(
+            'transaction.id as myid',
+            'transaction.*',
+            'details.*'
+        )
+            ->join('users', 'users.id', '=', 'transaction.user_id')
+            ->join('details', 'details.user_id', '=', 'users.id');
+
+        if ($tabActive === 'transaction') {
+            if ($request->filled('payment')) {
+                $usersListQuery->where('transaction.payment_method', $request->input('payment'));
+            }
+        }
+
+        $areaFilter = [
+            'payment' => Transaction::distinct()->pluck('payment_method', 'payment_method')->toArray(),
+        ];
+
+        // Paginate the results
+        $data = $usersListQuery->paginate(10)->withQueryString();
+
+        // Define the $tableCheckedbox variable
+        $tableCheckedbox = false; // or true, depending on your logic
+
+        return view('transaction.index', compact('data', 'areaFilter', 'users', 'totalsByMethod', 'totalsPerDay', 'overallTotal', 'tableCheckedbox'));
     }
 
 
@@ -73,15 +104,15 @@ class TransactionController extends Controller
     {
         // Fetch transactions for the given user
         $transactions = Transaction::where('user_id', $user->id)->get();
-    
+
         // Pass the transactions and user to the view
         return view('transaction.each-user', compact('transactions', 'user'));
     }
-    
 
-    
 
-    
+
+
+
 
     public function create(User $user)
     {
@@ -114,6 +145,7 @@ class TransactionController extends Controller
 
 
         $user = User::find($transaction->user_id);
+        $detail = Detail::find($transaction->user_id);
 
         return view('transaction.edit', compact('user', 'transaction'));
     }
@@ -145,23 +177,23 @@ class TransactionController extends Controller
 
 
         $serviceDetails = ServiceDetails::where('user_id', $request->user_id)->first();
-    
+
         if ($serviceDetails) {
             $previousDueDate = $serviceDetails->active_due_date;
-    
+
             // Check if current_payable_amount is not equal to the payment amount
             if ($current_payable_amount != $request->payment_amount) {
                 $perdayAmount = $current_payable_amount / 30;
                 $noofdays = $request->payment_amount / $perdayAmount;
-    
+
                 // Update active_due_date and billing_date
                 $newActiveDueDate = now()->addDays($noofdays);
                 $newBillingDate = $newActiveDueDate->copy()->addDays(10);
-    
+
                 $serviceDetails->update([
                     'active_due_date' => $newActiveDueDate,
                     'billing_date' => $newBillingDate,
-              
+
                 ]);
             }
         }
@@ -170,10 +202,39 @@ class TransactionController extends Controller
         return back()->with('success', __('Update successful'));
     }
 
-    public function destroy($id)
+
+
+    public function destroy(string $id)
     {
-        $transaction = Transaction::findOrFail($id);
-        $transaction->delete();
-        return redirect()->route('transaction.index')->with('success', 'Transaction deleted successfully');
+
+        $areaLocation = Transaction::find($id);
+
+
+        $serviceDetail = ServiceDetails::where("user_id", $areaLocation->user_id)->firstOrFail();
+
+        $prev = Carbon::parse($serviceDetail->previous_due_date);
+        $active = Carbon::parse($serviceDetail->active_due_date);
+
+        $daysDifference = $active->diffInDays($prev);
+
+        $newPrevDate = $prev->subDays($daysDifference);
+        $newBillingDate = $prev->addDays(10);
+
+        $serviceDetail->update([
+            'previous_due_date' => $newPrevDate,
+            'active_due_date' => $serviceDetail->previous_due_date,
+            'billing_date' => $newBillingDate,
+        ]);
+
+        if (!$areaLocation) {
+
+            return response()->json(['message' => 'Transaction not found'], 404);
+        }
+
+
+             $areaLocation->delete();
+
+
+        return response()->json(['message' => 'Transaction deleted successfully'], 200);
     }
 }

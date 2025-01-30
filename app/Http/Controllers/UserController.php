@@ -81,6 +81,18 @@ class UserController extends Controller
             if ($request->filled('Area')) {
                 $usersListQuery->where('details.area', $request->input('Area'));
             }
+            if ($request->filled('olt')) {
+                $usersListQuery->where('details.olt', $request->input('olt'));
+            }
+            if ($request->filled('pon')) {
+                $usersListQuery->where('details.pon', $request->input('pon'));
+            }
+            if ($request->filled('nap')) {
+                $usersListQuery->where('details.nap', $request->input('nap'));
+            }
+            if ($request->filled('port')) {
+                $usersListQuery->where('details.port', $request->input('port'));
+            }
         }
 
         // Other filters (e.g., status) if applicable
@@ -93,10 +105,10 @@ class UserController extends Controller
             'status' => ServiceDetails::distinct()->pluck('status', 'status')->toArray(),
             'Area' => Detail::distinct()->pluck('area', 'area')->toArray(),
             'Lock' => Detail::distinct()->pluck('is_lock', 'is_lock')->toArray(), // Fetch `is_lock` options
-            'OLT' => Detail::distinct()->pluck('is_lock', 'is_lock')->toArray(),
-            'PON' => Detail::distinct()->pluck('is_lock', 'is_lock')->toArray(),
-            'NAP' => Detail::distinct()->pluck('is_lock', 'is_lock')->toArray(),
-            'PORT' => Detail::distinct()->pluck('is_lock', 'is_lock')->toArray(),
+            'olt' => OltDevice::distinct()->pluck('olt_device', 'olt_device')->toArray(),
+            'pon' => Pon::distinct()->pluck('pon', 'pon')->toArray(),
+            'nap' => Nap::distinct()->pluck('nap', 'nap')->toArray(),
+            'port' => Port::distinct()->pluck('port', 'port')->toArray(),
         ];
 
         // Paginate the results
@@ -122,7 +134,7 @@ class UserController extends Controller
         $nap = Nap::all();
         $packages = Package::orderBy('name')->get();
 
-        return view('users.create', compact('packages', 'areas','olt','pon','port','nap'));// Ensure 'areas' is passed
+        return view('users.create', compact('packages', 'areas', 'olt', 'pon', 'port', 'nap'));// Ensure 'areas' is passed
     }
 
     private function generateUniqueInvoiceNumber()
@@ -425,7 +437,7 @@ class UserController extends Controller
         $routers = Router::all();
         $packages = Package::all();
         // Pass data to the view
-        return view('users.edit', compact('user', 'data', 'routers', 'packages', 'areas', 'olt', 'nap', 'port', 'pon','area'));
+        return view('users.edit', compact('user', 'data', 'routers', 'packages', 'areas', 'olt', 'nap', 'port', 'pon', 'area'));
 
 
     }
@@ -452,7 +464,7 @@ class UserController extends Controller
             "port" => "nullable|string",
             "nap" => "nullable|string",
         ]);
-       
+
 
 
         $user->name = $validatedData['name'] ?? $user->name;
@@ -476,8 +488,8 @@ class UserController extends Controller
                 'is_lock' => $validatedData['is_lock'] ?? $details->is_lock,
                 'olt' => $validatedData['olt'] ?? $details->olt,
                 'pon' => $validatedData['pon'] ?? $details->pon,
-                'port' =>  $validatedData['port'] ?? $details->port,
-                'nap' =>  $validatedData['nap'] ?? $details->nap,
+                'port' => $validatedData['port'] ?? $details->port,
+                'nap' => $validatedData['nap'] ?? $details->nap,
             ]);
         }
 

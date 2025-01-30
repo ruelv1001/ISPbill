@@ -34,7 +34,7 @@
                             </div>
 
                             <div>
-                            <div class="hidden">
+                                <div class="hidden">
                                     <x-input-label for="transaction_id" :value="__('Customer name')" class="mt-4" />
                                     <x-text-input id="transaction_id" name="transaction_id" type="text"
                                         class="mt-1 block w-full bg-gray-100" value="{{ $transaction->id }}" />
@@ -47,25 +47,19 @@
                                         value="{{ $user->detail->user_id ?? '' }}"></x-text-input>
                                 </div>
                                 <div>
-                                    <x-input-label for="first_name" :value="__('User First name')" class="mt-4"
+                                    <x-input-label for="first_name" :value="__('User Full name')" class="mt-4"
                                         disabled></x-input-label>
                                     <x-text-input id="first_name" name="first_name" type="text" readonly
                                         class="mt-1 block w-full bg-gray-100"
-                                        value="{{ $user->detail->first_name ?? '' }}"></x-text-input>
+                                        value="{{ $user->detail->name ?? '' }}"></x-text-input>
                                 </div>
 
-                                <div>
-                                    <x-input-label for="last_name" :value="__('User Last name')" class="mt-4"
-                                        disabled></x-input-label>
-                                    <x-text-input id="last_name" name="last_name" type="text" readonly
-                                        class="mt-1 block w-full bg-gray-100"
-                                        value="{{ $user->detail->last_name ?? '' }}"></x-text-input>
-                                </div>
+
 
                                 <div>
                                     <x-input-label for="payment_amount" :value="__('User Payment amount')" class="mt-4"
                                         disabled></x-input-label>
-                                    <x-text-input id="payment_amount" name="payment_amount" type="text"
+                                    <x-text-input id="payment_amount" name="payment_amount" type="text" readonly
                                         class="mt-1 block w-full bg-gray-100"
                                         value="{{ $transaction->payment_amount ?? '' }}"></x-text-input>
                                 </div>
@@ -81,7 +75,7 @@
                                 <div>
                                     <x-input-label for="remarks" :value="__('Remarks')" class="mt-4"
                                         disabled></x-input-label>
-                                    <x-text-input id="remarks" name="remarks" type="text"
+                                    <x-text-input id="remarks" name="remarks" type="text" readonly
                                         class="mt-1 block w-full bg-gray-100"
                                         value="{{ $transaction->remarks ?? '' }}"></x-text-input>
                                 </div>
