@@ -2,7 +2,7 @@
     <div class="py-6">
         <div class="max-w-8xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 shadow sm:rounded-lg">
-                <div class="p-4 sm:p-8">
+        <div class="p-4 sm:p-8 max-h-[80vh] overflow-y-auto">
                     <x-slot name="header">
                         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
                             {{ $user->name }}
@@ -42,7 +42,7 @@
                         @csrf
                         @method('patch')
 
-                        <div class="grid grid-cols-1 gap-4">
+                        <div class="grid grid-cols-1 gap-4 borde">
                             <div>
                                 <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">{{ __('Account') }}
                                 </h2>
@@ -51,7 +51,7 @@
                                 </p>
 
 
-                                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 outline outline-2 outline-gray-300  p-4">
                                     <div>
                                         <x-input-label for="user_id" :value="__('User ID')" class="mt-4"
                                             disabled></x-input-label>
@@ -172,56 +172,63 @@
 
                                 </div>
 
-                        <div class="grid grid-cols-5 gap-4">
-                            <p class="text-lg font-medium text-gray-900 dark:text-gray-100">
-                                {{ __("PON management") }}
-                            </p>
-                            <div>
-                            <x-input-label for="olt" :value="__('OLT Device')" class="mt-4"></x-input-label>
-                            <select id="olt" name="olt">
-                                <option value="{{ $user->detail->olt }}" selected>{{ $user->detail->olt }}</option>
-                                @if ($olt && $olt->isNotEmpty())
-                                    @foreach($olt as $data)
-                                        @if ($data->olt_device !== $user->detail->olt)
-                                            <option value="{{ $data->olt_device }}">{{ $data->olt_device }}</option>
-                                        @endif
-                                    @endforeach
-                                @else
-                                    <option disabled>No OLT available</option>
-                                @endif
-                            </select>
+                    <div class="space-y-4 outline outline-2 outline-gray-300  p-4 mt-4">
+                        <p class="text-lg font-medium text-gray-900 dark:text-gray-100">
+                            {{ __("PON management") }}
+                        </p>
 
+                        <div class="flex items-center gap-6">
+                            <div class="flex items-center gap-2">
+                                <x-input-label for="olt" :value="__('OLT Device')"></x-input-label>
+                                <select id="olt" name="olt" class="border-gray-300 rounded-md shadow-sm">
+                                    <option value="{{ $user->detail->olt }}" selected>{{ $user->detail->olt }}</option>
+                                    @if ($olt && $olt->isNotEmpty())
+                                        @foreach($olt as $data)
+                                            @if ($data->olt_device !== $user->detail->olt)
+                                                <option value="{{ $data->olt_device }}">{{ $data->olt_device }}</option>
+                                            @endif
+                                        @endforeach
+                                    @else
+                                        <option disabled>No OLT available</option>
+                                    @endif
+                                </select>
+                            </div>
 
-                                    <x-input-label for="pon" :value="__('Select PON')" class="mt-4"></x-input-label>
-                                    <select id="pon" name="pon">
-                                        <option value="{{ $user->detail->pon }}" selected>{{ $user->detail->pon }}</option>
-                                        @if ($pon && $pon->isNotEmpty())
-                                            @foreach($pon as $data)
-                                                @if ($data->pon !== $user->detail->pon)
-                                                    <option value="{{ $data->pon }}">{{ $data->pon }}</option>
-                                                @endif
-                                            @endforeach
-                                        @else
-                                            <option disabled>No PON available</option>
-                                        @endif
-                                    </select>
+                            <div class="flex items-center gap-2">
+                                <x-input-label for="pon" :value="__('Select PON')"></x-input-label>
+                                <select id="pon" name="pon" class="border-gray-300 rounded-md shadow-sm">
+                                    <option value="{{ $user->detail->pon }}" selected>{{ $user->detail->pon }}</option>
+                                    @if ($pon && $pon->isNotEmpty())
+                                        @foreach($pon as $data)
+                                            @if ($data->pon !== $user->detail->pon)
+                                                <option value="{{ $data->pon }}">{{ $data->pon }}</option>
+                                            @endif
+                                        @endforeach
+                                    @else
+                                        <option disabled>No PON available</option>
+                                    @endif
+                                </select>
+                            </div>
 
-                                            <x-input-label for="nap" :value="__('Select NAP')" class="mt-4"></x-input-label>
-                                            <select id="nap" name="nap">
-                                                <option value="{{ $user->detail->nap }}" selected>{{ $user->detail->nap }}</option>
-                                                @if ($nap && $nap->isNotEmpty())
-                                                    @foreach($nap as $data)
-                                                        @if ($data->nap !== $user->detail->nap)
-                                                            <option value="{{ $data->nap }}">{{ $data->nap }}</option>
-                                                        @endif
-                                                    @endforeach
-                                                @else
-                                                    <option disabled>No NAP available</option>
-                                                @endif
-                                            </select>
+                            <div class="flex items-center gap-2">
+                                <x-input-label for="nap" :value="__('Select NAP')"></x-input-label>
+                                <select id="nap" name="nap" class="border-gray-300 rounded-md shadow-sm">
+                                    <option value="{{ $user->detail->nap }}" selected>{{ $user->detail->nap }}</option>
+                                    @if ($nap && $nap->isNotEmpty())
+                                        @foreach($nap as $data)
+                                            @if ($data->nap !== $user->detail->nap)
+                                                <option value="{{ $data->nap }}">{{ $data->nap }}</option>
+                                            @endif
+                                        @endforeach
+                                    @else
+                                        <option disabled>No NAP available</option>
+                                    @endif
+                                </select>
+                            </div>
 
-                                <x-input-label for="port" :value="__('Select PORT')" class="mt-4"></x-input-label>
-                                <select id="port" name="port">
+                            <div class="flex items-center gap-2">
+                                <x-input-label for="port" :value="__('Select PORT')"></x-input-label>
+                                <select id="port" name="port" class="border-gray-300 rounded-md shadow-sm">
                                     <option value="{{ $user->detail->port }}" selected>{{ $user->detail->port }}</option>
                                     @if ($port && $port->isNotEmpty())
                                         @foreach($port as $data)
@@ -233,20 +240,12 @@
                                         <option disabled>No PORT available</option>
                                     @endif
                                 </select>
-
-                            </div>
-
-
-                            <div>
-
-                            </div>
-
-                            <div>
-
                             </div>
                         </div>
+                    </div>
 
-                                <div class="mt-4">
+
+                                <div class="mt-4 outline outline-2 outline-gray-300  p-4">
                                         <p class="text-lg font-medium text-gray-900 dark:text-gray-100">
                                             {{ __("MT Parameters") }}
                                         </p>
@@ -292,6 +291,7 @@
             </div>
         </div>
     </div>
+        </div>
 </x-app-layout>
 @include('sweetalert::alert')
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
