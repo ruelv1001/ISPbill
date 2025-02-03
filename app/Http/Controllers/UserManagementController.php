@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\UserLimit;
 use App\Models\UserType;
 use Illuminate\Http\Request;
 use App\Models\ServiceDetails;
@@ -24,15 +25,49 @@ class UserManagementController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    // public function index()
+    // {
+    //     if (auth()->user()->isUser()) {
+    //         return redirect('/');
+    //     }
+
+    //     $users = User::with('detail')->where('role', 'user')->get();
+    //     return view('user-management.index', compact('users'));
+    // }
+
+    public function index(Request $request)
     {
-        if (auth()->user()->isUser()) {
-            return redirect('/');
+        $tabActive = $request->input('tab-active', 'user_management');
+        $searchTerm = $request->input('search');
+        $area = $request->input('area');
+
+        // Base query with necessary joins
+        $usersListQuery = User::select('users.*');
+
+        // Apply filters based on tab active
+        if ($tabActive === 'user_management') {
+            if ($request->filled('role')) {
+                $usersListQuery->where('users.role', $request->input('role'));
+            } else {
+                // Exclude the 'admin' role if no specific role is selected
+                $usersListQuery->where('users.role', '!=', 'admin');
+            }
         }
 
-        $users = User::with('detail')->where('role', 'user')->get();
-        return view('user-management.index', compact('users'));
+        // Prepare filter options for the dropdown
+        $areaFilter = [
+            'role' => User::distinct()->pluck('role', 'role')->map(function ($role) {
+                return strtolower($role);
+            })->toArray(),
+        ];
+
+        // Paginate the results
+        $data = $usersListQuery->paginate(10)->withQueryString();
+
+        // Return the view with data
+        return view('user-management.index', compact('data', 'areaFilter'));
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -45,7 +80,7 @@ class UserManagementController extends Controller
         $userType = UserType::all();
         $packages = Package::orderBy('name')->get();
 
-        return view('user-management.create', compact('packages','userType'));
+        return view('user-management.create', compact('packages', 'userType'));
     }
 
     /**
@@ -53,55 +88,13 @@ class UserManagementController extends Controller
      */
     public function store(Request $request)
     {
-        $permissions = [
-            'dashboard_create',
-            'dashboard_edit',
-            'dashboard_delete',
-            'dashboard_view',
-            'packages_create',
-            'packages_edit',
-            'packages_delete',
-            'packages_view',
-            'customer_create',
-            'customer_edit',
-            'customer_delete',
-            'customer_view',
-            'service_detail_create',
-            'service_detail_edit',
-            'service_detail_delete',
-            'service_detail_view',
-            'transaction_create',
-            'transaction_edit',
-            'transaction_delete',
-            'transaction_view',
-            'router_create',
-            'router_edit',
-            'router_delete',
-            'router_view',
-            'user_management_create',
-            'user_management_edit',
-            'user_management_delete',
-            'user_management_view',
-            'tickets_create',
-            'tickets_edit',
-            'tickets_delete',
-            'tickets_view',
-            'dashboard_table',
-            'package_table',
-            'customer_table',
-            'service_detail_table',
-            'transaction_table',
-            'router_table',
-            'user_management_table',
-            'ticket_table',
-        ];
 
         $validatedData = $request->validate([
             "email" => "required|email|unique:users,email",
             "password" => "nullable|min:6|confirmed",
             "name" => "required|string|max:255",
             'role' => ['required', 'string', 'not_in:user'],
-        ] + array_fill_keys($permissions, 'nullable|boolean'));
+        ]);
 
         // Create the user
         $user = User::create([
@@ -111,15 +104,8 @@ class UserManagementController extends Controller
             'password' => Hash::make($validatedData['password']),
         ]);
 
-        // Prepare data for user_limit table
-        $userLimitData = ['user_id' => $user->id, 'user_type' => $validatedData['role']];
 
-        foreach ($permissions as $permission) {
-            $userLimitData[$permission] = $validatedData[$permission] ?? 0;
-        }
 
-        // Insert into user_limit table
-        DB::table('user_limit')->insert($userLimitData);
 
 
 

@@ -19,26 +19,25 @@
                     <div>
                         <section>
                             @php
-                        $headers = [
-                                'id' => 'ID',
-                                'role' => 'Area',
-                                'description' => 'Description',
-                                'action' => ''
-                            ];
-                            $dropdownActions = ['Lock Selected' => 'lock']; // Add lock action to dropdown
-                            $dltAllbtn = ["Lock Selected", "users.bulk-lock"];
-                            $tableActions = ['edit' => 'user-type.edit', 'delete-item' => 'user-type.destroy'];
-                            $addButton = ['Add User Role', 'user-type.create'];
+                            $headers = [
 
-                            $customMessage = [
-                                'success' => '',
-                                'delete' => 'This User will be permanently deleted if you proceed.',
-                            ];
+                                    'role' => 'Area',
+                                    'description' => 'Description',
+                                    'action' => ''
+                                ];
+                                $dropdownActions = ['Lock Selected' => 'lock']; // Add lock action to dropdown
+                                $dltAllbtn = ["Lock Selected", "users.bulk-lock"];
+                                $tableActions = ['edit' => 'user-type.edit', 'delete-item' => 'user-type.destroy'];
+                                $addButton = ['Add User Role', 'user-type.create'];
+                                $customMessage = [
+                                    'success' => '',
+                                    'delete' => 'This User will be permanently deleted if you proceed.',
+                                ];
 
                             @endphp
                             <x-table :headers="$headers" :data="$data" title="User Type" :dropdown="$dropdownActions"
                                 :actions="$tableActions" tablename="User Role" :addbtn="$addButton" :filters="$areaFilter"
-                                :searchField="true" :dltAllbtn="$dltAllbtn" itemName="Area" :message="$customMessage" />
+                                :searchField="false" :dltAllbtn="$dltAllbtn" itemName="Area" :message="$customMessage" />
                         </section>
                     </div>
                 </div>

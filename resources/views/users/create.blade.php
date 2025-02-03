@@ -77,6 +77,20 @@
                                 </div>
 
                                 <div>
+                                    <x-input-label for="role" :value="__('Role')" class="mt-4"></x-input-label>
+                                    <select name="role" id="role" class="w-full">
+                                        @if ($role && $role->isNotEmpty())
+                                            @foreach($role as $roles)
+                                                <option value="{{ $roles->role }}">{{ $roles->role }}</option>
+                                            @endforeach
+                                        @else
+                                            <option disabled>No areas available</option>
+                                        @endif
+                                    </select>
+                                    <x-input-error class="mt-2" :messages="$errors->get('roles')"></x-input-error>
+                                </div>
+
+                                <div>
                                     <x-input-label for="coordinates" :value="__('Coordinates')"
                                         class="mt-4"></x-input-label>
                                     <x-text-input id="coordinates" name="coordinates" type="text"

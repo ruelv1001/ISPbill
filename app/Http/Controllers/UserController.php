@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\AreaLocation;
 use App\Models\ServiceDetails;
 use App\Models\Setting;
+use App\Models\UserType;
 use Illuminate\Support\Facades\DB;
 use App\Models\Billing;
 use App\Models\Detail;
@@ -61,6 +62,8 @@ class UserController extends Controller
                 'service_details.*',
                 'details.user_id as id',
                 'details.is_lock as is_lock',
+                'details.package_name as package_name',
+                'details.remarks as remarks',
                 'details.area as area',
                 'miktrotik_parameters.uptime',
                 'miktrotik_parameters.down_time',
@@ -93,6 +96,7 @@ class UserController extends Controller
             if ($request->filled('port')) {
                 $usersListQuery->where('details.port', $request->input('port'));
             }
+
         }
 
         // Other filters (e.g., status) if applicable
@@ -133,8 +137,8 @@ class UserController extends Controller
         $port = Port::all();
         $nap = Nap::all();
         $packages = Package::orderBy('name')->get();
-
-        return view('users.create', compact('packages', 'areas', 'olt', 'pon', 'port', 'nap'));// Ensure 'areas' is passed
+        $role = UserType::all();
+        return view('users.create', compact('packages', 'areas', 'olt', 'pon', 'port', 'nap', 'role'));// Ensure 'areas' is passed
     }
 
     private function generateUniqueInvoiceNumber()

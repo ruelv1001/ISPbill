@@ -31,7 +31,7 @@ class UserTypeController extends Controller
                 $usersListQuery->where('users.role', $request->input('role'));
             }
 
-           
+
         }
 
 
@@ -57,7 +57,7 @@ class UserTypeController extends Controller
             return redirect('/');
         }
 
-     
+
         $data = UserType::orderBy('role')->get();
 
         return view('user-type.create', compact('data'));
@@ -73,6 +73,48 @@ class UserTypeController extends Controller
      */
     public function store(Request $request)
     {
+        $permissions = [
+            'dashboard_create',
+            'dashboard_edit',
+            'dashboard_delete',
+            'dashboard_view',
+            'packages_create',
+            'packages_edit',
+            'packages_delete',
+            'packages_view',
+            'customer_create',
+            'customer_edit',
+            'customer_delete',
+            'customer_view',
+            'service_detail_create',
+            'service_detail_edit',
+            'service_detail_delete',
+            'service_detail_view',
+            'transaction_create',
+            'transaction_edit',
+            'transaction_delete',
+            'transaction_view',
+            'router_create',
+            'router_edit',
+            'router_delete',
+            'router_view',
+            'user_management_create',
+            'user_management_edit',
+            'user_management_delete',
+            'user_management_view',
+            'tickets_create',
+            'tickets_edit',
+            'tickets_delete',
+            'tickets_view',
+            'dashboard_table',
+            'package_table',
+            'customer_table',
+            'service_detail_table',
+            'transaction_table',
+            'router_table',
+            'user_management_table',
+            'ticket_table',
+        ];
 
         $query = new UserType();
         $query->role = $request->role;
@@ -80,12 +122,16 @@ class UserTypeController extends Controller
 
         $query->save();
 
+        $userLimitData = ['user_type' => $request->role];
+        foreach ($permissions as $permission) {
+            $userLimitData[$permission] = $request->input($permission, 0); // Default to 0 if permission not selected
+        }
+
+        // Insert into user_limit table
+        \DB::table('user_limit')->insert($userLimitData);
 
         Alert::success('Success!', 'Role Save Successful.');
         return redirect('user-type');
-
-
-
     }
 
     /**
@@ -96,7 +142,7 @@ class UserTypeController extends Controller
         if (!auth()->user()->isAdmin()) {
             return redirect('/');
         }
-    
+
         return view('user-type.edit', compact('user_type'));
     }
 

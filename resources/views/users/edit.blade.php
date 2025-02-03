@@ -146,6 +146,13 @@
 
                                     </div>
 
+                                    <div>
+                                        <x-input-label for="remarks" :value="__('Remarks')" class="mt-4"></x-input-label>
+                                        <x-text-input id="remarks" name="remarks" type="text" class="mt-1 block w-full"
+                                            value="{{ $user->detail->remarks }}"></x-text-input>
+                                        <x-input-error class="mt-2" :messages="$errors->get('remarks')"></x-input-error>
+                                    </div>
+
                                     <!-- Search Input -->
 
 
