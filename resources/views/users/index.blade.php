@@ -1,5 +1,5 @@
 <x-app-layout>
-<div class="py-6">
+    <div class="py-6">
         <div class="max-w-8xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
@@ -71,9 +71,9 @@
     </div>
 
     <!-- Payment Modal -->
-    <div id="payment-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full flex items-center justify-center p-4">
-        <div class="relative mx-auto p-5 border w-3/4 shadow-lg rounded-md bg-white">
-            <div class="flex justify-between items-center pb-4 border-b p-2">
+    <div id="payment-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full" x-show="open">
+        <div class="relative top-20 mx-auto p-5 border w-3/4 shadow-lg rounded-md bg-white">
+            <div class="flex justify-between items-center pb-4 border-b">
                 <h3 class="text-xl font-semibold">Payment Details</h3>
                 <button onclick="closePaymentModal()" class="text-gray-400 hover:text-gray-500">
                     <span class="text-2xl">&times;</span>
@@ -81,7 +81,7 @@
             </div>
 
             <div class="py-4">
-                <form method="post" action="{{ route('paybill.store') }}" class="space-y-1 p-3">
+                <form method="post" action="{{ route('paybill.store') }}" class="space-y-1">
                     @csrf
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
