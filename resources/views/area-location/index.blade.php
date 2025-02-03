@@ -1,5 +1,4 @@
 <x-app-layout>
-
     <div class="py-6">
         <div class="max-w-8xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
@@ -8,21 +7,18 @@
                         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                             {{ __('Area List') }}
                         </h2>
-
-
-
-
                     </div>
-                    <div>
+
+                    <!-- Scrollable container -->
+                    <div class="h-[500px] overflow-y-auto border border-gray-300 rounded-md p-4">
                         <section>
                             @php
                                 $headers = [
-                           
                                     'area' => 'Area',
                                     'description' => 'Description',
                                     'action' => 'Action'
                                 ];
-                                $dropdownActions = []; // Add lock action to dropdown
+                                $dropdownActions = [];
                                 $dltAllbtn = [];
                                 $tableActions = ['edit' => 'area-location.edit', 'delete-item' => 'area-location.destroy'];
                                 $addButton = ['Add Area', 'area-location.create'];
@@ -31,18 +27,19 @@
                                     'success' => '',
                                     'delete' => 'This User will be permanently deleted if you proceed.',
                                 ];
-
                             @endphp
                             <x-table :headers="$headers" :data="$data" title="Area" :dropdown="$dropdownActions"
                                 :actions="$tableActions" tablename="Area" :addbtn="$addButton"
-                               :searchField="false" :dltAllbtn="$dltAllbtn" itemName="Area" :message="$customMessage" />
+                                :searchField="false" :dltAllbtn="$dltAllbtn" itemName="Area" :message="$customMessage" />
                         </section>
                     </div>
+                    <!-- End Scrollable container -->
                 </div>
             </div>
         </div>
     </div>
 </x-app-layout>
+
 
 @include('sweetalert::alert')
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
@@ -58,16 +55,7 @@
         location.reload();
     });
 </script>
-<script>
-    document.addEventListener('livewire:load', () => {
-        const bulkLockForm = document.getElementById('bulk-lock-form');
-        const bulkUserIdsInput = document.getElementById('bulk-user-ids');
 
-        Livewire.on('updateSelectedUsers', (selectedUserIds) => {
-            bulkUserIdsInput.value = selectedUserIds.join(',');
-        });
-    });
-</script>
 
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 

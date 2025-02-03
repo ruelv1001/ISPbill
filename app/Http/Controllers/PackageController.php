@@ -10,23 +10,40 @@ use RouterOS\Client;
 use phpseclib3\Net\SSH2;
 class PackageController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $data = null; // Define $data to prevent "undefined variable" error
+        $areaFilter = []; // Define $areaFilter to avoid undefined variable error
+
         if (auth()->user()->isUser()) {
             $user = auth()->user();
-            $router_name = $user->detail->router_name;
-            $router = Router::where("name", $router_name)->firstOrFail();
-            $packages = Package::where('router_id', $router->id)->orderBy('name')->get();
-            return view('packages.index', compact('packages'));
+            // $router_name = $user->detail->router_name;
+            // $router = Router::where("name", $router_name)->firstOrFail();
+            // $packages = Package::where('router_id', $router->id)->orderBy('name')->get();
+
+            $tabActive = $request->input('tab-active', 'port');
+            $searchTerm = $request->input('search');
+            $area = $request->input('port');
+            $usersListQuery = Package::select('packages.*');
+
+            if ($tabActive === 'package') {
+                if ($request->filled('name')) {
+                    $usersListQuery->where('packages.name', $request->input('name'));
+                }
+            }
+
+            $areaFilter = [
+                'name' => Package::distinct()->pluck('name', 'name')->toArray(),
+            ];
+            $data = $usersListQuery->paginate(10)->withQueryString();
         }
 
         if (auth()->user()->isAdmin()) {
-            $packages = Package::orderBy('name')->get();
-            return view('packages.index', compact('packages'));
+            $data = Package::orderBy('name')->paginate(10)->withQueryString();
         }
 
+        return view('packages.index', compact('data', 'areaFilter'));
     }
-
     public function create()
     {
         if (!auth()->user()->isAdmin()) {
@@ -109,5 +126,23 @@ class PackageController extends Controller
         $package->save();
 
         return redirect('packages')->with('success', __('Package successfullly updated'));
+    }
+
+    public function destroy(string $id)
+    {
+
+        $areaLocation = Package::find($id);
+
+
+        if (!$areaLocation) {
+
+            return response()->json(['message' => 'Package not found'], 404);
+        }
+
+
+        $areaLocation->delete();
+
+
+        return response()->json(['message' => 'Package deleted successfully'], 200);
     }
 }
