@@ -73,7 +73,8 @@ class TransactionController extends Controller
         $usersListQuery = Transaction::select(
             'transaction.id as myid',
             'transaction.*',
-            'details.*'
+            'details.*',
+            'details.name as cname'
         )
             ->join('users', 'users.id', '=', 'transaction.user_id')
             ->join('details', 'details.user_id', '=', 'users.id');
@@ -82,11 +83,16 @@ class TransactionController extends Controller
             if ($request->filled('payment')) {
                 $usersListQuery->where('transaction.payment_method', $request->input('payment'));
             }
+            if ($request->filled('name')) {
+                $usersListQuery->where('details.name', $request->input('name'));
+            }
         }
 
         $areaFilter = [
             'payment' => Transaction::distinct()->pluck('payment_method', 'payment_method')->toArray(),
+            'name' => Detail::distinct()->pluck('name', 'name')->toArray(),
         ];
+
 
         // Paginate the results
         $data = $usersListQuery->paginate(10)->withQueryString();
@@ -100,13 +106,52 @@ class TransactionController extends Controller
 
 
 
-    public function userTransactions(User $user)
+    public function userTransactions(User $user, Request $request)
     {
         // Fetch transactions for the given user
-        $transactions = Transaction::where('user_id', $user->id)->get();
+
+
+        $tabActive = $request->input('tab-active', 'transaction');
+        $searchTerm = $request->input('search');
+        $area = $request->input('transaction');
+        $users = User::with('transaction')->where('role', 'user')->get();
+
+        // Base query with necessary joins
+        $usersListQuery = Transaction::select(
+            'transaction.id as myid',
+            'transaction.*',
+            'details.*',
+            'details.name as cname'
+        )
+            ->join('users', 'users.id', '=', 'transaction.user_id')
+            ->join('details', 'details.user_id', '=', 'users.id')
+            ->where('transaction.user_id', $user->id);
+
+        if ($tabActive === 'transaction') {
+            if ($request->filled('payment')) {
+                $usersListQuery->where('transaction.payment_method', $request->input('payment'));
+            }
+            if ($request->filled('name')) {
+                $usersListQuery->where('details.name', $request->input('name'));
+            }
+        }
+
+        $areaFilter = [
+            'payment' => Transaction::distinct()->pluck('payment_method', 'payment_method')->toArray(),
+            'name' => Detail::distinct()->pluck('name', 'name')->toArray(),
+        ];
+
+
+        // Paginate the results
+        $data = $usersListQuery->paginate(10)->withQueryString();
+
+        // Define the $tableCheckedbox variable
+        $tableCheckedbox = false; // or true, depending on your logic
+
+        return view('transaction.each-user', compact('data', 'areaFilter', 'user', 'users', 'tableCheckedbox'));
 
         // Pass the transactions and user to the view
-        return view('transaction.each-user', compact('transactions', 'user'));
+
     }
 
 
@@ -232,7 +277,7 @@ class TransactionController extends Controller
         }
 
 
-             $areaLocation->delete();
+        $areaLocation->delete();
 
 
         return response()->json(['message' => 'Transaction deleted successfully'], 200);

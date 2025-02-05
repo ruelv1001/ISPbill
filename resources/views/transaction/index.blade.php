@@ -87,8 +87,8 @@
                         <section>
                             @php
                                 $headers = [
-                                    'myid' => 'ID',
-                                    'payment_method' => 'Payment Method',
+                                    'myid' => 'ID',      'payment_method' => 'Payment Method',
+                                    'cname' => 'Name',
                                     'payment_amount' => 'Amount',
                                     'payment_date' => 'Payment Date',
                                     'action' => 'Action'
