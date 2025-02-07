@@ -1,0 +1,41 @@
+.swal2-popup {
+    border-radius: 8px !important;
+
+    &.notif-popup{
+        :hover{
+            cursor: pointer;
+        }
+    }
+
+    .swal2-icon {
+        zoom: 0.5;
+        margin-bottom: 0px;
+    }
+
+    .swal2-title{
+        font-size: 18px !important;
+        line-height: 22px !important;
+        padding-top: 16px !important ;
+        &.notif-title{
+            padding-top: 0px !important ;
+        }
+    }
+
+    .swal2-html-container{
+        font-size: 16px !important;
+        line-height: 16px !important;
+    }
+
+    .swal2-cancel {
+        color: #5A5555;
+        border: solid #5A5555 1px;
+        background-color: #fff;
+    }
+
+    .swal2-confirm,
+    .swal2-deny,
+    .swal2-cancel{
+        font-size: 14px !important;
+        border-radius: 8px !important;
+    }
+}

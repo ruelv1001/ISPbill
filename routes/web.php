@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AddComment;
 use App\Http\Controllers\ArchieveUserController;
+use App\Http\Controllers\AreaLocationController;
 use App\Http\Controllers\AssignTicket;
 use App\Http\Controllers\AssignViewTicket;
 use App\Http\Controllers\BillingController;
@@ -12,11 +13,15 @@ use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DisableDueUser;
 use App\Http\Controllers\InvoiceDownload;
+use App\Http\Controllers\NapController;
+use App\Http\Controllers\OltDeviceController;
 use App\Http\Controllers\OpenTicket;
 use App\Http\Controllers\PackageController;
 use App\Http\Controllers\PayBillController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PaymentDownload;
+use App\Http\Controllers\PonController;
+use App\Http\Controllers\PortController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RouterController;
 use App\Http\Controllers\SettingController;
@@ -29,6 +34,7 @@ use App\Http\Controllers\UserDownload;
 use App\Http\Controllers\UserEnable;
 use App\Http\Controllers\UserManagementController;
 use App\Http\Controllers\UserRefresh;
+use App\Http\Controllers\UserTypeController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth')->group(function () {
@@ -45,9 +51,16 @@ Route::middleware('auth')->group(function () {
     Route::resource('/ticket', TicketController::class);
     Route::resource('/paybill', PayBillController::class);
     Route::resource('user-management', UserManagementController::class);
+    Route::resource('area-location', AreaLocationController::class);
+    Route::resource('olt-device', OltDeviceController::class);
+    Route::resource('pon', PonController::class);
+    Route::resource('nap', NapController::class);
+    Route::resource('port', PortController::class);
+    Route::get('/olt-device', [OltDeviceController::class, 'index'])->name('olt-device.index');
+    Route::resource('user-type', UserTypeController::class);
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
     Route::post('/users/{user}/archive', [UserController::class, 'archieve_data'])->name('users.archive');
-    Route::resource('/transaction', TransactionController::class);
+    Route::resource('transaction', TransactionController::class);
     Route::get('/transaction/user/{user}', [TransactionController::class, 'userTransactions'])->name('transaction.user');
     // Route::get('transaction/user/{id}', [TransactionController::class, 'userTransactions']);
     Route::resource('/router', RouterController::class);
@@ -67,6 +80,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/paybill/update-due', [PaybillController::class, 'update_due'])->name('paybill.update-due');
     Route::get('/due', [PaybillController::class, 'due'])->name('paybill.due');
     Route::post('/paybill/due-update', [PayBillController::class, 'updateDue'])->name('paybill.due_update');
+    Route::get('/get-user/{id}', [PayBillController::class, 'getUser'])->name('get.user');
     //Users
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
     Route::delete('/users-delete/{user}', [UserController::class, 'destroyother'])->name('users.destroyother');

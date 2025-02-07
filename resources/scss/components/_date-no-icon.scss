@@ -1,0 +1,23 @@
+// This will remove the date icon for input type date with the class no-icon
+// and allow calendar to show up when the input element is clicked
+
+.no-icon{
+    border: none;
+    box-sizing: border-box;
+    outline: 0;
+    position: relative;
+    width: 100%;
+
+    &::-webkit-calendar-picker-indicator {
+        background: transparent;
+        bottom: 0;
+        color: transparent;
+        cursor: pointer;
+        height: auto;
+        left: 0;
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: auto;
+    }
+}

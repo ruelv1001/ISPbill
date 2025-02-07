@@ -11,10 +11,11 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    @vite(['resources/css/app.css', 'resources/scss/app.scss', 'resources/js/app.js'])
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+   
     @livewireStyles
 </head>
 <body class="font-sans antialiased">

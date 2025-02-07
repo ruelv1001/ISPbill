@@ -1,0 +1,42 @@
+.toggle {
+
+    .toggle-control {
+        transition: $transition;
+        width: 44px;
+        height: 24px;
+        display: block;
+        border: 2px solid $color_checkbox_default;
+        border-radius: 44px;
+        background-color: $color_checkbox_default;
+        position: relative;
+
+        &:after {
+            transition: $transition;
+            content: "";
+            width: 20px;
+            height: 20px;
+            display: block;
+            background-color: #fff;
+            border-radius: 50%;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+    }
+
+    input {
+        display: none;
+
+        &:checked+.toggle-control {
+            border-color: $color_checkbox_success;
+            background-color: $color_checkbox_success;
+
+            &:after {
+                left: 20px
+            }
+        }
+    }
+
+    .toggle_input {}
+
+}

@@ -70,7 +70,7 @@ class Log extends Controller
             ];
 
             // Debug output
-            dd($data);
+      
 
         } catch (\Exception $e) {
             return back()->with("error", __("Mikrotik connection failed: " . $e->getMessage()));

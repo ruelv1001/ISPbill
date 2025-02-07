@@ -1,0 +1,26 @@
+// resources/scss/abstracts/_variables.scss
+
+// Color Palette
+$primary-color: #14532D;   // Primary blue
+$secondary-color: #0EA5E9; // Secondary yellow
+$success-color: #38c172;   // Success green
+$danger-color: #C03744;    // Danger red
+$warning-color: #ff851b;   // Warning orange
+$info-color: #6cb2eb;      // Info light blue
+$light-color: #f8f9fa;     // Light gray
+$dark-color: #343a40;      // Dark gray
+
+// Text Colors
+$text-color: #323F49;      // Default text color
+$muted-color: #5A5555;     // Muted text color
+$text-color-green: #004729;
+
+$svg-color: #166534;
+$svg-color-muted: #16A34A;
+
+$border-color: #E4E7EC;
+
+// Toggle Component
+$color_checkbox_success: #2196F3;
+$color_checkbox_default: #B5B3B3;
+$transition: .3s cubic-bezier(0.95, 0.05, 0.795, 0.035);

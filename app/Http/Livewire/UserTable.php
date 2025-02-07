@@ -9,13 +9,11 @@ use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
-
+use Rappasoft\LaravelLivewireTables\Views\Filters\SelectFilter;
 
 class UserTable extends DataTableComponent
 {
-
-    
-    protected $model = Detail::class; // Use the Detail model
+    protected $model = Detail::class;
     public array $bulkActions = [
         'lockSelected' => 'Lock Selected',
         'unlockSelected' => 'Unlock Selected',
@@ -24,14 +22,51 @@ class UserTable extends DataTableComponent
 
     public function configure(): void
     {
-        $this->setPrimaryKey('id') // Assuming 'id' is the primary key in the 'details' table
-            ->setAdditionalSelects(['details.user_id as id']); // Update with 'details' table's primary key
-        $this->setEagerLoadAllRelationsEnabled();
-
-       
+        $this->setPrimaryKey('id')
+            ->setAdditionalSelects(['details.user_id as id'])
+            ->setEagerLoadAllRelationsEnabled();
     }
 
-    
+    public function filters(): array
+    {
+        $packages = Detail::distinct()
+        ->pluck('package_name', 'package_name')
+        ->toArray();
+
+    // Add "All" option
+    $packageOptions = ['' => 'All'] + $packages;
+
+        return [
+            SelectFilter::make('Lock Status')
+                ->options([
+                    '' => 'All',
+                    'lock' => 'Locked',
+                    'unlock' => 'Unlocked',
+                ])
+                ->filter(function(Builder $builder, string $value) {
+                    $builder->where('is_lock', $value);
+                }),
+
+                SelectFilter::make('Package')
+                ->options($packageOptions)
+                ->filter(function(Builder $builder, string $value) {
+                    $builder->where('package_name', $value);
+                }),
+            SelectFilter::make('Status')
+                ->options([
+                    '' => 'All',
+                    'active' => 'Active',
+                    'expired' => 'Expired',
+                ])
+                ->filter(function(Builder $builder, string $value) {
+                    if ($value === 'active') {
+                        $builder->where('service_details.active_due_date', '>', now());
+                    } elseif ($value === 'expired') {
+                        $builder->where('service_details.active_due_date', '<', now());
+                    }
+                }),
+        ];
+    }
 
     public function columns(): array
     {
@@ -47,7 +82,7 @@ class UserTable extends DataTableComponent
                     return "<button onclick=\"toggleLock({$row->user_id})\">$icon</button>";
                 })
                 ->html(),
-            Column::make("Name", "name") // Adjust to match 'details' table fields
+            Column::make("Name", "name")
                 ->sortable()
                 ->searchable(),
             Column::make("Package", "package_name")
@@ -59,7 +94,7 @@ class UserTable extends DataTableComponent
             Column::make("Expire", "service_details.active_due_date")
                 ->sortable()
                 ->searchable(),
-                Column::make('Status')
+            Column::make('Status')
                 ->label(fn($row) => view('components.mt-status', ['row' => $row])),
             Column::make('Actions')
                 ->label(fn($row) => view('components.actions', ['row' => $row])),
@@ -71,9 +106,10 @@ class UserTable extends DataTableComponent
         return Detail::query()
             ->join('service_details', 'service_details.user_id', '=', 'details.user_id')
             ->join('miktrotik_parameters', 'miktrotik_parameters.user_id', '=', 'details.user_id')
-            ->select('details.*','miktrotik_parameters.*', 'service_details.active_due_date'); 
+            ->select('details.*', 'miktrotik_parameters.*', 'service_details.active_due_date');
     }
 
+    // Bulk action methods remain unchanged
     public function lockSelected()
     {
         if ($this->getSelected()) {
@@ -99,7 +135,6 @@ class UserTable extends DataTableComponent
     public function archiveSelected()
     {
         if ($this->getSelected()) {
-            // Fetch details of selected users who are not locked
             $unlockedDetails = Detail::whereIn('user_id', $this->getSelected())
                 ->where('is_lock', '!=', 'lock')
                 ->get();
@@ -107,11 +142,10 @@ class UserTable extends DataTableComponent
             if ($unlockedDetails->isNotEmpty()) {
                 $archiveDetails = $unlockedDetails->map(function ($detail) {
                     $array = $detail->toArray();
-                    unset($array['created_at'], $array['updated_at']); // Exclude timestamps
+                    unset($array['created_at'], $array['updated_at']);
                     return $array;
                 })->toArray();
 
-                // Insert into archive and delete from details
                 \DB::table('archieve_details')->insert($archiveDetails);
                 Detail::whereIn('user_id', $unlockedDetails->pluck('user_id'))->delete();
 

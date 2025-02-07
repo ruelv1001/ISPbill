@@ -38,6 +38,10 @@ class Detail extends Model
         'my_profile',
         'remarks',
         'router_name',
+        'olt',
+        'pon',
+        'nap',
+        'port',
     ];
 
     public function user()

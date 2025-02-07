@@ -1,13 +1,20 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use App\Models\AreaLocation;
 use App\Models\ServiceDetails;
 use App\Models\Setting;
+use App\Models\UserType;
 use Illuminate\Support\Facades\DB;
 use App\Models\Billing;
 use App\Models\Detail;
 use App\Models\MikrotikParamter;
+use App\Models\Nap;
+use App\Models\OltDevice;
 use App\Models\Package;
+use App\Models\Pon;
+use App\Models\Port;
 use App\Models\Router;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -18,22 +25,104 @@ use App\Models\User;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\Log;
 use phpseclib3\Net\SSH2;
+use App\Services\BreadcrumbService;
 class UserController extends Controller
 {
-    public function __construct()
+    public function __construct(BreadcrumbService $breadcrumbs)
     {
-        //
+        $this->breadcrumbs = $breadcrumbs;
+    }
+    private function generateFilterData($data, $item = 'id')
+    {
+        $filter = array();
+        foreach ($data as $value) {
+            if ($item == 'id') {
+                $filter[$value->id] = $value->name;
+            } elseif ($item == 'value') {
+                $filter[$value] = $value;
+            }
+        }
+        return $filter;
     }
 
-    public function index()
+
+    public function index(Request $request)
     {
-        if (auth()->user()->isUser()) {
-            return redirect('/');
+        $tabActive = $request->input('tab-active', 'users');
+        $searchTerm = $request->input('search');
+        $isLock = $request->input('is_lock');
+        $arearequest = $request->input('area');
+
+        // Base query with necessary joins
+        $usersListQuery = User::join('service_details', 'users.id', '=', 'service_details.user_id')
+            ->join('details', 'users.id', '=', 'details.user_id')
+            ->leftJoin('miktrotik_parameters', 'users.id', '=', 'miktrotik_parameters.user_id')
+            ->select(
+                'users.*',
+                'service_details.*',
+                'details.user_id as id',
+                'details.is_lock as is_lock',
+                'details.package_name as package_name',
+                'details.remarks as remarks',
+                'details.area as area',
+                'miktrotik_parameters.uptime',
+                'miktrotik_parameters.down_time',
+                DB::raw("CONCAT(miktrotik_parameters.uptime, ' / ', miktrotik_parameters.down_time) AS uptime_info"),
+                DB::raw("CONCAT(miktrotik_parameters.last_login, ' / ', miktrotik_parameters.last_logout) AS log_info")
+            );
+
+
+        if ($tabActive === 'user') {
+            if ($request->filled('Lock')) {
+                $usersListQuery->where('details.is_lock', $request->input('Lock'));
+            }
+
+            if ($request->filled('status')) {
+                $usersListQuery->where('service_details.status', $request->input('status'));
+            }
+
+            if ($request->filled('Area')) {
+                $usersListQuery->where('details.area', $request->input('Area'));
+            }
+            if ($request->filled('olt')) {
+                $usersListQuery->where('details.olt', $request->input('olt'));
+            }
+            if ($request->filled('pon')) {
+                $usersListQuery->where('details.pon', $request->input('pon'));
+            }
+            if ($request->filled('nap')) {
+                $usersListQuery->where('details.nap', $request->input('nap'));
+            }
+            if ($request->filled('port')) {
+                $usersListQuery->where('details.port', $request->input('port'));
+            }
+
         }
 
-        $users = User::with(['detail', 'service_details'])->where('role', 'user')->get();
-        return view('users.index', compact('users'));
+        // Other filters (e.g., status) if applicable
+        if ($request->filled('status')) {
+            $usersListQuery->where('service_details.status', $request->input('status'));
+        }
+
+        // Prepare filter options for the dropdown
+        $userFilter = [
+            'status' => ServiceDetails::distinct()->pluck('status', 'status')->toArray(),
+            'Area' => Detail::distinct()->pluck('area', 'area')->toArray(),
+            'Lock' => Detail::distinct()->pluck('is_lock', 'is_lock')->toArray(), // Fetch `is_lock` options
+            'olt' => OltDevice::distinct()->pluck('olt_device', 'olt_device')->toArray(),
+            'pon' => Pon::distinct()->pluck('pon', 'pon')->toArray(),
+            'nap' => Nap::distinct()->pluck('nap', 'nap')->toArray(),
+            'port' => Port::distinct()->pluck('port', 'port')->toArray(),
+        ];
+
+        // Paginate the results
+        $users = $usersListQuery->paginate(10)->withQueryString();
+
+        // Return the view with data
+        return view('users.index', compact('users', 'userFilter'));
     }
+
+
 
 
     public function create()
@@ -42,11 +131,15 @@ class UserController extends Controller
             return redirect('/');
         }
 
+        $areas = AreaLocation::all();
+        $olt = OltDevice::all();
+        $pon = Pon::all();
+        $port = Port::all();
+        $nap = Nap::all();
         $packages = Package::orderBy('name')->get();
-
-        return view('users.create', compact('packages'));
+        $role = UserType::all();
+        return view('users.create', compact('packages', 'areas', 'olt', 'pon', 'port', 'nap', 'role'));// Ensure 'areas' is passed
     }
-
 
     private function generateUniqueInvoiceNumber()
     {
@@ -88,7 +181,7 @@ class UserController extends Controller
             "password" => "min:6|confirmed",
             "name" => "required|string|max:255",
             "address" => "required|string",
-            "area" => "nullable|in:1,2,3,4,5,6,7,8,9,10",
+            "area" => "nullable",
             "phone" => "required|string",
             "router_id" => "nullable",
             "dob" => "nullable|date",
@@ -97,6 +190,10 @@ class UserController extends Controller
             "package_name" => "required|exists:packages,id",
             "router_name" => "required|exists:routers,id",
             "router_password" => "required|string",
+            "olt" => "nullable",
+            "pon" => "nullable",
+            "port" => "nullable",
+            "nap" => "nullable",
         ]);
 
         // Start a database transaction for better error handling
@@ -120,7 +217,7 @@ class UserController extends Controller
             // Retrieve package and router
             $package = Package::findOrFail($validatedData['package_name']);
             $router = Router::findOrFail($validatedData['router_name']);
-            // Create user details
+
             $accountNumber = $user->id . '-' . now()->format('YmdHis');
             $details = Detail::create([
                 'user_id' => $user->id,
@@ -132,7 +229,7 @@ class UserController extends Controller
                 'router_name' => $router->name,
                 'package_price' => $package->price,
                 'due' => $package->price,
-                'status' => 'active',
+                'status' => 'new',
                 'is_lock' => 'unlock',
                 'account_number' => $accountNumber,
                 'name' => str_replace(' ', '_', $validatedData['name']) . '_' . date('Y-m-d'),
@@ -141,6 +238,10 @@ class UserController extends Controller
                 'coordinates' => $validatedData['coordinates'],
                 'router_id' => $router->id,
                 'package_start' => Carbon::now(),
+                'olt' => $validatedData['olt'],
+                'pon' => $validatedData['pon'],
+                'port' => $validatedData['port'],
+                'nap' => $validatedData['nap'],
             ]);
             $currentDateAndTime = Carbon::now();
             $oneMonthdateAndTime = Carbon::now()->addMonth();
@@ -148,8 +249,8 @@ class UserController extends Controller
             $serviceDetails = ServiceDetails::create([
                 'user_id' => $user->id,
                 'subscription_date' => $currentDateAndTime,
-                'active_due_date' => $oneMonthdateAndTime,
-                'billing_date' => $oneMonthdateAndTime,
+                'active_due_date' => $currentDateAndTime,
+                'billing_date' => $currentDateAndTime,
                 'status' => "Active",
             ]);
 
@@ -172,7 +273,7 @@ class UserController extends Controller
                 ]);
 
                 $query = new Query("/ppp/secret/add");
-              $query->equal("name", str_replace(' ', '_', $user->name) . '_' . date('Y-m-d')); // Use only user_id
+                $query->equal("name", str_replace(' ', '_', $user->name) . '_' . date('Y-m-d')); // Use only user_id
                 $query->equal("password", $validatedData['router_password']);
                 $query->equal("service", 'any');
                 $query->equal("profile", $package->name);
@@ -189,18 +290,18 @@ class UserController extends Controller
                 foreach ($profiles as $profile) {
                     $onUp = $profile['on-up'] ?? 'No script set';  // Check if 'on-up' is empty
                     $onDown = $profile['on-down'] ?? 'No script set';  // Check if 'on-down' is empty
-                    
+
                     // Print the values
                     echo "On-Up: " . $onUp . "\n";
                     echo "On-Down: " . $onDown . "\n";
-                
 
-                   
+
+
                 }
 
                 // Display the filtered profiles (this would print out the profile data)
-               
-                
+
+
             } catch (\Exception $e) {
                 // Log the error for debugging
                 Log::error('Failed to create Mikrotik user.', [
@@ -316,7 +417,13 @@ class UserController extends Controller
                 $lastLoggedOut = trim($matches[1]);
             }
 
-            // Structure the data
+            $areas = AreaLocation::all();
+            $olt = OltDevice::all();
+            $pon = Pon::all();
+            $port = Port::all();
+            $nap = Nap::all();
+            $area = AreaLocation::all();
+
             $data = [
                 'uptime' => $uptime,
                 'profiles' => $profileData,
@@ -334,7 +441,7 @@ class UserController extends Controller
         $routers = Router::all();
         $packages = Package::all();
         // Pass data to the view
-        return view('users.edit', compact('user', 'data', 'routers', 'packages'));
+        return view('users.edit', compact('user', 'data', 'routers', 'packages', 'areas', 'olt', 'nap', 'port', 'pon', 'area'));
 
 
     }
@@ -350,15 +457,20 @@ class UserController extends Controller
             "area" => "nullable|in:1,2,3,4,5,6,7,8,9,10",
             "my_profile" => "nullable|in:Profile 1,Profile 2,Profile 3",
             "coordinates" => "nullable|string",
-            "package_name" => "nullable|exists:packages,name",
-            "router_name" => "nullable|exists:routers,name",
-            "router_password" => "nullable|string",
+            // "package_name" => "nullable|exists:packages,name",
+            // "router_name" => "nullable|exists:routers,name",
+            // "router_password" => "nullable|string",
             "subscription_date" => "nullable|date",
             "active_due_date" => "nullable|date",
             "billing_date" => "nullable|date",
+            "olt" => "nullable|string",
+            "pon" => "nullable|string",
+            "port" => "nullable|string",
+            "nap" => "nullable|string",
         ]);
 
-      
+
+
         $user->name = $validatedData['name'] ?? $user->name;
         $user->email = $validatedData['email'] ?? $user->email;
         $user->save();
@@ -371,15 +483,21 @@ class UserController extends Controller
                 'phone' => $validatedData['phone'] ?? $details->phone,
                 'address' => $validatedData['address'] ?? $details->address,
                 'dob' => $validatedData['dob'] ?? $details->dob,
-                'router_password' => $validatedData['router_password'] ?? $details->router_password,
-                'package_name' => $validatedData['package_name'] ?? $details->package_name,
-                'router_name' => $validatedData['router_name'] ?? $details->router_name,
+                // 'router_password' => $validatedData['router_password'] ?? $details->router_password,
+                // 'package_name' => $validatedData['package_name'] ?? $details->package_name,
+                // 'router_name' => $validatedData['router_name'] ?? $details->router_name,
                 'area' => $validatedData['area'] ?? $details->area,
                 'my_profile' => $validatedData['my_profile'] ?? $details->my_profile,
                 'coordinates' => $validatedData['coordinates'] ?? $details->coordinates,
                 'is_lock' => $validatedData['is_lock'] ?? $details->is_lock,
+                'olt' => $validatedData['olt'] ?? $details->olt,
+                'pon' => $validatedData['pon'] ?? $details->pon,
+                'port' => $validatedData['port'] ?? $details->port,
+                'nap' => $validatedData['nap'] ?? $details->nap,
             ]);
         }
+
+
 
         ServiceDetails::updateOrCreate(
             ['user_id' => $user->id],
@@ -396,35 +514,35 @@ class UserController extends Controller
 
 
 
-    public function destroy(User $user)
-{
-    try {
-        $hasTransaction = \DB::table('transaction')->where('user_id', $user->id)->exists();
+    public function destroynew(User $user)
+    {
+        try {
+            $hasTransaction = \DB::table('transaction')->where('user_id', $user->id)->exists();
 
-        if ($hasTransaction) {
-            Alert::warning('Warning!', 'Consumer has transaction data');
-            return redirect()->route('users.index');
+            if ($hasTransaction) {
+                Alert::warning('Warning!', 'Consumer has transaction data');
+                return redirect()->route('users.index');
+            }
+
+            // Check if there are any details with is_lock set to 'lock'
+            $lockedDetails = \DB::table('details')->where('user_id', $user->id)->where('is_lock', 'lock')->exists();
+
+            if ($lockedDetails) {
+                Alert::warning('Warning!', 'Cannot delete user because some details are locked.');
+                return redirect()->route('users.index');
+            }
+
+            // Proceed with deletion if no locked details
+            \DB::table('details')->where('user_id', $user->id)->where('is_lock', '!=', 'lock')->delete();
+            \DB::table('service_details')->where('user_id', $user->id)->delete();
+
+            $user->delete();
+
+            return redirect()->route('users.index')->with('success', 'User deleted successfully.');
+        } catch (\Exception $e) {
+            return redirect()->route('users.index')->with('error', 'Error deleting user: ' . $e->getMessage());
         }
-
-        // Check if there are any details with is_lock set to 'lock'
-        $lockedDetails = \DB::table('details')->where('user_id', $user->id)->where('is_lock', 'lock')->exists();
-
-        if ($lockedDetails) {
-            Alert::warning('Warning!', 'Cannot delete user because some details are locked.');
-            return redirect()->route('users.index');
-        }
-
-        // Proceed with deletion if no locked details
-        \DB::table('details')->where('user_id', $user->id)->where('is_lock', '!=', 'lock')->delete();
-        \DB::table('service_details')->where('user_id', $user->id)->delete();
-
-        $user->delete();
-
-        return redirect()->route('users.index')->with('success', 'User deleted successfully.');
-    } catch (\Exception $e) {
-        return redirect()->route('users.index')->with('error', 'Error deleting user: ' . $e->getMessage());
     }
-}
 
 
 
@@ -463,29 +581,92 @@ class UserController extends Controller
     }
 
 
-    public function destroyother(User $user)
+    public function destroy(User $user)
     {
+        \Log::info('Deleting user:', ['user_id' => $user->id]); // Log the user ID
+
         try {
-
-
+            // Check if the user has transaction data
             $hasTransaction = \DB::table('transaction')->where('user_id', $user->id)->exists();
 
             if ($hasTransaction) {
-
-                Alert::warning('Warning!', 'Consumer has transaction data');
-                return redirect()->route('users.index');
+                \Log::warning('User has transaction data:', ['user_id' => $user->id]); // Log warning
+                return response()->json(['message' => 'Consumer has transaction data'], 400);
             }
 
+            // Check if any detail record is locked
+            $isLocked = \DB::table('details')
+                ->where('user_id', $user->id)
+                ->where('is_lock', 'lock')
+                ->exists();
 
+            if ($isLocked) {
+                \Log::warning('User details are locked:', ['user_id' => $user->id]); // Log warning
+                return response()->json(['message' => 'User details are locked and cannot be deleted'], 400);
+            }
+
+            // Proceed with deletion if no locks are found
             \DB::table('details')->where('user_id', $user->id)->delete();
             \DB::table('service_details')->where('user_id', $user->id)->delete();
 
-
             $user->delete();
+            \Log::info('User deleted successfully:', ['user_id' => $user->id]); // Log success
+            return response()->json(['message' => 'User deleted successfully'], 200);
 
-            return redirect()->route('user-management.index')->with('success', 'User deleted successfully.');
         } catch (\Exception $e) {
-            return redirect()->route('user-management.index')->with('error', 'Error deleting user: ' . $e->getMessage());
+            \Log::error('Error deleting user:', ['user_id' => $user->id, 'error' => $e->getMessage()]); // Log error
+            return response()->json(['message' => 'User deletion failed'], 500);
+        }
+    }
+
+
+    public function bulkLock(Request $request)
+    {
+        try {
+            if (!$request->has('ids') || empty($request->ids)) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'No users selected for locking'
+                ], 400);
+            }
+
+            $ids = explode(',', $request->ids);
+
+            // Validate that we have valid IDs
+            if (empty($ids)) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Invalid selection of users'
+                ], 400);
+            }
+
+            Log::info('Locking users with IDs:', ['ids' => $ids]);
+
+            $updated = Detail::whereIn('user_id', $ids)->update([
+                'is_lock' => "lock"
+            ]);
+
+            if ($updated) {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Selected users have been locked successfully'
+                ]);
+            } else {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'No users were updated'
+                ]);
+            }
+        } catch (\Exception $e) {
+            Log::error('Error in bulkLock:', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return response()->json([
+                'status' => 'error',
+                'message' => 'An error occurred while locking users'
+            ], 500);
         }
     }
 

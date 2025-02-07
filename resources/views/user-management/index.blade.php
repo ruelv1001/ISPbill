@@ -33,11 +33,37 @@
                                     class="ml-2 inline-flex items-center px-4 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white rounded uppercase">
                                     {{ __('Create') }}
                                 </a>
+
+                                <a href="{{ route('user-type.index') }}"
+                                    class="ml-2 inline-flex items-center px-4 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white rounded uppercase">
+                                    {{ __('User Type management') }}
+                                </a>
                             @endif
                         </div>
                     </div>
-                    <div>
-                        <livewire:user-management-table />
+                    <div class="max-h-[600px] overflow-y-auto"> <!-- Increased max-height for a larger screen -->
+                        <section>
+                            @php
+$headers = [
+    'name' => 'Name',
+    'role' => 'Role',
+    'action' => 'Action'
+];
+$dropdownActions = ['Lock Selected' => 'lock']; // Add lock action to dropdown
+$dltAllbtn = ["Lock Selected", "users.bulk-lock"];
+$tableActions = ['edit' => 'user-management.edit', 'delete-item' => 'user-management.destroy'];
+$addButton = ['Add User Role', 'user-management.create'];
+$filterRoute = route('user-management.index');
+$customMessage = [
+    'success' => '',
+    'delete' => 'This User will be permanently deleted if you proceed.',
+];
+                            @endphp
+                            <x-table :headers="$headers" :data="$data" title="User Management" :dropdown="$dropdownActions"
+                                :actions="$tableActions" tablename="User Role" :addbtn="$addButton" :filterRoute=$filterRoute
+                                :filters="$areaFilter" :searchField="false" :dltAllbtn="$dltAllbtn"
+                                itemName="Area" :message="$customMessage" />
+                        </section>
                     </div>
                 </div>
             </div>
@@ -45,3 +71,5 @@
     </div>
 </x-app-layout>
 @include('sweetalert::alert')
+
+
