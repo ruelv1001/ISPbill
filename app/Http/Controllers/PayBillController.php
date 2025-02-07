@@ -38,11 +38,12 @@ class PayBillController extends Controller
             'id' => $user->id,
             'name' => $user->detail->name ?? '',
             'package_name' => $user->detail->package_name ?? '',
-            'package_price' => $user->detail->package_price ?? ''
+            'package_price' => $user->detail->package_price ?? '',
+            'status' => $user->detail->status ?? ''
         ]);
     }
 
-    public function create(User $user,$id)
+    public function create(User $user, $id)
     {
         if (!auth()->user()->isAdmin()) {
             return redirect('/');
@@ -98,35 +99,54 @@ class PayBillController extends Controller
         $paybill->payment_date = now();
         $paybill->save();
 
+
+
+
         $serviceDetails = ServiceDetails::where('user_id', $request->user_id)->first();
 
         if ($serviceDetails) {
-            $previousDueDate = $serviceDetails->active_due_date;
 
-            // Check if current_payable_amount is not equal to the payment amount
-            if ($current_payable_amount != $request->payment_amount) {
-                $perdayAmount = $current_payable_amount / 30;
-                $noofdays = $request->payment_amount / $perdayAmount;
-
-                // Update active_due_date and billing_date
-                $newActiveDueDate = $previousDueDate->addDays($noofdays);
-                $newBillingDate = $newActiveDueDate->copy()->addDays(10);
-
-                $serviceDetails->update([
-                    'previous_due_date' => $previousDueDate,
-                    'active_due_date' => $newActiveDueDate,
-                    'billing_date' => $newBillingDate,
-                    'status' => "Active",
+            if ($details->status == "new") {
+                $details->update([
+                    'status' => "active",
                 ]);
-            } else {
-                // Default behavior: Extend by 1 month
+                $previousDueDate = $serviceDetails->active_due_date;
                 $serviceDetails->update([
                     'previous_due_date' => $previousDueDate,
                     'active_due_date' => $serviceDetails->active_due_date->addMonth(),
                     'billing_date' => $serviceDetails->billing_date->addMonth(),
                     'status' => "Active",
                 ]);
+            } else {
+                $previousDueDate = $serviceDetails->active_due_date;
+
+                // Check if current_payable_amount is not equal to the payment amount
+                if ($current_payable_amount != $request->payment_amount) {
+                    $perdayAmount = $current_payable_amount / 30;
+                    $noofdays = $request->payment_amount / $perdayAmount;
+
+                    // Update active_due_date and billing_date
+                    $newActiveDueDate = $previousDueDate->addDays($noofdays);
+                    $newBillingDate = $newActiveDueDate->copy()->addDays(10);
+
+                    $serviceDetails->update([
+                        'previous_due_date' => $previousDueDate,
+                        'active_due_date' => $newActiveDueDate,
+                        'billing_date' => $newBillingDate,
+                        'status' => "Active",
+                    ]);
+                } else {
+                    // Default behavior: Extend by 1 month
+                    $serviceDetails->update([
+                        'previous_due_date' => $previousDueDate,
+                        'active_due_date' => $serviceDetails->active_due_date->addMonth(),
+                        'billing_date' => $serviceDetails->billing_date->addMonth(),
+                        'status' => "Active",
+                    ]);
+                }
             }
+
+
 
             if ($serviceDetails->status = "Inactive") {
 

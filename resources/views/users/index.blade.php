@@ -41,24 +41,24 @@
                         <div>
                             <section>
                                 @php
-                                $headers = [
-                                    'id' => 'ID',
-                                    'name' => 'Name',
-                                    'active_due_date' => 'Expire',
-                                    'area' => 'Area',
-                                    'package_name' => 'Plan',
-                                    'log_info' => 'Status',
-                                    'remarks' => 'Remarks',
-                                    'action' => ''
-                                    ];
-                                    $dropdownActions = ['Lock Selected' => 'lock'];
-                                    $dltAllbtn = ["Lock Selected", "users.bulk-lock"];
-                                    $tableActions = ['pay' => 'paybill.create', 'edit' => 'users.edit', 'delete-item' => 'users.destroy'];
-                                    $addButton = ['Add Customer', 'users.create'];
-                                    $customMessage = [
-                                        'success' => '',
-                                        'delete' => 'This User will be permanently deleted if you proceed.',
-                                    ];
+$headers = [
+    'id' => 'ID',
+    'name' => 'Name',
+    'active_due_date' => 'Expire',
+    'area' => 'Area',
+    'package_name' => 'Plan',
+    'log_info' => 'Status',
+    'remarks' => 'Remarks',
+    'action' => ''
+];
+$dropdownActions = ['Lock Selected' => 'lock'];
+$dltAllbtn = ["Lock Selected", "users.bulk-lock"];
+$tableActions = ['pay' => 'paybill.create', 'edit' => 'users.edit', 'delete-item' => 'users.destroy'];
+$addButton = ['Add Customer', 'users.create'];
+$customMessage = [
+    'success' => '',
+    'delete' => 'This User will be permanently deleted if you proceed.',
+];
                                 @endphp
                                 <x-table :headers="$headers" :data="$users" title="" :dropdown="$dropdownActions" :actions="$tableActions"
                                     tablename="user" :addbtn="$addButton" :filters="$userFilter" :searchField="true" :dltAllbtn="$dltAllbtn"
@@ -112,30 +112,31 @@
                                 <x-text-input id="payment_amount" name="payment_amount" type="number" class="mt-1 block w-full bg-gray-100" value="{{ $user->detail->package_price ?? '' }}" required />
                             </div>
 
-                            <div>
-                                <x-input-label for="payment_method" :value="__('Payment Method')" class="mt-4" />
-                                <select id="payment_method" name="payment_method" class="mt-1 block w-full bg-gray-100" required onchange="toggleRefCode()">
-                                    <option value="">Select a payment method</option>
-                                    <option value="Cash">Cash</option>
-                                    <option value="Gcash">Gcash</option>
-                                    <option value="Maya">Maya</option>
-                                    <option value="Bank Transfer">Bank Transfer</option>
-                                </select>
-                            </div>
+                        <div>
+                            <x-input-label for="payment_method" :value="__('Payment Method')" class="mt-4" />
+                            <select id="payment_method" name="payment_method" class="mt-1 block w-full bg-gray-100" required
+                                onchange="toggleRefCode()">
+                                <option value="">Select a payment method</option>
+                                <option value="Cash">Cash</option>
+                                <option value="Gcash">Gcash</option>
+                                <option value="Maya">Maya</option>
+                                <option value="Bank Transfer">Bank Transfer</option>
+                            </select>
+                        </div>
 
-                            <div id="ref_code_container" class="mt-4 hidden">
-                                <x-input-label for="ref_code" :value="__('Reference Code')" />
-                                <x-text-input id="ref_code" name="ref_code" type="text" class="mt-1 block w-full bg-gray-100" placeholder="Enter Reference Code" />
-                            </div>
-
+                        <div id="ref_code_container" class="mt-4 hidden">
+                            <x-input-label for="ref_code" :value="__('Reference Code')" />
+                            <x-text-input id="ref_code" name="ref_code" type="text" class="mt-1 block w-full bg-gray-100"
+                                placeholder="Enter Reference Code" />
+                        </div>
                             <div>
                                 <x-input-label for="remarks" :value="__(key: 'Remarks')" class="mt-4" />
                                 <x-text-input id="remarks" name="remarks" type="text" class="mt-1 block w-full bg-gray-100" required />
                             </div>
 
-                            <div class="flex items-center gap-4 mt-4">
-                                <x-primary-button>{{ __('Pay') }}</x-primary-button>
-                            </div>
+                <div class="flex items-center gap-4 mt-4">
+                    <x-primary-button id="payment-button">{{ __('Pay') }}</x-primary-button>
+                </div>
                         </div>
                     </div>
                 </form>
@@ -157,13 +158,13 @@
     }
 
     function toggleRefCode() {
-        const paymentMethod = document.getElementById('payment_method').value;
-        const refCodeContainer = document.getElementById('ref_code_container');
+        var paymentMethod = document.getElementById('payment_method').value;
+        var refCodeContainer = document.getElementById('ref_code_container');
 
-        if (['Gcash', 'Maya', 'Bank Transfer'].includes(paymentMethod)) {
-            refCodeContainer.classList.remove('hidden');
+        if (paymentMethod === 'Cash') {
+            refCodeContainer.classList.add('hidden'); // Hide the reference code input
         } else {
-            refCodeContainer.classList.add('hidden');
+            refCodeContainer.classList.remove('hidden'); // Show the reference code input
         }
     }
 
@@ -185,19 +186,60 @@
             bulkUserIdsInput.value = selectedUserIds.join(',');
         });
     });
-    function openPaymentModal(userId) {
-            fetch(`/get-user/${userId}`)
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('user_id').value = data.id;
-                    document.getElementById('name').value = data.name;
-                    document.getElementById('package_name').value = data.package_name;
-                    document.getElementById('package_price').value = data.package_price;
-                    document.getElementById('payment_amount').value = data.package_price;
-                    document.getElementById('payment-modal').classList.remove('hidden');
-                })
-                .catch(error => console.error('Error:', error));
+  function openPaymentModal(userId) {
+        fetch(`/get-user/${userId}`)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('user_id').value = data.id;
+                document.getElementById('name').value = data.name;
+                document.getElementById('package_name').value = data.package_name;
+                document.getElementById('package_price').value = data.package_price;
+
+                const paymentAmount = document.getElementById('payment_amount');
+                const paymentMethod = document.getElementById('payment_method');
+                const paymentButton = document.getElementById('payment-button');
+                const refCodeContainer = document.getElementById('ref_code_container');
+
+                if (data.status === 'new') {
+                    paymentAmount.value = 0;
+                    paymentAmount.readOnly = true;
+                    paymentMethod.innerHTML = '<option value="Activate">Activate</option>';
+                    paymentButton.textContent = 'Activate';
+                } else {
+                    paymentAmount.value = data.package_price;
+                    paymentAmount.readOnly = false;
+                    paymentMethod.innerHTML = `
+                        <option value="Cash">Cash</option>
+                        <option value="Gcash">Gcash</option>
+                        <option value="Maya">Maya</option>
+                        <option value="Bank Transfer">Bank Transfer</option>
+                    `;
+                    paymentButton.textContent = 'Pay';
+                }
+
+                // Toggle the reference code visibility based on the selected payment method
+                toggleRefCode();
+
+                // Show the payment modal
+                document.getElementById('payment-modal').classList.remove('hidden');
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    function toggleRefCode() {
+        const paymentMethod = document.getElementById('payment_method').value;
+        const refCodeContainer = document.getElementById('ref_code_container');
+
+        if (paymentMethod === 'Cash') {
+            refCodeContainer.classList.add('hidden'); // Hide the reference code input
+        } else {
+            refCodeContainer.classList.remove('hidden'); // Show the reference code input
         }
+    }
+
+    // Call toggleRefCode when the payment method is changed
+    document.getElementById('payment_method').addEventListener('change', toggleRefCode);
+
 </script>
 <script>
     // Event listener for delete confirmation using Swal

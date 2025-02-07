@@ -217,7 +217,7 @@ class UserController extends Controller
             // Retrieve package and router
             $package = Package::findOrFail($validatedData['package_name']);
             $router = Router::findOrFail($validatedData['router_name']);
-            // Create user details
+
             $accountNumber = $user->id . '-' . now()->format('YmdHis');
             $details = Detail::create([
                 'user_id' => $user->id,
@@ -229,7 +229,7 @@ class UserController extends Controller
                 'router_name' => $router->name,
                 'package_price' => $package->price,
                 'due' => $package->price,
-                'status' => 'active',
+                'status' => 'new',
                 'is_lock' => 'unlock',
                 'account_number' => $accountNumber,
                 'name' => str_replace(' ', '_', $validatedData['name']) . '_' . date('Y-m-d'),
@@ -249,8 +249,8 @@ class UserController extends Controller
             $serviceDetails = ServiceDetails::create([
                 'user_id' => $user->id,
                 'subscription_date' => $currentDateAndTime,
-                'active_due_date' => $oneMonthdateAndTime,
-                'billing_date' => $oneMonthdateAndTime,
+                'active_due_date' => $currentDateAndTime,
+                'billing_date' => $currentDateAndTime,
                 'status' => "Active",
             ]);
 
