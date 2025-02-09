@@ -15,13 +15,13 @@
                 <x-sidebar-item :href="route('transaction.index')"
                     :active="request()->routeIs('transaction.index')">{{ __('Transaction') }}</x-sidebar-item>
                 <x-sidebar-item :href="route('company.edit')"
-                    :active="request()->routeIs('company.edit')">{{ __('ISP') }}</x-sidebar-item>
+                    :active="request()->routeIs('company.edit')">{{ __('ISPs') }}</x-sidebar-item>
                 <x-sidebar-item :href="route('router.index')"
                     :active="request()->routeIs('router.index')">{{ __('Router') }}</x-sidebar-item>
                     <x-sidebar-item :href="route('user-management.index')"
                     :active="request()->routeIs('user-management.index')">{{ __('User Management') }}</x-sidebar-item>
             @endif
-<!-- 
+<!--
             <x-sidebar-item :href="route('billing.index')"
                 :active="request()->routeIs('billing.index')">{{ __('Billing') }}</x-sidebar-item> -->
             <!-- <x-sidebar-item :href="route('payment.index')"

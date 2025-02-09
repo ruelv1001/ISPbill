@@ -1,45 +1,38 @@
 <x-guest-layout>
     <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
+    <x-auth-session-status style="margin-bottom: 16px;" :status="session('status')" />
 
-    <form method="POST" action="{{ route('login') }}">
+    <form method="POST" action="{{ route('login') }}" style="max-width: 400px; margin: auto; padding: 20px; border: 1px solid #ccc; border-radius: 8px; background: #f9f9f9;">
         @csrf
 
         <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+        <div style="margin-bottom: 12px;">
+            <x-input-label for="email" :value="__('Email')" style="display: block; font-weight: bold; margin-bottom: 4px;" />
+            <x-text-input id="email" type="email" name="email" :value="old('email')" required autofocus autocomplete="username"
+                style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" />
+            <x-input-error :messages="$errors->get('email')" style="color: red; margin-top: 4px;" />
         </div>
 
         <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
-
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+        <div style="margin-bottom: 12px;">
+            <x-input-label for="password" :value="__('Password')" style="display: block; font-weight: bold; margin-bottom: 4px;" />
+            <x-text-input id="password" type="password" name="password" required autocomplete="current-password"
+                style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" />
+            <x-input-error :messages="$errors->get('password')" style="color: red; margin-top: 4px;" />
         </div>
 
         <!-- Remember Me -->
-        <div class="block mt-4">
-            <label for="remember_me" class="inline-flex items-center">
-                <input id="remember_me" type="checkbox" class="rounded dark:bg-gray-900 border-gray-300 dark:border-gray-700 text-indigo-600 shadow-sm focus:ring-indigo-500 dark:focus:ring-indigo-600 dark:focus:ring-offset-gray-800" name="remember">
-                <span class="ml-2 text-sm text-gray-600 dark:text-gray-400">{{ __('Remember me') }}</span>
-            </label>
+        <div style="margin-bottom: 12px; display: flex; align-items: center;">
+            <input id="remember_me" type="checkbox" name="remember" style="margin-right: 8px;">
+            <label for="remember_me" style="font-size: 14px; color: #555;">{{ __('Remember me') }}</label>
         </div>
 
-        <div class="flex items-center justify-end mt-4">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
             @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('password.request') }}">
-                    {{ __('Forgot your password?') }}
-                </a>
+                <a href="{{ route('password.request') }}" style="font-size: 14px; color: #007bff; text-decoration: none;">{{ __('Forgot your password?') }}</a>
             @endif
 
-            <x-primary-button class="ml-3">
+            <x-primary-button style="background: #007bff; color: white; padding: 10px 16px; border: none; border-radius: 4px; cursor: pointer;">
                 {{ __('Log in') }}
             </x-primary-button>
         </div>

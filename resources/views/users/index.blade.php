@@ -1,38 +1,40 @@
 <x-app-layout>
-    <div class="py-6">
-        <div class="max-w-8xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
+    <div style="padding: 24px;">
+        <div style="max-width: 1600px; margin: 0 auto; padding: 0 48px;">
+            <div
+                style="background-color: white; overflow: hidden; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); border-radius: 8px;">
+                <div style="padding: 24px; color: #1a202c;">
                     <!-- Scrollable container -->
                     <div style="max-height: 80vh; overflow-y: auto;">
-                        <div class="flex justify-between items-center mb-6 border-b-2 border-slate-100 pb-4">
-                            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; border-bottom: 2px solid #e2e8f0; padding-bottom: 16px;">
+                            <h2 style="font-weight: 600; font-size: 20px; color: #2d3748; margin: 0;">
                                 {{ __('Customer List') }}
                             </h2>
 
-                            <div class="flex space-x-2">
+                            <div style="display: flex; gap: 8px;">
                                 <a href="{{ route('area-location.index') }}"
-                                    class="inline-flex items-center px-3 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white uppercase">
+                                    style="display: inline-flex; align-items: center; padding: 8px 12px; background-color: #2d3748; color: white; border: none; border-radius: 4px; font-weight: 600; font-size: 12px; text-transform: uppercase; text-decoration: none;">
                                     {{ __('Refresh') }}
                                 </a>
                                 <a href="{{ route('area-location.index') }}"
-                                    class="inline-flex items-center px-3 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white uppercase">
+                                    style="display: inline-flex; align-items: center; padding: 8px 12px; background-color: #2d3748; color: white; border: none; border-radius: 4px; font-weight: 600; font-size: 12px; text-transform: uppercase; text-decoration: none;">
                                     {{ __('Area') }}
                                 </a>
                                 <a href="{{ route('olt-device.index') }}"
-                                    class="inline-flex items-center px-3 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white uppercase">
+                                    style="display: inline-flex; align-items: center; padding: 8px 12px; background-color: #2d3748; color: white; border: none; border-radius: 4px; font-weight: 600; font-size: 12px; text-transform: uppercase; text-decoration: none;">
                                     {{ __('OLT') }}
                                 </a>
                                 <a href="{{ route('pon.index') }}"
-                                    class="inline-flex items-center px-3 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white uppercase">
+                                    style="display: inline-flex; align-items: center; padding: 8px 12px; background-color: #2d3748; color: white; border: none; border-radius: 4px; font-weight: 600; font-size: 12px; text-transform: uppercase; text-decoration: none;">
                                     {{ __('PON') }}
                                 </a>
                                 <a href="{{ route('nap.index') }}"
-                                    class="inline-flex items-center px-3 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white uppercase">
+                                    style="display: inline-flex; align-items: center; padding: 8px 12px; background-color: #2d3748; color: white; border: none; border-radius: 4px; font-weight: 600; font-size: 12px; text-transform: uppercase; text-decoration: none;">
                                     {{ __('NAP') }}
                                 </a>
                                 <a href="{{ route('port.index') }}"
-                                    class="inline-flex items-center px-3 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white uppercase">
+                                    style="display: inline-flex; align-items: center; padding: 8px 12px; background-color: #2d3748; color: white; border: none; border-radius: 4px; font-weight: 600; font-size: 12px; text-transform: uppercase; text-decoration: none;">
                                     {{ __('Port') }}
                                 </a>
                             </div>
@@ -72,50 +74,48 @@ $customMessage = [
     </div>
 
     <!-- Payment Modal -->
-    <div id="payment-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full" x-show="open">
-        <div class="relative top-20 mx-auto p-5 border w-3/4 shadow-lg rounded-md bg-white">
-            <div class="flex justify-between items-center pb-4 border-b">
-                <h3 class="text-xl font-semibold">Payment Details</h3>
-                <button onclick="closePaymentModal()" class="text-gray-400 hover:text-gray-500">
-                    <span class="text-2xl">&times;</span>
-                </button>
-            </div>
+   <div id="payment-modal" style="position: fixed; inset: 0; background: rgba(0, 0, 0, 0.5); display: none; overflow-y: auto; height: 100%; width: 100%;" x-show="open">
+    <div style="position: relative; top: 10%; margin: auto; padding: 20px; width: 60%; background: white; border-radius: 10px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);">
+        <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 10px; border-bottom: 2px solid #ddd;">
+            <h3 style="font-size: 20px; font-weight: bold; color: #333;">Payment Details</h3>
+            <button onclick="closePaymentModal()" style="font-size: 24px; color: #888; border: none; background: none; cursor: pointer;">&times;</button>
+        </div>
 
-            <div class="py-4">
-                <form method="post" action="{{ route('paybill.store') }}" class="space-y-1">
-                    @csrf
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <div class="hidden">
-                                <x-input-label for="user_id" :value="__('Customer name')" class="mt-4" />
-                                <x-text-input id="user_id" name="user_id" type="text" class="mt-1 block w-full bg-gray-100" value="{{ $user->id ?? ''   }}" />
-                            </div>
-                            <div>
-                                <x-input-label for="name" :value="__('Customer name')" class="mt-4" />
-                                <x-text-input id="name" name="name" type="text" class="mt-1 block w-full bg-gray-100" value="{{ $user->detail->name ?? '' }}" readonly />
-                            </div>
-
-                            <div>
-                                <x-input-label for="package_name" :value="__(key: 'Package name')" class="mt-4" />
-                                <x-text-input id="package_name" name="package_name" type="text" class="mt-1 block w-full bg-gray-100" value="{{ $user->detail->package_name ?? '' }}" readonly />
-                            </div>
-
-                            <div>
-                                <x-input-label for="package_price" :value="__(key: 'Package price')" class="mt-4" />
-                                <x-text-input id="package_price" name="package_price" type="text" class="mt-1 block w-full bg-gray-100" value="{{ $user->detail->package_price ?? '' }}" disabled />
-                            </div>
+        <div style="padding-top: 15px;">
+            <form method="post" action="{{ route('paybill.store') }}">
+                @csrf
+                <div style="display: flex; gap: 20px;">
+                    <div style="flex: 1;">
+                        <div style="display: none;">
+                            <label for="user_id" style="font-size: 14px; font-weight: bold;">Customer Name</label>
+                            <input id="user_id" name="user_id" type="text" value="{{ $user->id ?? '' }}" style="width: 100%; padding: 8px; background: #f5f5f5; border: 1px solid #ccc;">
                         </div>
 
                         <div>
-                            <div>
-                                <x-input-label for="payment_amount" :value="__(key: 'Amount Pay')" class="mt-4" />
-                                <x-text-input id="payment_amount" name="payment_amount" type="number" class="mt-1 block w-full bg-gray-100" value="{{ $user->detail->package_price ?? '' }}" required />
-                            </div>
+                            <label for="name" style="font-size: 14px; font-weight: bold;">Customer Name</label>
+                            <input id="name" name="name" type="text" value="{{ $user->detail->name ?? '' }}" readonly style="width: 100%; padding: 8px; background: #f5f5f5; border: 1px solid #ccc;">
+                        </div>
 
                         <div>
-                            <x-input-label for="payment_method" :value="__('Payment Method')" class="mt-4" />
-                            <select id="payment_method" name="payment_method" class="mt-1 block w-full bg-gray-100" required
-                                onchange="toggleRefCode()">
+                            <label for="package_name" style="font-size: 14px; font-weight: bold;">Package Name</label>
+                            <input id="package_name" name="package_name" type="text" value="{{ $user->detail->package_name ?? '' }}" readonly style="width: 100%; padding: 8px; background: #f5f5f5; border: 1px solid #ccc;">
+                        </div>
+
+                        <div>
+                            <label for="package_price" style="font-size: 14px; font-weight: bold;">Package Price</label>
+                            <input id="package_price" name="package_price" type="text" value="{{ $user->detail->package_price ?? '' }}" disabled style="width: 100%; padding: 8px; background: #f5f5f5; border: 1px solid #ccc;">
+                        </div>
+                    </div>
+
+                    <div style="flex: 1;">
+                        <div>
+                            <label for="payment_amount" style="font-size: 14px; font-weight: bold;">Amount to Pay</label>
+                            <input id="payment_amount" name="payment_amount" type="number" value="{{ $user->detail->package_price ?? '' }}" required style="width: 100%; padding: 8px; background: #f5f5f5; border: 1px solid #ccc;">
+                        </div>
+
+                        <div>
+                            <label for="payment_method" style="font-size: 14px; font-weight: bold;">Payment Method</label>
+                            <select id="payment_method" name="payment_method" required onchange="toggleRefCode()" style="width: 100%; padding: 8px; background: #f5f5f5; border: 1px solid #ccc;">
                                 <option value="">Select a payment method</option>
                                 <option value="Cash">Cash</option>
                                 <option value="Gcash">Gcash</option>
@@ -124,69 +124,35 @@ $customMessage = [
                             </select>
                         </div>
 
-                        <div id="ref_code_container" class="mt-4 hidden">
-                            <x-input-label for="ref_code" :value="__('Reference Code')" />
-                            <x-text-input id="ref_code" name="ref_code" type="text" class="mt-1 block w-full bg-gray-100"
-                                placeholder="Enter Reference Code" />
+                        <div id="ref_code_container" style="margin-top: 10px; display: none;">
+                            <label for="ref_code" style="font-size: 14px; font-weight: bold;">Reference Code</label>
+                            <input id="ref_code" name="ref_code" type="text" placeholder="Enter Reference Code" style="width: 100%; padding: 8px; background: #f5f5f5; border: 1px solid #ccc;">
                         </div>
-                            <div>
-                                <x-input-label for="remarks" :value="__(key: 'Remarks')" class="mt-4" />
-                                <x-text-input id="remarks" name="remarks" type="text" class="mt-1 block w-full bg-gray-100" required />
-                            </div>
 
-                <div class="flex items-center gap-4 mt-4">
-                    <x-primary-button id="payment-button">{{ __('Pay') }}</x-primary-button>
-                </div>
+                        <div>
+                            <label for="remarks" style="font-size: 14px; font-weight: bold;">Remarks</label>
+                            <input id="remarks" name="remarks" type="text" required style="width: 100%; padding: 8px; background: #f5f5f5; border: 1px solid #ccc;">
+                        </div>
+
+                        <div style="margin-top: 15px; text-align: right;">
+                            <button id="payment-button" type="submit" style="background: #007bff; color: white; padding: 10px 20px; font-size: 16px; border: none; border-radius: 5px; cursor: pointer;">
+                                Pay
+                            </button>
                         </div>
                     </div>
-                </form>
-            </div>
+                </div>
+            </form>
         </div>
     </div>
+</div>
+
+
 </x-app-layout>
 @include('sweetalert::alert')
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
 <script>
-    function openPaymentModal() {
-        document.getElementById('payment-modal').classList.remove('hidden');
-        // Add logic to fetch user data and populate the form
-    }
-
-    function closePaymentModal() {
-        document.getElementById('payment-modal').classList.add('hidden');
-    }
-
-    function toggleRefCode() {
-        var paymentMethod = document.getElementById('payment_method').value;
-        var refCodeContainer = document.getElementById('ref_code_container');
-
-        if (paymentMethod === 'Cash') {
-            refCodeContainer.classList.add('hidden'); // Hide the reference code input
-        } else {
-            refCodeContainer.classList.remove('hidden'); // Show the reference code input
-        }
-    }
-
-    window.addEventListener('updatePaginationUrl', function (event) {
-        const url = new URL(window.location);
-        url.searchParams.set('page', event.detail.page);
-        history.pushState(null, '', url);
-    });
-
-    window.addEventListener('reloadPage', function () {
-        location.reload();
-    });
-
-    document.addEventListener('livewire:load', () => {
-        const bulkLockForm = document.getElementById('bulk-lock-form');
-        const bulkUserIdsInput = document.getElementById('bulk-user-ids');
-
-        Livewire.on('updateSelectedUsers', (selectedUserIds) => {
-            bulkUserIdsInput.value = selectedUserIds.join(',');
-        });
-    });
-  function openPaymentModal(userId) {
+    function openPaymentModal(userId) {
         fetch(`/get-user/${userId}`)
             .then(response => response.json())
             .then(data => {
@@ -194,105 +160,41 @@ $customMessage = [
                 document.getElementById('name').value = data.name;
                 document.getElementById('package_name').value = data.package_name;
                 document.getElementById('package_price').value = data.package_price;
-
-                const paymentAmount = document.getElementById('payment_amount');
-                const paymentMethod = document.getElementById('payment_method');
-                const paymentButton = document.getElementById('payment-button');
-                const refCodeContainer = document.getElementById('ref_code_container');
-
-                if (data.status === 'new') {
-                    paymentAmount.value = 0;
-                    paymentAmount.readOnly = true;
-                    paymentMethod.innerHTML = '<option value="Activate">Activate</option>';
-                    paymentButton.textContent = 'Activate';
-                } else {
-                    paymentAmount.value = data.package_price;
-                    paymentAmount.readOnly = false;
-                    paymentMethod.innerHTML = `
-                        <option value="Cash">Cash</option>
-                        <option value="Gcash">Gcash</option>
-                        <option value="Maya">Maya</option>
-                        <option value="Bank Transfer">Bank Transfer</option>
-                    `;
-                    paymentButton.textContent = 'Pay';
-                }
-
-                // Toggle the reference code visibility based on the selected payment method
                 toggleRefCode();
-
-                // Show the payment modal
-                document.getElementById('payment-modal').classList.remove('hidden');
-            })
-            .catch(error => console.error('Error:', error));
+                document.getElementById('payment-modal').style.display = 'block';
+            });
     }
-
+    function closePaymentModal() {
+        document.getElementById('payment-modal').style.display = 'none';
+    }
     function toggleRefCode() {
-        const paymentMethod = document.getElementById('payment_method').value;
-        const refCodeContainer = document.getElementById('ref_code_container');
-
-        if (paymentMethod === 'Cash') {
-            refCodeContainer.classList.add('hidden'); // Hide the reference code input
-        } else {
-            refCodeContainer.classList.remove('hidden'); // Show the reference code input
-        }
+        var paymentMethod = document.getElementById('payment_method').value;
+        var refCodeContainer = document.getElementById('ref_code_container');
+        refCodeContainer.style.display = (paymentMethod === 'Cash') ? 'none' : 'block';
     }
-
-    // Call toggleRefCode when the payment method is changed
-    document.getElementById('payment_method').addEventListener('change', toggleRefCode);
-
-</script>
-<script>
-    // Event listener for delete confirmation using Swal
     function confirmDelete(id) {
         Swal.fire({
             title: 'Are you sure?',
-            text: 'This user will be permanently deleted if you proceed.',
+            text: 'This user will be permanently deleted.',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!',
-            cancelButtonText: 'No, cancel!',
-            reverseButtons: true
+            confirmButtonText: 'Yes, delete it!'
         }).then((result) => {
             if (result.isConfirmed) {
-                // Proceed to delete the user
                 deleteUser(id);
             }
         });
     }
-
-    // Function to send AJAX delete request
     function deleteUser(id) {
-            // Log the start of the delete operation
-            console.log(`Attempting to delete user with ID: ${id}`);
-
-            // Perform the delete request using AJAX
-            axios.delete(`/users/${id}`)
-                .then(response => {
-                    // Log success
-                    console.log(`User with ID: ${id} deleted successfully. Response:`, response.data);
-
-                    // Show success alert
-                    Swal.fire('Deleted!', 'The user has been deleted.', 'success');
-
-                    // Option 1: Reload the page
-                    location.reload();
-
-                    // Option 2: Remove the user from the DOM without reloading
-                    // document.getElementById(`user-${id}`).remove();
-                })
-                .catch(error => {
-                    // Log the error
-                    console.error(`Error deleting user with ID: ${id}. Error:`, error);
-
-                    // Handle errors (if any)
-                    if (error.response && error.response.status === 400) {
-                        Swal.fire('Warning!', error.response.data.message, 'warning');
-                    }
-                    if (error.response && error.response.status === 405) {
-                             Swal.fire('Warning!', error.response.data.message, 'warning');
-                    }
-
-                });
-        }
+        axios.delete(`/users/${id}`)
+            .then(response => {
+                Swal.fire('Deleted!', 'The user has been deleted.', 'success');
+                location.reload();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                Swal.fire('Error!', 'Could not delete user.', 'error');
+            });
+    }
 </script>

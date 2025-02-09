@@ -1,157 +1,36 @@
 <x-app-layout>
-    <div class="py-6">
-        <div class="max-w-8xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    <h2 class="font-semibold text-xl text-gray-800 leading-tight mb-8 border-b-2 border-slate-100 pb-4">
+    <div style="padding: 24px;">
+        <div style="max-width: 1280px; margin: 0 auto; padding: 16px;">
+            <div style="background: white; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border-radius: 8px;">
+                <div style="padding: 24px; color: #1a202c;">
+                    <h2 style="font-weight: 600; font-size: 1.25rem; color: #2d3748; margin-bottom: 32px; border-bottom: 2px solid #e2e8f0; padding-bottom: 16px;">
                         {{ __('Dashboard') }}
                     </h2>
-                    <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-6 mb-6">
-                        <div class="border border-gray-200 p-4 rounded flex flex-col items-center justify-center">
-                            <p class="text-2xl mt-2 font-bold">{{ config('app.currency') . $totalBills }}</p>
-                            <h2 class="text-l">{{ __('Total Bills') }}</h2>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-top: 24px; margin-bottom: 24px;">
+                        @foreach ([['Total Bills', $totalBills], ['Total Payments', $totalPayments], ['Bills This Month', $billsThisMonth], ['Payments This Month', $paymentsThisMonth]] as [$label, $amount])
+                        <div style="border: 1px solid #e2e8f0; padding: 16px; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                            <p style="font-size: 1.5rem; margin-top: 8px; font-weight: bold;">{{ config('app.currency') . $amount }}</p>
+                            <h2 style="font-size: 1rem;">{{ __($label) }}</h2>
                         </div>
-                        <div class="border border-gray-200 p-4 rounded flex flex-col items-center justify-center">
-                            <p class="text-2xl mt-2 font-bold">{{ config('app.currency') . $totalPayments }}</p>
-                            <h2 class="text-l">{{ __('Total Payments') }}</h2>
-                        </div>
-                        <div class="border border-gray-200 p-4 rounded flex flex-col items-center justify-center">
-                            <p class="text-2xl mt-2 font-bold">{{ config('app.currency') . $billsThisMonth }}</p>
-                            <h2 class="text-l">{{ __('Bills This Month') }}</h2>
-                        </div>
-                        <div class="border border-gray-200 p-4 rounded flex flex-col items-center justify-center">
-                            <p class="text-2xl mt-2 font-bold">{{ config('app.currency') . $paymentsThisMonth }}</p>
-                            <h2 class="text-l">{{ __('Payments This Month') }}</h2>
-                        </div>
+                        @endforeach
                     </div>
 
-                    <div class="grid grid-cols-2 gap-4">
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;">
                         <div>
-                            <h3 class="mt-6 mb-6 font-semibold">{{ __('Billing and payment per month') }}</h3>
+                            <h3 style="margin-top: 24px; margin-bottom: 24px; font-weight: 600;">{{ __('Billing and payment per month') }}</h3>
                             <canvas id="monthlyChart"></canvas>
                         </div>
                         <div>
-                            <h3 class="mt-6 mb-6 font-semibold">{{ __('Billing and payment per day') }}</h3>
+                            <h3 style="margin-top: 24px; margin-bottom: 24px; font-weight: 600;">{{ __('Billing and payment per day') }}</h3>
                             <canvas id="dailyChart"></canvas>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-4 mt-6">
-                        <div class="border-l-2 bg-neutral-50 border-neutral-500 p-4">
-                            <h2 class="text-l font-bold">{{ __('Total Users') }}</h2>
-                            <p class="text-xl mt-2 font-bold">{{ $totalUsers }}</p>
-                        </div>
-                        <div class="border-l-2 bg-neutral-50 border-neutral-500 p-4">
-                            <h2 class="text-l font-bold">{{ __('Users With Due') }}</h2>
-                            <p class="text-xl mt-2 font-bold">{{ $usersWithDueCount }}</p>
-                        </div>
-                        <div class="border-l-2 bg-neutral-50 border-neutral-500 p-4">
-                            <h2 class="text-l font-bold">{{ __('Bills This Year') }}</h2>
-                            <p class="text-xl mt-2 font-bold">{{ config('app.currency') . $billsThisYear }}</p>
-                        </div>
-                        <div class="border-l-2 bg-neutral-50 border-neutral-500 p-4">
-                            <h2 class="text-l font-bold">{{ __('Payments This Year') }}</h2>
-                            <p class="text-xl mt-2 font-bold">{{ config('app.currency') . $paymentsThisYear }}</p>
-                        </div>
-                    </div>
-
-                    <div class="mt-8">
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <h3 class="font-semibold">{{ __('Recent Users') }}</h3>
-                                <table class="table-auto border-collapse border-b border-slate-400 mt-4 w-full">
-                                    <thead>
-                                    <tr>
-                                        <th class="border-b border-slate-300 p-2 text-left bg-slate-50">{{ __('Name') }}</th>
-                                        <th class="border-b border-slate-300 p-2 text-left bg-slate-50">{{ __('Package') }}</th>
-                                        <th class="border-b border-slate-300 p-2 text-left bg-slate-50">{{ __('Joined') }}</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    @foreach ($recentUsers as $user)
-                                    <tr>
-                                        <td class="border-b border-slate-300 p-2">{{ $user->name }}</td>
-                                        <td class="border-b border-slate-300 p-2">{{ $user->detail->package_name ?? 'N/A' }}</td>
-                                        <td class="border-b border-slate-300 p-2">{{ date('Y-m-d', strtotime($user->created_at)) }}</td>
-                                    </tr>
-                                    @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div>
-                                <h3 class="font-semibold">{{ __('Recent Payments') }}</h3>
-                                <table class="table-auto border-collapse border-b border-slate-400 mt-4 w-full">
-                                    <thead>
-                                    <tr>
-                                        <th class="border-b border-slate-300 p-2 text-left bg-slate-50">{{ __('User') }}</th>
-                                        <th class="border-b border-slate-300 p-2 text-left bg-slate-50">{{ __('Amount') }}</th>
-                                        <th class="border-b border-slate-300 p-2 text-left bg-slate-50">{{ __('Date') }}</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    @foreach ($recentPayments as $payment)
-                                        <tr>
-                                            <td class="border-b border-slate-300 p-2">{{ $payment->user->name }}</td>
-                                            <td class="border-b border-slate-300 p-2">{{ config('app.currency') . $payment->package_price }}</td>
-                                            <td class="border-b border-slate-300 p-2">{{ date('Y-m-d', strtotime($payment->created_at)) }}</td>
-                                        </tr>
-                                    @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="mt-8">
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <h3 class="font-semibold">{{ __('Users With Due') }}</h3>
-                                <table class="table-auto border-collapse border-b border-slate-400 mt-4 w-full">
-                                    <thead>
-                                    <tr>
-                                        <th class="border-b border-slate-300 p-2 text-left bg-slate-50">{{ __('Name') }}</th>
-                                        <th class="border-b border-slate-300 p-2 text-left bg-slate-50">{{ __('Package') }}</th>
-                                        <th class="border-b border-slate-300 p-2 text-left bg-slate-50">{{ __('Due') }}</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    @foreach ($usersWithDueList as $user)
-                                        <tr>
-                                            <td class="border-b border-slate-300 p-2">{{ $user->name }}</td>
-                                            <td class="border-b border-slate-300 p-2">{{ $user->detail->package_name }}</td>
-                                            <td class="border-b border-slate-300 p-2">{{ config('app.currency') . $user->due_amount($user->id) }}</td>
-                                        </tr>
-                                    @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div>
-                                <h3 class="font-semibold">{{ __('Recent Tickets') }}</h3>
-                                <table class="table-auto border-collapse border-b border-slate-400 mt-4 w-full">
-                                    <thead>
-                                    <tr>
-                                        <th class="border-b border-slate-300 p-2 text-left bg-slate-50">{{ __('Subject') }}</th>
-                                        <th class="border-b border-slate-300 p-2 text-left bg-slate-50">{{ __('Status') }}</th>
-                                        <th class="border-b border-slate-300 p-2 text-left bg-slate-50">{{ __('Date') }}</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    @foreach ($recentTickets as $ticket)
-                                        <tr>
-                                            <td class="border-b border-slate-300 p-2">{{ $ticket->subject }}</td>
-                                            <td class="border-b border-slate-300 p-2">{{ $ticket->status }}</td>
-                                            <td class="border-b border-slate-300 p-2">{{ date('Y-m-d', strtotime($ticket->created_at)) }}</td>
-                                        </tr>
-                                    @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
 
     @push('scripts')
         <script>

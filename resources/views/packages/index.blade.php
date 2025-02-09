@@ -1,57 +1,55 @@
 <x-app-layout>
-    <div class="py-6">
-        <div class="max-w-8xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
+    <div style="padding: 24px;">
+        <div style="max-width: 1280px; margin: 0 auto; padding: 0 24px;">
+            <div
+                style="background-color: #ffffff; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); border-radius: 8px; overflow: hidden;">
+                <div style="padding: 24px; color: #1a202c;">
                     @if(session('success'))
-                        <div class="alert alert-success text-green-600">
+                        <div
+                            style="background-color: #d1fae5; color: #065f46; padding: 12px; border-radius: 4px; margin-bottom: 16px;">
                             {{ session('success') }}
                         </div>
                     @endif
 
                     @if(session('error'))
-                        <div class="alert alert-danger text-red-600">
+                        <div
+                            style="background-color: #fee2e2; color: #b91c1c; padding: 12px; border-radius: 4px; margin-bottom: 16px;">
                             {{ session('error') }}
                         </div>
                     @endif
-                    <div class="flex justify-between items-center mb-6 border-b-2 border-slate-100 pb-4">
-                        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                            {{ __('Packages') }}
-                        </h2>
-                        @if (auth()->user()->isAdmin())
-                            <x-create-button url="{{ route('packages.create') }}"></x-create-button>
-                        @endif
-                    </div>
-                    <div>
-                        @if (auth()->user()->isAdmin())
-                            <section>
-                                @php
-                                    $headers = [
-                                         'name' => 'name',
-                                    'price' => 'Price',
-                                    'created_at' => 'Date Created',
-                                        'action' => 'Action'
-                                    ];
-                                    $dropdownActions = [];
-                                    $dltAllbtn = [];
-                                    $tableActions = ['edit' => 'packages.edit', 'delete-item' => 'packages.destroy'];
-                                    $addButton = ['Add package', 'packages.create'];
 
-                                    $customMessage = [
-                                        'success' => '',
-                                        'delete' => 'This User will be permanently deleted if you proceed.',
-                                    ];
 
-                                @endphp
-                                <x-table :headers="$headers" :data="$data" title="Port" :dropdown="$dropdownActions"
-                                    :actions="$tableActions" tablename="Port" :addbtn="$addButton" :searchField="false"
-                                    :dltAllbtn="$dltAllbtn" itemName="Area" :message="$customMessage" />
-                            </section>
-                        @endif
-                        @if (auth()->user()->isUser())
-                            <livewire:user-package-table />
-                        @endif
-                    </div>
+
+
+                    @if (auth()->user()->isAdmin())
+                                        <section>
+                                            @php
+                                                $headers = [
+                                                    'name' => 'name',
+                                                    'price' => 'Price',
+                                                    'created_at' => 'Date Created',
+                                                    'action' => 'Action'
+                                                ];
+                                                $dropdownActions = [];
+                                                $dltAllbtn = [];
+                                                $tableActions = ['edit' => 'packages.edit', 'delete-item' => 'packages.destroy'];
+                                                $addButton = ['Add package', 'packages.create'];
+
+                                                $customMessage = [
+                                                    'success' => '',
+                                                    'delete' => 'This User will be permanently deleted if you proceed.',
+                                                ];
+
+                                            @endphp
+                                            <x-table :headers="$headers" :data="$data" title="Port" :dropdown="$dropdownActions"
+                                                :actions="$tableActions" tablename="Port" :addbtn="$addButton" :searchField="false"
+                                                :dltAllbtn="$dltAllbtn" itemName="Area" :message="$customMessage" />
+                                        </section>
+                    @endif
+                    @if (auth()->user()->isUser())
+                        <livewire:user-package-table />
+                    @endif
+
                 </div>
             </div>
         </div>
@@ -131,4 +129,3 @@
         location.reload();
     });
 </script>
-

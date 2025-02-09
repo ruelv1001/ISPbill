@@ -1,13 +1,11 @@
-
-
 @php
     $classes = ($active ?? false)
-                ? 'w-full flex justify-between items-center py-3 px-6 cursor-pointer bg-indigo-50 text-indigo-900 focus:outline-none border-r-4 border-indigo-900'
-                : 'w-full flex justify-between items-center py-3 px-6 text-gray-600 cursor-pointer hover:bg-gray-50 hover:text-gray-700 focus:outline-none hover:border-r-4 hover:border-gray-50';
+                ? 'width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 12px 24px; cursor: pointer; background-color: #eef2ff; color: #312e81; outline: none; border-right: 4px solid #312e81;'
+                : 'width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 12px 24px; color: #4b5563; cursor: pointer; transition: all 0.3s ease; outline: none;';
 @endphp
 
-<a {{ $attributes->merge(['class' => $classes]) }}>
-    <span class="flex items-center">
-        <span class="mx-2 font-sm">{{ $slot }}</span>
+<a {{ $attributes->merge(['style' => $classes]) }}>
+    <span style="display: flex; align-items: center;">
+        <span style="margin: 0 8px; font-size: 14px;">{{ $slot }}</span>
     </span>
 </a>

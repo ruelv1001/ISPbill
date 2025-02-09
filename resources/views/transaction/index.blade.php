@@ -1,38 +1,38 @@
 <x-app-layout>
-    <div class="py-6">
-        <div class="max-w-8xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    <div class="flex justify-between items-center mb-6 border-b-2 border-slate-100 pb-4">
-                        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+    <div style="padding: 20px;">
+        <div style="max-width: 1200px; margin: auto; padding: 10px;">
+            <div style="background: white; overflow: hidden; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); border-radius: 5px;">
+                <div style="padding: 15px; color: #1a202c;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px;">
+                        <h2 style="font-weight: 600; font-size: 20px; color: #2d3748;">
                             {{ __('Transactions') }}
                         </h2>
                     </div>
 
                     <!-- Scrollable Content Section -->
-                    <div class="overflow-y-auto" style="max-height: 80vh;">
+                    <div style="overflow-y: auto; max-height: 80vh;">
                         <!-- Transaction Summary Section -->
-                        <div class="space-y-8">
-                            <h2 class="text-2xl font-bold text-gray-800">Transaction Summary</h2>
+                        <div style="margin-bottom: 20px;">
+                            <h2 style="font-size: 18px; font-weight: bold; color: #2d3748;">Transaction Summary</h2>
 
                             <!-- Payment Method Summary -->
-                            <div class="bg-gray-50 rounded-lg p-6">
-                                <h3 class="text-lg font-semibold text-gray-700 mb-4">Totals by Payment Method</h3>
-                                <div class="overflow-x-auto">
-                                    <table class="min-w-full divide-y divide-gray-200">
+                            <div style="background: #f7fafc; border-radius: 5px; padding: 15px;">
+                                <h3 style="font-size: 16px; font-weight: 600; color: #4a5568; margin-bottom: 10px;">Totals by Payment Method</h3>
+                                <div style="overflow-x: auto;">
+                                    <table style="width: 100%; border-collapse: collapse;">
                                         <thead>
                                             <tr>
                                                 @foreach ($totalsByMethod as $method => $total)
-                                                    <th class="px-6 py-3 bg-gray-100 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
+                                                    <th style="padding: 10px; background: #edf2f7; text-align: left; font-size: 12px; font-weight: 500; color: #4a5568; text-transform: uppercase;">
                                                         {{ $method }}
                                                     </th>
                                                 @endforeach
                                             </tr>
                                         </thead>
-                                        <tbody class="bg-white divide-y divide-gray-200">
+                                        <tbody style="background: white;">
                                             <tr>
                                                 @foreach ($totalsByMethod as $total)
-                                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                                                    <td style="padding: 10px; text-align: left; font-size: 14px; color: #4a5568;">
                                                         Php {{ number_format($total, 2) }}
                                                     </td>
                                                 @endforeach
@@ -43,23 +43,23 @@
                             </div>
 
                             <!-- Daily Totals Summary -->
-                            <div class="bg-gray-50 rounded-lg p-6">
-                                <h3 class="text-lg font-semibold text-gray-700 mb-4">Totals by Day</h3>
-                                <div class="overflow-x-auto">
-                                    <table class="min-w-full divide-y divide-gray-200">
+                            <div style="background: #f7fafc; border-radius: 5px; padding: 15px; margin-top: 10px;">
+                                <h3 style="font-size: 16px; font-weight: 600; color: #4a5568; margin-bottom: 10px;">Totals by Day</h3>
+                                <div style="overflow-x: auto;">
+                                    <table style="width: 100%; border-collapse: collapse;">
                                         <thead>
                                             <tr>
                                                 @foreach ($totalsPerDay as $date => $total)
-                                                    <th class="px-6 py-3 bg-gray-100 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
+                                                    <th style="padding: 10px; background: #edf2f7; text-align: left; font-size: 12px; font-weight: 500; color: #4a5568; text-transform: uppercase;">
                                                         {{ $date }}
                                                     </th>
                                                 @endforeach
                                             </tr>
                                         </thead>
-                                        <tbody class="bg-white divide-y divide-gray-200">
+                                        <tbody style="background: white;">
                                             <tr>
                                                 @foreach ($totalsPerDay as $total)
-                                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                                                    <td style="padding: 10px; text-align: left; font-size: 14px; color: #4a5568;">
                                                         Php {{ number_format($total, 2) }}
                                                     </td>
                                                 @endforeach
@@ -70,12 +70,12 @@
                             </div>
 
                             <!-- Overall Total -->
-                            <div class="bg-gray-50 rounded-lg p-6">
-                                <h3 class="text-lg font-semibold text-gray-700 mb-4">Overall Total</h3>
-                                <div class="overflow-hidden">
-                                    <div class="bg-white rounded-lg border border-gray-200">
-                                        <div class="px-6 py-4">
-                                            <span class="text-2xl font-bold text-gray-900">
+                            <div style="background: #f7fafc; border-radius: 5px; padding: 15px; margin-top: 10px;">
+                                <h3 style="font-size: 16px; font-weight: 600; color: #4a5568; margin-bottom: 10px;">Overall Total</h3>
+                                <div>
+                                    <div style="background: white; border-radius: 5px; border: 1px solid #e2e8f0;">
+                                        <div style="padding: 10px;">
+                                            <span style="font-size: 18px; font-weight: bold; color: #1a202c;">
                                                 Php {{ number_format($overallTotal, 2) }}
                                             </span>
                                         </div>
@@ -114,7 +114,7 @@
         </div>
     </div>
 </x-app-layout>
-@include('sweetalert::alert')
+
 
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 

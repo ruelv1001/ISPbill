@@ -1,28 +1,26 @@
 <x-app-layout>
-    <div class="py-6">
-        <div class="max-w-8xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-gray-800 shadow sm:rounded-lg">
-                <div class="p-4 sm:p-8" style="max-height: 80vh; overflow-y: auto;">
+    <div style="padding-top: 1.5rem; padding-bottom: 1.5rem;">
+        <div style="max-width: 90rem; margin-left: auto; margin-right: auto; padding-left: 1.5rem; padding-right: 1.5rem;">
+            <div style="background-color: white; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1); border-radius: 0.5rem;">
+                <div style="padding: 1rem; max-height: 80vh; overflow-y: auto;">
                     @if(session('error'))
-                        <div class="alert alert-danger text-red-600">
+                        <div style="color: #dc2626;">
                             {{ session('error') }}
                         </div>
                     @endif
 
-                    <h2
-                        class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight border-b-2 border-slate-100 pb-4">
+                    <h2 style="font-weight: 600; font-size: 1.25rem; color: #1f2937; line-height: 1.25; border-bottom: 2px solid #f1f5f9; padding-bottom: 1rem;">
                         {{ __('Create user') }}
                     </h2>
 
-                    <form method="post" action="{{ route('users.store') }}" class="mt-6 space-y-6">
+                    <form method="post" action="{{ route('users.store') }}" style="margin-top: 1.5rem;">
                         @csrf
 
-                        <div class="grid grid-cols-4 gap-4">
+                        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;">
                             <!-- Column 1: Account Information -->
                             <div>
-                                <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">{{ __('Account') }}
-                                </h2>
-                                <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                                <h2 style="font-size: 1.125rem; font-weight: 500; color: #1f2937;">{{ __('Account') }}</h2>
+                                <p style="margin-top: 0.25rem; font-size: 0.875rem; color: #6b7280;">
                                     {{ __("Add user account information") }}
                                 </p>
                             </div>
@@ -30,41 +28,39 @@
                             <!-- Column 2: User Details -->
                             <div>
                                 <div>
-                                    <x-input-label for="name" :value="__('User Name')" class="mt-4"></x-input-label>
-                                    <x-text-input id="name" name="name" type="text" class="mt-1 block w-full"
+                                    <x-input-label for="name" :value="__('User Name')" style="margin-top: 1rem;"></x-input-label>
+                                    <x-text-input id="name" name="name" type="text" style="margin-top: 0.25rem; display: block; width: 100%;"
                                         :value="old('name')" required></x-text-input>
-                                    <x-input-error class="mt-2" :messages="$errors->get('name')"></x-input-error>
+                                    <x-input-error style="margin-top: 0.5rem;" :messages="$errors->get('name')"></x-input-error>
                                 </div>
 
                                 <div>
-                                    <x-input-label for="phone" :value="__('Phone')" class="mt-4"></x-input-label>
-                                    <x-text-input id="phone" name="phone" type="number" class="mt-1 block w-full"
+                                    <x-input-label for="phone" :value="__('Phone')" style="margin-top: 1rem;"></x-input-label>
+                                    <x-text-input id="phone" name="phone" type="number" style="margin-top: 0.25rem; display: block; width: 100%;"
                                         :value="old('phone')" required></x-text-input>
-                                    <x-input-error class="mt-2" :messages="$errors->get('phone')"></x-input-error>
+                                    <x-input-error style="margin-top: 0.5rem;" :messages="$errors->get('phone')"></x-input-error>
                                 </div>
 
                                 <div>
-                                    <x-input-label for="email" :value="__('Email address')"
-                                        class="mt-4"></x-input-label>
-                                    <x-text-input id="email" name="email" type="text" class="mt-1 block w-full"
+                                    <x-input-label for="email" :value="__('Email address')" style="margin-top: 1rem;"></x-input-label>
+                                    <x-text-input id="email" name="email" type="text" style="margin-top: 0.25rem; display: block; width: 100%;"
                                         :value="old('email')" required></x-text-input>
-                                    <x-input-error class="mt-2" :messages="$errors->get('email')"></x-input-error>
+                                    <x-input-error style="margin-top: 0.5rem;" :messages="$errors->get('email')"></x-input-error>
                                 </div>
                             </div>
 
                             <!-- Column 3: Address and Area -->
                             <div>
                                 <div>
-                                    <x-input-label for="address" :value="__('Billing Address')"
-                                        class="mt-4"></x-input-label>
-                                    <x-text-input id="address" name="address" type="text" class="mt-1 block w-full"
+                                    <x-input-label for="address" :value="__('Billing Address')" style="margin-top: 1rem;"></x-input-label>
+                                    <x-text-input id="address" name="address" type="text" style="margin-top: 0.25rem; display: block; width: 100%;"
                                         :value="old('address')" required></x-text-input>
-                                    <x-input-error class="mt-2" :messages="$errors->get('address')"></x-input-error>
+                                    <x-input-error style="margin-top: 0.5rem;" :messages="$errors->get('address')"></x-input-error>
                                 </div>
 
                                 <div>
-                                    <x-input-label for="area" :value="__('Area')" class="mt-4"></x-input-label>
-                                    <select name="area" id="area" class="w-full">
+                                    <x-input-label for="area" :value="__('Area')" style="margin-top: 1rem;"></x-input-label>
+                                    <select name="area" id="area" style="width: 100%;">
                                         @if ($areas && $areas->isNotEmpty())
                                             @foreach($areas as $area)
                                                 <option value="{{ $area->area }}">{{ $area->area }}</option>
@@ -73,12 +69,12 @@
                                             <option disabled>No areas available</option>
                                         @endif
                                     </select>
-                                    <x-input-error class="mt-2" :messages="$errors->get('area')"></x-input-error>
+                                    <x-input-error style="margin-top: 0.5rem;" :messages="$errors->get('area')"></x-input-error>
                                 </div>
 
                                 <div>
-                                    <x-input-label for="role" :value="__('Role')" class="mt-4"></x-input-label>
-                                    <select name="role" id="role" class="w-full">
+                                    <x-input-label for="role" :value="__('Role')" style="margin-top: 1rem;"></x-input-label>
+                                    <select name="role" id="role" style="width: 100%;">
                                         @if ($role && $role->isNotEmpty())
                                             @foreach($role as $roles)
                                                 <option value="{{ $roles->role }}">{{ $roles->role }}</option>
@@ -87,70 +83,67 @@
                                             <option disabled>No areas available</option>
                                         @endif
                                     </select>
-                                    <x-input-error class="mt-2" :messages="$errors->get('roles')"></x-input-error>
+                                    <x-input-error style="margin-top: 0.5rem;" :messages="$errors->get('roles')"></x-input-error>
                                 </div>
 
                                 <div>
-                                    <x-input-label for="coordinates" :value="__('Coordinates')"
-                                        class="mt-4"></x-input-label>
+                                    <x-input-label for="coordinates" :value="__('Coordinates')" style="margin-top: 1rem;"></x-input-label>
                                     <x-text-input id="coordinates" name="coordinates" type="text"
-                                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                                        style="margin-top: 0.25rem; display: block; width: 100%; border: 1px solid #d1d5db; border-radius: 0.375rem; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);"
                                         :value="old('coordinates')" required readonly />
-                                    <x-input-error class="mt-2" :messages="$errors->get('coordinates')" />
+                                    <x-input-error style="margin-top: 0.5rem;" :messages="$errors->get('coordinates')" />
                                 </div>
                             </div>
-                            <div id="map" class="mt-4 hidden" style="height: 300px;"></div>
+                            <div id="map" style="margin-top: 1rem; height: 300px; display: none;"></div>
+
                             <!-- Column 4: Hidden Fields -->
-                            <div class="hidden">
+                            <div style="display: none;">
                                 <div>
-                                    <x-input-label for="dob" :value="__('Date of birth')" class="mt-4"></x-input-label>
-                                    <x-text-input id="dob" name="dob" type="date" class="mt-1 block w-full"
+                                    <x-input-label for="dob" :value="__('Date of birth')" style="margin-top: 1rem;"></x-input-label>
+                                    <x-text-input id="dob" name="dob" type="date" style="margin-top: 0.25rem; display: block; width: 100%;"
                                         :value="old('dob')"></x-text-input>
-                                    <x-input-error class="mt-2" :messages="$errors->get('dob')"></x-input-error>
+                                    <x-input-error style="margin-top: 0.5rem;" :messages="$errors->get('dob')"></x-input-error>
                                 </div>
 
                                 <div>
-                                    <x-input-label for="pin" :value="__('Personal Identification Number')"
-                                        class="mt-4"></x-input-label>
-                                    <x-text-input id="pin" name="pin" type="text" class="mt-1 block w-full"
+                                    <x-input-label for="pin" :value="__('Personal Identification Number')" style="margin-top: 1rem;"></x-input-label>
+                                    <x-text-input id="pin" name="pin" type="text" style="margin-top: 0.25rem; display: block; width: 100%;"
                                         :value="old('pin')"></x-text-input>
-                                    <x-input-error class="mt-2" :messages="$errors->get('pin')"></x-input-error>
+                                    <x-input-error style="margin-top: 0.5rem;" :messages="$errors->get('pin')"></x-input-error>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-4 gap-4">
+                        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;">
                             <!-- Column 1: Subscription Information -->
                             <div>
-                                <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
+                                <h2 style="font-size: 1.125rem; font-weight: 500; color: #1f2937;">
                                     {{ __('Subscription') }}
                                 </h2>
-                                <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                                <p style="margin-top: 0.25rem; font-size: 0.875rem; color: #6b7280;">
                                     {{ __("Add subscription details") }}
                                 </p>
                             </div>
 
                             <!-- Column 2: Router Packages -->
                             <div>
-                                <div class="w-full">
+                                <div style="width: 100%;">
                                     <livewire:router-packages-dropdown />
                                 </div>
 
-                                <div class="hidden">
-                                    <x-input-label for="router_password" :value="__('Mikrotik password')"
-                                        class="mt-4"></x-input-label>
+                                <div style="display: none;">
+                                    <x-input-label for="router_password" :value="__('Mikrotik password')" style="margin-top: 1rem;"></x-input-label>
                                     <x-text-input id="router_password" value="admin12345" name="router_password"
-                                        type="text" class="mt-1 block w-full"></x-text-input>
-                                    <x-input-error class="mt-2"
-                                        :messages="$errors->get('router_password')"></x-input-error>
+                                        type="text" style="margin-top: 0.25rem; display: block; width: 100%;"></x-text-input>
+                                    <x-input-error style="margin-top: 0.5rem;" :messages="$errors->get('router_password')"></x-input-error>
                                 </div>
                             </div>
 
                             <!-- Column 3: OLT and NAP -->
                             <div>
                                 <div>
-                                    <x-input-label for="olt" :value="__('OLT')" class="mt-4"></x-input-label>
-                                    <select name="olt" id="olt" class="w-full">
+                                    <x-input-label for="olt" :value="__('OLT')" style="margin-top: 1rem;"></x-input-label>
+                                    <select name="olt" id="olt" style="width: 100%;">
                                         @if ($olt && $olt->isNotEmpty())
                                             @foreach($olt as $data)
                                                 <option value="{{ $data->olt_device }}">{{ $data->olt_device }}</option>
@@ -159,12 +152,12 @@
                                             <option disabled>No olt available</option>
                                         @endif
                                     </select>
-                                    <x-input-error class="mt-2" :messages="$errors->get('olt')"></x-input-error>
+                                    <x-input-error style="margin-top: 0.5rem;" :messages="$errors->get('olt')"></x-input-error>
                                 </div>
 
                                 <div>
-                                    <x-input-label for="nap" :value="__('NAP')" class="mt-4"></x-input-label>
-                                    <select name="nap" id="nap" class="w-full">
+                                    <x-input-label for="nap" :value="__('NAP')" style="margin-top: 1rem;"></x-input-label>
+                                    <select name="nap" id="nap" style="width: 100%;">
                                         @if ($nap && $nap->isNotEmpty())
                                             @foreach($nap as $data)
                                                 <option value="{{ $data->nap }}">{{ $data->nap }}</option>
@@ -173,15 +166,15 @@
                                             <option disabled>No olt available</option>
                                         @endif
                                     </select>
-                                    <x-input-error class="mt-2" :messages="$errors->get('nap')"></x-input-error>
+                                    <x-input-error style="margin-top: 0.5rem;" :messages="$errors->get('nap')"></x-input-error>
                                 </div>
                             </div>
 
                             <!-- Column 4: Port and Pon -->
                             <div>
                                 <div>
-                                    <x-input-label for="port" :value="__('Port')" class="mt-4"></x-input-label>
-                                    <select name="port" id="port" class="w-full">
+                                    <x-input-label for="port" :value="__('Port')" style="margin-top: 1rem;"></x-input-label>
+                                    <select name="port" id="port" style="width: 100%;">
                                         @if ($port && $port->isNotEmpty())
                                             @foreach($port as $data)
                                                 <option value="{{ $data->port }}">{{ $data->port }}</option>
@@ -190,12 +183,12 @@
                                             <option disabled>No olt available</option>
                                         @endif
                                     </select>
-                                    <x-input-error class="mt-2" :messages="$errors->get('port')"></x-input-error>
+                                    <x-input-error style="margin-top: 0.5rem;" :messages="$errors->get('port')"></x-input-error>
                                 </div>
 
                                 <div>
-                                    <x-input-label for="pon" :value="__('Pon')" class="mt-4"></x-input-label>
-                                    <select name="pon" id="pon" class="w-full">
+                                    <x-input-label for="pon" :value="__('Pon')" style="margin-top: 1rem;"></x-input-label>
+                                    <select name="pon" id="pon" style="width: 100%;">
                                         @if ($pon && $pon->isNotEmpty())
                                             @foreach($pon as $data)
                                                 <option value="{{ $data->pon }}">{{ $data->pon }}</option>
@@ -204,12 +197,12 @@
                                             <option disabled>No olt available</option>
                                         @endif
                                     </select>
-                                    <x-input-error class="mt-2" :messages="$errors->get('pon')"></x-input-error>
+                                    <x-input-error style="margin-top: 0.5rem;" :messages="$errors->get('pon')"></x-input-error>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="flex items-center gap-4 mt-4">
+                        <div style="display: flex; align-items: center; gap: 1rem; margin-top: 1rem;">
                             <x-primary-button>{{ __('Save') }}</x-primary-button>
                         </div>
                     </form>
