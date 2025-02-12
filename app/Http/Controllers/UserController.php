@@ -96,6 +96,9 @@ class UserController extends Controller
             if ($request->filled('port')) {
                 $usersListQuery->where('details.port', $request->input('port'));
             }
+            if ($request->filled('package')) {
+                $usersListQuery->where('details.package_name', $request->input('package'));
+            }
 
         }
 
@@ -113,6 +116,7 @@ class UserController extends Controller
             'pon' => Pon::distinct()->pluck('pon', 'pon')->toArray(),
             'nap' => Nap::distinct()->pluck('nap', 'nap')->toArray(),
             'port' => Port::distinct()->pluck('port', 'port')->toArray(),
+            'package' => Detail::distinct()->pluck('package_name', 'package_name')->toArray(),
         ];
 
         // Paginate the results
@@ -184,7 +188,6 @@ class UserController extends Controller
             "area" => "nullable",
             "phone" => "required|string",
             "router_id" => "nullable",
-            "dob" => "nullable|date",
             "my_profile" => "nullable|in:Profile 1,Profile 2,Profile 3",
             "coordinates" => "required|string",
             "package_name" => "required|exists:packages,id",
@@ -223,7 +226,6 @@ class UserController extends Controller
                 'user_id' => $user->id,
                 'phone' => $validatedData['phone'],
                 'address' => $validatedData['address'],
-                'dob' => $validatedData['dob'],
                 'router_password' => $validatedData['router_password'],
                 'package_name' => $package->name,
                 'router_name' => $router->name,
@@ -583,15 +585,22 @@ class UserController extends Controller
 
     public function destroy(User $user)
     {
-        \Log::info('Deleting user:', ['user_id' => $user->id]); // Log the user ID
+        \Log::info('Attempting to delete user:', ['user_id' => $user->id]);
 
         try {
+            // Begin transaction
+            \DB::beginTransaction();
+
             // Check if the user has transaction data
-            $hasTransaction = \DB::table('transaction')->where('user_id', $user->id)->exists();
+            $hasTransaction = \DB::table('transaction')
+                ->where('user_id', $user->id)
+                ->exists();
 
             if ($hasTransaction) {
-                \Log::warning('User has transaction data:', ['user_id' => $user->id]); // Log warning
-                return response()->json(['message' => 'Consumer has transaction data'], 400);
+                \Log::warning('Cannot delete: User has transaction data', ['user_id' => $user->id]);
+                return response()->json([
+                    'message' => 'Cannot delete user: Consumer has existing transaction data'
+                ], 400);
             }
 
             // Check if any detail record is locked
@@ -601,21 +610,40 @@ class UserController extends Controller
                 ->exists();
 
             if ($isLocked) {
-                \Log::warning('User details are locked:', ['user_id' => $user->id]); // Log warning
-                return response()->json(['message' => 'User details are locked and cannot be deleted'], 400);
+                \Log::warning('Cannot delete: User details are locked', ['user_id' => $user->id]);
+                return response()->json([
+                    'message' => 'Cannot delete user: Details are currently locked'
+                ], 400);
             }
 
-            // Proceed with deletion if no locks are found
+            // Delete related records
             \DB::table('details')->where('user_id', $user->id)->delete();
             \DB::table('service_details')->where('user_id', $user->id)->delete();
 
+            // Delete the user
             $user->delete();
-            \Log::info('User deleted successfully:', ['user_id' => $user->id]); // Log success
-            return response()->json(['message' => 'User deleted successfully'], 200);
+
+            // Commit transaction
+            \DB::commit();
+
+            \Log::info('User deleted successfully', ['user_id' => $user->id]);
+            return response()->json([
+                'message' => 'User deleted successfully'
+            ], 200);
 
         } catch (\Exception $e) {
-            \Log::error('Error deleting user:', ['user_id' => $user->id, 'error' => $e->getMessage()]); // Log error
-            return response()->json(['message' => 'User deletion failed'], 500);
+            // Rollback transaction
+            \DB::rollBack();
+
+            \Log::error('Failed to delete user', [
+                'user_id' => $user->id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return response()->json([
+                'message' => 'Failed to delete users: ' . $e->getMessage()
+            ], 500);
         }
     }
 

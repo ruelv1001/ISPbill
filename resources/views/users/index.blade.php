@@ -150,7 +150,8 @@ $customMessage = [
 </x-app-layout>
 @include('sweetalert::alert')
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
     function openPaymentModal(userId) {
         fetch(`/get-user/${userId}`)
@@ -173,28 +174,34 @@ $customMessage = [
         refCodeContainer.style.display = (paymentMethod === 'Cash') ? 'none' : 'block';
     }
     function confirmDelete(id) {
-        Swal.fire({
-            title: 'Are you sure?',
-            text: 'This user will be permanently deleted.',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                deleteUser(id);
-            }
-        });
-    }
-    function deleteUser(id) {
-        axios.delete(`/users/${id}`)
-            .then(response => {
-                Swal.fire('Deleted!', 'The user has been deleted.', 'success');
-                location.reload();
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                Swal.fire('Error!', 'Could not delete user.', 'error');
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'This user will be permanently deleted.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    deleteUser(id);
+                }
             });
-    }
+        }
+
+        function deleteUser(id) {
+            axios.delete(`/users/${id}`)
+                .then(response => {
+                    if (response.status === 200) {
+                        Swal.fire('Deleted!', response.data.message, 'success')
+                            .then(() => {
+                                location.reload();
+                            });
+                    }
+                })
+                .catch(error => {
+                    // Handle specific error messages from the backend
+                    const errorMessage = error.response?.data?.message || 'Could not delete user.';
+                    Swal.fire('Error!', errorMessage, 'error');
+                });
+        }
 </script>

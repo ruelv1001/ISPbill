@@ -71,9 +71,6 @@ class UserLimit extends Authenticatable
         ,
         'user_type'
     ];
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
+
 
 }

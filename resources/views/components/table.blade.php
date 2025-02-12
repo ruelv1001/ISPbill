@@ -1,5 +1,5 @@
 @php
-    $searchField = filter_var($searchField, FILTER_VALIDATE_BOOLEAN);
+$searchField = filter_var($searchField, FILTER_VALIDATE_BOOLEAN);
 @endphp
 <div id="{{ $tablename }}-table" style="position: relative; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); border-radius: 0.5rem; background-color: #ffffff;">
     <div style="display: flex; align-items: center; justify-content: space-between; background-color: #f3f4f6; padding: 1rem; border-top-left-radius: 0.75rem; border-top-right-radius: 0.75rem;">
@@ -112,11 +112,11 @@
                                                             <td style="padding: 0.75rem 1.5rem; color: #374151; {{ $index == 'id' ? 'display: flex; align-items: center;' : '' }}">
                                                                 @if ($index == 'id' && $tableCheckedbox)
                                                                     <input id="checkbox-{{ $tablename }}-{{ $row['id'] }}" type="checkbox" style="margin-right: 0.5rem;">
-                                                                    <label for="checkbox-{{ $tablename }}-{{ $row['id'] }}">checkbox</label>
+                                                                    <label for="checkbox-{{ $tablename }}-{{ $row['id'] }}"></label>
                                                                     {{ $row[$index] }}
                                                                 @else
                                                                                             @php
-                                                                                                $viewOnly = isset($row['registration_closed']) && $row['registration_closed'] ? $row['registration_closed'] : false;
+                $viewOnly = isset($row['registration_closed']) && $row['registration_closed'] ? $row['registration_closed'] : false;
                                                                                             @endphp
 
                                                                                             @if ($index == 'status' || $index == 'classification')
@@ -125,23 +125,18 @@
 
                                                                                             @if ($index == 'active_due_date')
                                                                                                                         @php
-                                                                                                                            $dueDate = \Carbon\Carbon::parse($row['active_due_date']);
-                                                                                                                            $currentDate = \Carbon\Carbon::now();
-                                                                                                                            $colorClass = $dueDate->isPast() ? 'red' : 'green';
+                    $dueDate = \Carbon\Carbon::parse($row['active_due_date']);
+                    $currentDate = \Carbon\Carbon::now();
+                    $colorClass = $dueDate->isPast() ? 'red' : 'green';
                                                                                                                         @endphp
                                                                                                                         <span style="color: {{ $colorClass }};">
                                                                                             @endif
-
                                                                                             @if ($index == 'action')
                                                                                                 <div style="display: flex; gap: 0.5rem;">
                                                                                                     @foreach ($actions as $action => $route)
                                                                                                         @if ($action == 'edit' && !$viewOnly)
                                                                                                             <a href="{{ route($route, $row['id']) }}" style="text-decoration: none;">
                                                                                                                 <x-image src="/images/edit.svg" alt="edit svg" width="20" height="20" />
-                                                                                                            </a>
-                                                                                                        @elseif ($action == 'edit-schedule')
-                                                                                                            <a href="{{ route($route, $row['id']) }}" style="text-decoration: none;">
-                                                                                                                <x-image src="/images/view.svg" alt="edit svg" width="20" height="20" />
                                                                                                             </a>
                                                                                                         @elseif ($action == 'delete')
                                                                                                             <form id="delete-{{ strtolower($tablename) }}tbl-{{ isset($itemName) && $itemName != '' ? strtolower($itemName) : 'item' }}-{{ $row['id'] }}" action="{{ route($route, $row['id']) }}" method="POST" style="display: none;">
@@ -153,10 +148,6 @@
                                                                                                             </button>
                                                                                                         @elseif ($action == 'view')
                                                                                                             <a href="{{ route($route, $row['id']) }}" style="text-decoration: none;">
-                                                                                                                <x-image src="/images/view.svg" alt="edit svg" width="20" height="20" />
-                                                                                                            </a>
-                                                                                                        @elseif ($action == 'view-participating-schools')
-                                                                                                            <a href="{{ route('convention.participating-schools', $row['id']) }}" style="text-decoration: none;">
                                                                                                                 <x-image src="/images/view.svg" alt="edit svg" width="20" height="20" />
                                                                                                             </a>
                                                                                                         @elseif ($action == 'pay')
@@ -211,8 +202,68 @@
         {{ $data->appends(array_merge(request()->only('search', 'tab-active'), ['tab-active' => $tablename]))->links('components.pagination', ['tabActive' => $tablename, 'filterRoute' => $filterRoute]) }}
     </div>
 </div>
-@push('scripts')
-    <script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+            const tableContainer = document.getElementById('{{ $tablename }}-table');
+            if (!tableContainer) return;
+
+            const checkboxAll = tableContainer.querySelector(`#checkbox-all-{{ $tablename }}`);
+            const checkboxes = tableContainer.querySelectorAll(`input[id^="checkbox-{{ $tablename }}-"]`);
+            const tableOptions = tableContainer.querySelector('.table-options');
+            const countSpan = tableContainer.querySelector('.count');
+            const selectedIdsInput = tableContainer.querySelector('.selected-ids');
+
+            function updateSelectedCount() {
+                const checkedBoxes = Array.from(checkboxes).filter(cb => cb.checked);
+                const count = checkedBoxes.length;
+
+                if (countSpan) countSpan.textContent = count;
+
+                // Show/hide options based on checkbox selection
+                const optionsContainer = tableContainer.querySelector('div[style*="display: none"]');
+                if (optionsContainer) {
+                    optionsContainer.style.display = count > 0 ? 'flex' : 'none';
+                }
+
+                // Update hidden input with selected IDs
+                if (selectedIdsInput) {
+                    const selectedIds = checkedBoxes.map(cb => {
+                        const row = cb.closest('tr');
+                        return row.dataset.trid.split('-')[1];
+                    });
+                    selectedIdsInput.value = selectedIds.join(',');
+                }
+
+                // Update "select all" checkbox
+                if (checkboxAll) {
+                    checkboxAll.checked = count > 0 && count === checkboxes.length;
+                }
+            }
+
+            // Handle "select all" checkbox
+            if (checkboxAll) {
+                checkboxAll.addEventListener('change', function () {
+                    checkboxes.forEach(cb => cb.checked = this.checked);
+                    updateSelectedCount();
+                });
+            }
+
+            // Handle individual checkboxes
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', updateSelectedCount);
+            });
+
+            // Cancel button functionality
+            const cancelButton = tableContainer.querySelector('button[style*="background-color: transparent"]');
+            if (cancelButton) {
+                cancelButton.addEventListener('click', function () {
+                    checkboxes.forEach(cb => cb.checked = false);
+                    if (checkboxAll) checkboxAll.checked = false;
+                    updateSelectedCount();
+                });
+            }
+        });
+
         function openDeleteAllModal(itemName, deleteFromID, message) {
             var textMessage = message != '' ? message : "Locking all of these " + itemName;
             Swal.fire({
@@ -281,68 +332,4 @@
                 }
             });
         }
-
-
-        document.addEventListener('DOMContentLoaded', function () {
-            const tableContainer = document.getElementById('{{ $tablename }}-table');
-            if (!tableContainer) return;
-
-            const checkboxAll = tableContainer.querySelector('.checkbox-all-search');
-            const checkboxes = tableContainer.querySelectorAll('tbody .checkbox-input');
-            const tableOptions = tableContainer.querySelector('.table-options');
-            const countSpan = tableContainer.querySelector('.count');
-            const clearCheckbox = tableContainer.querySelector('.clear-checkbox');
-            const selectedIdsInput = tableContainer.querySelector('.selected-ids');
-
-            function updateSelectedCount() {
-                const checkedBoxes = Array.from(checkboxes).filter(cb => cb.checked);
-                const count = checkedBoxes.length;
-
-                if (countSpan) countSpan.textContent = count;
-                if (tableOptions) {
-                    if (count > 0) {
-                        tableOptions.classList.remove('hidden');
-                    } else {
-                        tableOptions.classList.add('hidden');
-                    }
-                }
-
-                // Update hidden input with selected IDs
-                if (selectedIdsInput) {
-                    const selectedIds = checkedBoxes.map(cb => {
-                        const row = cb.closest('tr');
-                        return row.dataset.trid.split('-')[1];
-                    });
-                    selectedIdsInput.value = selectedIds.join(',');
-                }
-
-                // Update "select all" checkbox
-                if (checkboxAll) {
-                    checkboxAll.checked = count > 0 && count === checkboxes.length;
-                }
-            }
-
-            // Handle "select all" checkbox
-            if (checkboxAll) {
-                checkboxAll.addEventListener('change', function () {
-                    checkboxes.forEach(cb => cb.checked = this.checked);
-                    updateSelectedCount();
-                });
-            }
-
-            // Handle individual checkboxes
-            checkboxes.forEach(checkbox => {
-                checkbox.addEventListener('change', updateSelectedCount);
-            });
-
-            // Handle clear button
-            if (clearCheckbox) {
-                clearCheckbox.addEventListener('click', function () {
-                    checkboxes.forEach(cb => cb.checked = false);
-                    if (checkboxAll) checkboxAll.checked = false;
-                    updateSelectedCount();
-                });
-            }
-        });
-    </script>
-@endpush
+</script>

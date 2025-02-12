@@ -109,18 +109,18 @@ class User extends Authenticatable
         return $this->hasOne(ArchieveDetail::class);
     }
 
-    public function userLimit()
-    {
-        return $this->hasOne(UserLimit::class);
-    }
-    protected static function boot()
-    {
-        parent::boot();
+    // public function userLimit()
+    // {
+    //     return $this->hasOne(UserLimit::class);
+    // }
+    // protected static function boot()
+    // {
+    //     parent::boot();
 
-        static::deleting(function ($user) {
-            $user->userLimit()->delete();
-        });
-    }
+    //     static::deleting(function ($user) {
+    //         $user->userLimit()->delete();
+    //     });
+    // }
     public function ticket()
     {
         return $this->hasOne(Ticket::class);
