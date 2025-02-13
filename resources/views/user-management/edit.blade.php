@@ -1,107 +1,118 @@
 <x-app-layout>
-    <div class="py-6">
-        <div class="max-w-8xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-gray-800 shadow sm:rounded-lg">
-                <div class="p-4 sm:p-8" style="max-height: 80vh; overflow-y: auto;">
+    <div style="padding: 24px 0;">
+        <div style="max-width: 100%; margin: 0 auto; padding: 0 24px;">
+            <div style="background-color: white; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); border-radius: 8px; overflow: hidden;">
+                <div style="padding: 16px 24px; max-height: 80vh; overflow-y: auto;">
                     <x-slot name="header">
-                        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+                        <h2 style="font-size: 20px; font-weight: 600; color: #374151;">
                             {{ $user->name }}
                         </h2>
                     </x-slot>
+
                     @if(session('error'))
-                        <div class="alert alert-danger text-red-600">
+                        <div style="color: #e53e3e; font-size: 14px;">
                             {{ session('error') }}
                         </div>
                     @endif
 
-                    <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight border-b-2 border-slate-100 pb-4">
+                    <h2 style="font-size: 20px; font-weight: 600; color: #374151; border-bottom: 2px solid #e5e7eb; padding-bottom: 16px;">
                         {{ __('Edit user') }}
                     </h2>
 
                     <div>
-                        <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">{{ __('Account') }}</h2>
-                        <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                        <h2 style="font-size: 18px; font-weight: 500; color: #374151;">{{ __('Account') }}</h2>
+                        <p style="margin-top: 8px; font-size: 14px; color: #6b7280;">
                             {{ __("Edit user account information") }}
                         </p>
                     </div>
 
-                    <form method="post" action="{{ route('user-management.update', $user->id) }}" class="mt-6 space-y-6">
+                    <form method="post" action="{{ route('user-management.update', $user->id) }}" style="margin-top: 24px; display: grid; gap: 24px;">
                         @csrf
                         @method('patch')
 
-                        <div class="grid grid-cols-4 gap-4">
+                        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;">
                             <div>
                                 <div>
-                                    <x-input-label for="user_id" :value="__('User ID')" class="mt-4"></x-input-label>
-                                    <x-text-input id="user_id" name="user_id" type="text" readonly
-                                        class="mt-1 block w-full bg-gray-100" value="{{ $user->id }}"></x-text-input>
+                                    <label for="user_id" style="font-size: 14px; font-weight: 500; color: #374151;">{{ __('User ID') }}</label>
+                                    <input id="user_id" name="user_id" type="text" readonly
+                                        style="margin-top: 8px; padding: 8px; border: 1px solid #d1d5db; background-color: #f3f4f6; width: 100%;" value="{{ $user->id }}" />
                                 </div>
                             </div>
 
                             <div>
                                 <div>
-                                    <x-input-label for="name" :value="__('User Name')" class="mt-4"></x-input-label>
-                                    <x-text-input id="name" name="name" type="text"
-                                        class="mt-1 block w-full bg-gray-100" value="{{ $user->name }}"></x-text-input>
+                                    <label for="name" style="font-size: 14px; font-weight: 500; color: #374151;">{{ __('User Name') }}</label>
+                                    <input id="name" name="name" type="text"
+                                        style="margin-top: 8px; padding: 8px; border: 1px solid #d1d5db; background-color: #f3f4f6; width: 100%;" value="{{ $user->name }}" />
                                 </div>
                             </div>
 
                             <div>
                                 <div>
-                                    <x-input-label for="User Type" :value="__('Role')" class="mt-4"></x-input-label>
-                                    <x-text-input id="role" name="role" type="text" class="mt-1 block w-full bg-gray-100"
-                                        value="{{ $user->role }}"></x-text-input>
-                                    <x-input-error class="mt-2" :messages="$errors->get('role')"></x-input-error>
+                                    <label for="role" style="font-size: 14px; font-weight: 500; color: #374151;">{{ __('Role') }}</label>
+                                    <input id="role" name="role" type="text" 
+                                        style="margin-top: 8px; padding: 8px; border: 1px solid #d1d5db; background-color: #f3f4f6; width: 100%;" value="{{ $user->role }}" />
+                                    <div style="margin-top: 4px; color: #e53e3e; font-size: 12px;">
+                                        @error('role'){{ $message }}@enderror
+                                    </div>
                                 </div>
                             </div>
 
                             <div>
                                 <div>
-                                    <x-input-label for="email" :value="__('Email address')" class="mt-4"></x-input-label>
-                                    <x-text-input id="email" name="email" type="text"
-                                        class="mt-1 block w-full bg-gray-100" value="{{ $user->email }}"></x-text-input>
-                                    <x-input-error class="mt-2" :messages="$errors->get('email')"></x-input-error>
+                                    <label for="email" style="font-size: 14px; font-weight: 500; color: #374151;">{{ __('Email address') }}</label>
+                                    <input id="email" name="email" type="text"
+                                        style="margin-top: 8px; padding: 8px; border: 1px solid #d1d5db; background-color: #f3f4f6; width: 100%;" value="{{ $user->email }}" />
+                                    <div style="margin-top: 4px; color: #e53e3e; font-size: 12px;">
+                                        @error('email'){{ $message }}@enderror
+                                    </div>
                                 </div>
                             </div>
 
                             <div>
                                 <div>
-                                    <x-input-label for="password" :value="__('Password')" class="mt-4"></x-input-label>
-                                    <x-text-input name="password" type="password" class="mt-1 block w-full" value=""></x-text-input>
-                                    <x-input-error class="mt-2" :messages="$errors->get('password')"></x-input-error>
+                                    <label for="password" style="font-size: 14px; font-weight: 500; color: #374151;">{{ __('Password') }}</label>
+                                    <input name="password" type="password" 
+                                        style="margin-top: 8px; padding: 8px; border: 1px solid #d1d5db; width: 100%;" value="" />
+                                    <div style="margin-top: 4px; color: #e53e3e; font-size: 12px;">
+                                        @error('password'){{ $message }}@enderror
+                                    </div>
                                 </div>
                             </div>
 
                             <div>
                                 <div>
-                                    <x-input-label for="password_confirmation" :value="__('Password confirm')" class="mt-4"></x-input-label>
-                                    <x-text-input name="password_confirmation" type="password" class="mt-1 block w-full"
-                                        value=""></x-text-input>
-                                    <x-input-error class="mt-2" :messages="$errors->get('password_confirmation')"></x-input-error>
+                                    <label for="password_confirmation" style="font-size: 14px; font-weight: 500; color: #374151;">{{ __('Password confirm') }}</label>
+                                    <input name="password_confirmation" type="password" 
+                                        style="margin-top: 8px; padding: 8px; border: 1px solid #d1d5db; width: 100%;" value="" />
+                                    <div style="margin-top: 4px; color: #e53e3e; font-size: 12px;">
+                                        @error('password_confirmation'){{ $message }}@enderror
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
                         <div>
-                            <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100 mt-10">{{ __('') }}</h2>
-                            <p class="text-lg font-medium text-gray-900 dark:text-gray-100 mt-14">
-                                {{ __("User's Limitations") }}
-                            </p>
+                            <h2 style="font-size: 18px; font-weight: 500; color: #374151; margin-top: 24px;">{{ __("User's Limitations") }}</h2>
                         </div>
 
-                        <div class="grid grid-cols-4 gap-4">
+                        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;">
                             @foreach($permissions as $permission)
                                 <div>
-                                    <x-input-label for="{{ $permission }}" :value="__(ucwords(str_replace('_', ' ', $permission)))" class="mt-4"></x-input-label>
+                                    <label for="{{ $permission }}" style="font-size: 14px; font-weight: 500; color: #374151;">{{ __(ucwords(str_replace('_', ' ', $permission))) }}</label>
                                     <input id="{{ $permission }}" name="{{ $permission }}" type="checkbox" value="1"
-                                        class="mt-1" {{ old($permission, $userLimit->$permission) == 1 ? 'checked' : '' }}>
-                                    <x-input-error class="mt-2" :messages="$errors->get($permission)"></x-input-error>
+                                        style="margin-top: 8px;" {{ old($permission, $userLimit->$permission) == 1 ? 'checked' : '' }} />
+                                    <div style="margin-top: 4px; color: #e53e3e; font-size: 12px;">
+                                        @error($permission){{ $message }}@enderror
+                                    </div>
                                 </div>
                             @endforeach
                         </div>
 
-                        <div class="flex items-center gap-4 mt-4">
-                            <x-primary-button>{{ __('Update') }}</x-primary-button>
+                        <div style="display: flex; gap: 16px; justify-content: flex-start; margin-top: 16px;">
+                            <button type="submit" style="background-color: #2d3748; color: white; padding: 12px 24px; border-radius: 4px; font-size: 14px; font-weight: 600; cursor: pointer;">
+                                {{ __('Update') }}
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -109,4 +120,5 @@
         </div>
     </div>
 </x-app-layout>
+
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />

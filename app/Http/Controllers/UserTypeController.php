@@ -142,28 +142,63 @@ class UserTypeController extends Controller
         if (!auth()->user()->isAdmin()) {
             return redirect('/');
         }
-
-        return view('user-type.edit', compact('user_type'));
+    
+        // Fetch the current permissions for the selected UserType from the user_limit table
+        $permissions = \DB::table('user_limit')
+            ->where('user_type', $user_type->role)
+            ->first();
+    
+        // Pass permissions to the view along with user_type
+        return view('user-type.edit', compact('user_type', 'permissions'));
     }
-
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, string $id)
     {
-
+        // Validate the request data
         $validatedData = $request->validate([
             'role' => 'required|string|max:255',
             'description' => 'nullable|string|max:255',
         ]);
+    
+        // Find the UserType by id
         $query = UserType::findOrFail($id);
+    
+        // Update the role and description
         $query->update([
             'role' => $validatedData['role'],
             'description' => $validatedData['description'] ?? $query->description,
         ]);
+    
+        // Permissions list
+        $permissions = [
+            'dashboard_create', 'dashboard_edit', 'dashboard_delete', 'dashboard_view',
+            'packages_create', 'packages_edit', 'packages_delete', 'packages_view',
+            'customer_create', 'customer_edit', 'customer_delete', 'customer_view',
+            'service_detail_create', 'service_detail_edit', 'service_detail_delete', 'service_detail_view',
+            'transaction_create', 'transaction_edit', 'transaction_delete', 'transaction_view',
+            'router_create', 'router_edit', 'router_delete', 'router_view',
+            'user_management_create', 'user_management_edit', 'user_management_delete', 'user_management_view',
+            'tickets_create', 'tickets_edit', 'tickets_delete', 'tickets_view',
+            'dashboard_table', 'package_table', 'customer_table', 'service_detail_table',
+            'transaction_table', 'router_table', 'user_management_table', 'ticket_table',
+        ];
+    
+        // Prepare data to update the user_limit table
+        $userLimitData = ['user_type' => $request->role];
+        foreach ($permissions as $permission) {
+            $userLimitData[$permission] = $request->input($permission, 0); // Default to 0 if permission not selected
+        }
+    
+        // Update the permissions in the user_limit table
+        \DB::table('user_limit')->where('user_type', $request->role)->update($userLimitData);
+    
+        // Redirect with success message
         return redirect("/user-type/{$query->id}/edit")
             ->with("success", __("User Type updated successfully"));
     }
+    
 
     /**
      * Remove the specified resource from storage.

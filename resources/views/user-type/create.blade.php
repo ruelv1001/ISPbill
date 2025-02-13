@@ -1,47 +1,55 @@
 <x-app-layout>
-    <div class="py-6">
-        <div class="max-w-8xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-4 sm:p-8 overflow-y-auto" style="max-height: 80vh;"> <!-- Added overflow-y-auto and max-height -->
+    <div style="padding: 24px 0;">
+        <div style="max-width: 100%; margin: 0 auto; padding: 0 24px;">
+            <div style="background-color: white; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); border-radius: 8px;">
+                <div style="padding: 16px 32px; overflow-y: auto; max-height: 80vh;">
                     @if(session('error'))
-                        <div class="alert alert-danger text-red-600">
+                        <div style="color: red; font-size: 14px;">
                             {{ session('error') }}
                         </div>
                     @endif
 
-                    <h2 class="font-semibold text-xl text-gray-800 leading-tight border-b-2 border-slate-100 pb-4">
+                    <h2 style="font-size: 20px; font-weight: 600; color: #374151; border-bottom: 2px solid #d1d5db; padding-bottom: 16px;">
                         {{ __('Create Role') }}
                     </h2>
 
-                    <form method="post" action="{{ route('user-type.store') }}" class="space-y-6">
+                    <form method="post" action="{{ route('user-type.store') }}" style="margin-top: 24px; margin-bottom: 24px;">
                         @csrf
-
-                        <div class="grid grid-flex-2 gap-4">
-                            <div>
-                                <h2 class="text-lg font-medium text-gray-900">{{ __('User Role') }}</h2>
-                                <p class="mt-1 text-sm text-gray-600">{{ __("Create a new role") }}</p>
+                        <div>
+                                <h2 style="font-size: 18px; font-weight: 500; color: #374151;">{{ __('User Role') }}</h2>
+                                <p style="margin-top: 8px; font-size: 14px; color: #4b5563;">
+                                    {{ __("Create a new role") }}
+                                </p>
                             </div>
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;">
+                    
 
                             <div>
                                 <div>
-                                    <x-input-label for="role" :value="__('Role')"></x-input-label>
-                                    <x-text-input id="role" name="role" type="text" class="mt-1  md:text-sm block w-full" :value="old('role')" required></x-text-input>
-                                    <x-input-error class="mt-2" :messages="$errors->get('role')"></x-input-error>
+                                    <label for="role" style="font-weight: 500; color: #374151; margin-bottom: 8px;">{{ __('Role') }}</label>
+                                    <input id="role" name="role" type="text" style="margin-top: 8px; display: block; width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 4px;" value="{{ old('role') }}" required>
+                                    <div style="color: red; font-size: 12px; margin-top: 4px;">
+                                        @foreach ($errors->get('role') as $error)
+                                            {{ $error }}
+                                        @endforeach
+                                    </div>
                                 </div>
+
                                 <div>
-                                    <x-input-label for="description" :value="__('Description')" class="mt-4"></x-input-label>
-                                    <textarea name="description" class="px-3 py-3 mt-1 rounded-lg border-gray-300 md:text-sm block w-full" rows="5"></textarea>
-                                    <x-input-error class="mt-2" :messages="$errors->get('description')"></x-input-error>
+                                    <label for="description" style="font-weight: 500; color: #374151; margin-top: 16px; margin-bottom: 8px;">{{ __('Description') }}</label>
+                                    <textarea name="description" style="padding: 12px; margin-top: 8px; display: block; width: 100%; border: 1px solid #d1d5db; border-radius: 4px; font-size: 14px;" rows="5"></textarea>
+                                    <div style="color: red; font-size: 12px; margin-top: 4px;">
+                                        @foreach ($errors->get('description') as $error)
+                                            {{ $error }}
+                                        @endforeach
+                                    </div>
                                 </div>
 
                                 <div>
-                                    <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100 mt-10">{{ __('') }}</h2>
-                                    <p class="text-lg font-medium text-gray-900 dark:text-gray-100 mt-14">
-                                        {{ __("User's Limitations") }}
-                                    </p>
+                                    <h2 style="font-size: 18px; font-weight: 500; color: #374151; margin-top: 24px;">{{ __("User's Limitations") }}</h2>
                                 </div>
 
-                                <div class="grid grid-cols-4 gap-5">
+                                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;">
                                     @php
                                     $permissions = [
                                         'dashboard_create',
@@ -88,16 +96,26 @@
                                     @endphp
 
                                     @foreach($permissions as $permission)
-                                        <div>
-                                            <x-input-label :for="$permission" :value="__(ucwords(str_replace('_', ' ', $permission)))" class="mt-4"></x-input-label>
-                                            <input id="{{ $permission }}" name="{{ $permission }}" type="checkbox" value="1" class="mt-1">
-                                            <x-input-error class="mt-2" :messages="$errors->get($permission)"></x-input-error>
-                                        </div>
-                                    @endforeach
+                                            <div>
+                                                <label for="{{ $permission }}" style="font-weight: 500; color: #374151; margin-bottom: 8px;">
+                                                    {{ ucwords(str_replace('_', ' ', $permission)) }}
+                                                </label>
+                                                <div style="margin-top: 8px;">
+                                                <input id="{{ $permission }}" name="{{ $permission }}" type="checkbox" value="1" style="vertical-align: middle; margin-left: 0; transform: scale(1.5);">
+                                                </div>
+                                                <div style="color: red; font-size: 12px; margin-top: 4px;">
+                                                    @foreach ($errors->get($permission) as $error)
+                                                        {{ $error }}
+                                                    @endforeach
+                                                </div>
+                                            </div>
+                                        @endforeach
                                 </div>
 
-                                <div class="flex items-center gap-4 mt-4">
-                                    <x-primary-button>{{ __('Save') }}</x-primary-button>
+                                <div style="display: flex; align-items: center; gap: 16px; margin-top: 16px;">
+                                    <button type="submit" style="background-color: #4CAF50; color: white; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer;">
+                                        {{ __('Save') }}
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -107,4 +125,5 @@
         </div>
     </div>
 </x-app-layout>
+
 @include('sweetalert::alert')

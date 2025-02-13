@@ -1,11 +1,15 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-<div style="margin-top: 15px;">
+
+<!-- Sidebar Wrapper with White Background -->
+<div style="background-color: #ffffff; padding: 15px; margin-top: 15px; height: 100vh; overflow-y: auto; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+
+
     <nav class="mt-10">
         <div x-data="{ open: false }">
 
-        <x-sidebar-item :href="route('dashboard')" :active="request()->routeIs('dashboard')" style="font-size: 18px;">
-            <i class="fas fa-tachometer-alt" style="margin-right: 10px;"></i> {{ __('Dashboard') }}
-        </x-sidebar-item>
+            <x-sidebar-item :href="route('dashboard')" :active="request()->routeIs('dashboard')" style="font-size: 18px;">
+                <i class="fas fa-tachometer-alt" style="margin-right: 10px;"></i> {{ __('Dashboard') }}
+            </x-sidebar-item>
 
             <x-sidebar-item :href="route('packages.index')" :active="request()->routeIs('packages.index')" style="font-size: 18px;">
                 <i class="fas fa-box" style="margin-right: 10px;"></i> {{ __('Packages') }}

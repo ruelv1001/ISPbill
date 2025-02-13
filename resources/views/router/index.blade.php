@@ -1,27 +1,54 @@
 <x-app-layout>
-    <div class="py-6">
-        <div class="max-w-8xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
+    <div style="padding: 24px 0;">
+        <div style="max-width: 100%; margin: 0 auto; padding: 0 24px;">
+            <div style="background-color: white; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); border-radius: 8px; overflow: hidden;">
+                <div style="padding: 24px; color: #374151;">
                     @if(session('success'))
-                        <div class="alert alert-success text-green-600">
+                        <div style="color: green; font-size: 14px;">
                             {{ session('success') }}
                         </div>
                     @endif
 
                     @if(session('error'))
-                        <div class="alert alert-danger text-red-600">
+                        <div style="color: red; font-size: 14px;">
                             {{ session('error') }}
                         </div>
                     @endif
-                    <div class="flex justify-between items-center mb-6 border-b-2 border-slate-100 pb-4">
-                        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; border-bottom: 2px solid #e5e7eb; padding-bottom: 16px;">
+                        <h2 style="font-size: 20px; font-weight: 600; color: #374151;">
                             {{ __('Mikrotik Routers') }}
                         </h2>
-                        <x-create-button url="{{ route('router.create') }}"></x-create-button>
+                        <div style="display: flex; align-items: center;">
+                            <a href="{{ route('router.create') }}" style="margin-left: 8px; display: inline-flex; align-items: center; padding: 8px 16px; background-color: #2d3748; color: white; border-radius: 4px; font-size: 12px; font-weight: 600; text-transform: uppercase; text-decoration: none;">
+                                {{ __('Create') }}
+                            </a>
+                        </div>
                     </div>
-                    <div>
-                        <livewire:router-table/>
+
+                    <div style="max-height: 600px; overflow-y: auto;">
+                    <section>
+                            @php
+                                $headers = [
+                                    'name' => 'Name',
+                                    'location' => 'Description',
+                                    'username' => 'Username',
+                                    'action' => 'Action'
+                                ];
+                                $dropdownActions = [];
+                                $dltAllbtn = [];
+                                $tableActions = ['edit' => 'router.edit', 'delete-item' => 'router.destroy'];
+                                $addButton = ['Add Routers', 'router.create'];
+
+                                $customMessage = [
+                                    'success' => '',
+                                    'delete' => 'This User will be permanently deleted if you proceed.',
+                                ];
+                            @endphp
+                            <x-table :headers="$headers" :data="$data" title="Router" :dropdown="$dropdownActions"
+                                :actions="$tableActions" tablename="Router" :addbtn="$addButton"
+                                :searchField="false" :dltAllbtn="$dltAllbtn" itemName="Area" :message="$customMessage" />
+                        </section>
                     </div>
                 </div>
             </div>

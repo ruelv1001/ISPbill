@@ -12,14 +12,47 @@ class RouterController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    // public function index()
+    // {
+    //     if (!auth()->user()->isAdmin()) {
+    //         redirect('/');
+    //     }
+
+    //     $routers = Router::orderBy("name", "asc")->get();
+    //     return view("router.index", compact("routers"));
+    // }
+
+    public function index(Request $request)
     {
-        if (!auth()->user()->isAdmin()) {
-            redirect('/');
+
+        $tabActive = $request->input('tab-active', 'port');
+        $searchTerm = $request->input('search');
+        $area = $request->input('routers');
+
+        // Base query with necessary joins
+        $usersListQuery = Router::select(
+            'routers.*'
+        );
+
+
+        if ($tabActive === 'routers') {
+            if ($request->filled('name')) {
+                $usersListQuery->where('routers.name', $request->input('name'));
+            }
+
+
         }
 
-        $routers = Router::orderBy("name", "asc")->get();
-        return view("router.index", compact("routers"));
+        $areaFilter = [
+            'routers' => Router::distinct()->pluck('name', 'name')->toArray(),
+        ];
+
+        // Paginate the results
+        $data = $usersListQuery->paginate(10)->withQueryString();
+
+        // Return the view with data
+        return view('router.index', compact('data', 'areaFilter'));
+
     }
 
     /**

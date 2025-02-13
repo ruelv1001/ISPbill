@@ -1,29 +1,24 @@
 <x-app-layout>
-    <div class="py-6">
-        <div class="max-w-8xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    <div class="flex justify-between items-center mb-6 border-b-2 border-slate-100 pb-4">
-                        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+    <div style="padding: 24px 0;">
+        <div style="max-width: 100%; margin: 0 auto; padding: 0 24px;">
+            <div style="background-color: white; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); border-radius: 8px;">
+                <div style="padding: 24px; color: #1f2937;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; border-bottom: 2px solid #e5e7eb; padding-bottom: 16px;">
+                        <h2 style="font-weight: 600; font-size: 20px; color: #374151; line-height: 1.25;">
                             {{ __('Ticket ID #') . $ticket->number }}
                         </h2>
-
                     </div>
 
-
-
                     <div>
-
-
                         @if($ticket->status == "Open")
-
-                        <form action="{{ route('assign.ticket', ['ticket' => $ticket->id]) }}" method="post">
+                            <form action="{{ route('assign.ticket', ['ticket' => $ticket->id]) }}" method="post">
                                 @csrf
 
-                                <x-text-input name="ticket_id" type="hidden" value="{{ $ticket->id }}"></x-text-input>
+                                <input type="hidden" name="ticket_id" value="{{ $ticket->id }}">
+
                                 <div>
-                                    <x-input-label for="user_type" :value="__('User Type ')" class="mt-4" />
-                                    <select id="user_type" name="user_type" class="mt-1 block w-1/2 bg-gray-100 select2" required onchange="toggleRefCode()">
+                                    <label for="user_type" style="font-weight: 500; color: #374151; display: block; margin-top: 16px;">{{ __('User Type ') }}</label>
+                                    <select id="user_type" name="user_type" style="margin-top: 4px; width: 50%; padding: 8px; border-radius: 8px; border: 1px solid #d1d5db;" required onchange="toggleRefCode()">
                                         <option value="">Select User</option>
                                         @foreach($userLimits as $limit)
                                             <option value="{{ $limit->user->id  }}">{{ $limit->user->name }}</option>
@@ -31,11 +26,12 @@
                                     </select>
                                 </div>
 
-                                <div class="flex items-center gap-4 mt-4">
-                                    <x-success-button>{{ __('Assign') }}</x-success-button>
+                                <div style="display: flex; align-items: center; gap: 16px; margin-top: 16px;">
+                                    <button type="submit" style="padding: 8px 16px; background-color: #4b5563; color: white; border-radius: 8px; font-size: 14px; font-weight: 600; text-transform: uppercase;">
+                                        {{ __('Assign') }}
+                                    </button>
                                 </div>
                             </form>
-
                         @endif
                     </div>
 
@@ -44,6 +40,7 @@
         </div>
     </div>
 </x-app-layout>
+
 @include('sweetalert::alert')
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />

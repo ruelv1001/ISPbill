@@ -1,62 +1,62 @@
 <x-app-layout>
-    <div class="py-6">
-        <div class="max-w-8xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-4 sm:p-8">
+    <div style="padding: 24px 0;">
+        <div style="max-width: 100%; margin: 0 auto; padding: 0 24px;">
+            <div style="background-color: white; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); border-radius: 8px;">
+                <div style="padding: 16px; padding-top: 32px;">
                     @if(session('success'))
-                        <div class="alert alert-success text-gray-400">
+                        <div style="background-color: #d1fae5; color: #065f46; padding: 8px 16px; border-radius: 8px;">
                             {{ session('success') }}
                         </div>
                     @endif
 
                     @if(session('error'))
-                        <div class="alert alert-danger text-red-600">
+                        <div style="background-color: #fee2e2; color: #dc2626; padding: 8px 16px; border-radius: 8px;">
                             {{ session('error') }}
                         </div>
                     @endif
 
-                        <h2 class="font-semibold text-xl text-gray-800 leading-tight border-b-2 border-slate-100 pb-4">
-                            {{ __('Company Information') }}
-                        </h2>
+                    <h2 style="font-weight: 600; font-size: 20px; color: #374151; line-height: 1.25; border-bottom: 2px solid #e5e7eb; padding-bottom: 16px;">
+                        {{ __('Company Information') }}
+                    </h2>
 
-                    <form method="post" action="{{ route('company.update', $company ? $company->id : null) }}" class="mt-6 space-y-6">
+                    <form method="post" action="{{ route('company.update', $company ? $company->id : null) }}" style="margin-top: 24px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;">
                         @csrf
                         @method('patch')
 
-                        <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <h2 style="font-size: 18px; font-weight: 500; color: #1f2937;">{{ __('ISP') }}</h2>
+                            <p style="margin-top: 4px; font-size: 14px; color: #6b7280;">{{ __("Update your company information.") }}</p>
+                        </div>
+
+                        <div>
                             <div>
-                                <h2 class="text-lg font-medium text-gray-900">{{ __('ISP') }}</h2>
-                                <p class="mt-1 text-sm text-gray-600">{{ __("Update your company information.") }}</p>
+                                <label for="name" style="font-weight: 500; color: #374151; display: block; margin-top: 16px;">{{ __('ISP name') }}</label>
+                                <input type="text" id="name" name="name" value="{{ old('name', $company ? $company->name : '') }}" required style="margin-top: 4px; padding: 8px 16px; width: 100%; border-radius: 8px; border: 1px solid #d1d5db;">
+                                <div style="color: #dc2626; margin-top: 4px;">@error('name') {{ $message }} @enderror</div>
                             </div>
 
                             <div>
-                                <div>
-                                    <x-input-label for="name" value="{{ __('ISP name') }}" class="mt-4"></x-input-label>
-                                    <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" value="{{ old('name', $company ? $company->name : '') }}" required></x-text-input>
-                                    <x-input-error class="mt-2" :messages="$errors->get('name')"></x-input-error>
-                                </div>
+                                <label for="address" style="font-weight: 500; color: #374151; display: block; margin-top: 16px;">{{ __('Address') }}</label>
+                                <input type="text" id="address" name="address" value="{{ old('address', $company ? $company->address : '') }}" required style="margin-top: 4px; padding: 8px 16px; width: 100%; border-radius: 8px; border: 1px solid #d1d5db;">
+                                <div style="color: #dc2626; margin-top: 4px;">@error('address') {{ $message }} @enderror</div>
+                            </div>
 
-                                <div>
-                                    <x-input-label for="address" value="{{ __('Address') }}" class="mt-4"></x-input-label>
-                                    <x-text-input id="address" name="address" type="text" class="mt-1 block w-full" value="{{ old('address', $company ? $company->address : '') }}" required></x-text-input>
-                                    <x-input-error class="mt-2" :messages="$errors->get('address')"></x-input-error>
-                                </div>
+                            <div>
+                                <label for="email" style="font-weight: 500; color: #374151; display: block; margin-top: 16px;">{{ __('Email address') }}</label>
+                                <input type="text" id="email" name="email" value="{{ old('email', $company ? $company->email : '') }}" required style="margin-top: 4px; padding: 8px 16px; width: 100%; border-radius: 8px; border: 1px solid #d1d5db;">
+                                <div style="color: #dc2626; margin-top: 4px;">@error('email') {{ $message }} @enderror</div>
+                            </div>
 
-                                <div>
-                                    <x-input-label for="email" value="{{ __('Email address') }}" class="mt-4"></x-input-label>
-                                    <x-text-input id="email" name="email" type="text" class="mt-1 block w-full" value="{{ old('email', $company ? $company->email : '') }}" required></x-text-input>
-                                    <x-input-error class="mt-2" :messages="$errors->get('email')"></x-input-error>
-                                </div>
+                            <div>
+                                <label for="phone" style="font-weight: 500; color: #374151; display: block; margin-top: 16px;">{{ __('Phone number') }}</label>
+                                <input type="text" id="phone" name="phone" value="{{ old('phone', $company ? $company->phone : '') }}" required style="margin-top: 4px; padding: 8px 16px; width: 100%; border-radius: 8px; border: 1px solid #d1d5db;">
+                                <div style="color: #dc2626; margin-top: 4px;">@error('phone') {{ $message }} @enderror</div>
+                            </div>
 
-                                <div>
-                                    <x-input-label for="phone" value="{{ __('Phone number') }}" class="mt-4"></x-input-label>
-                                    <x-text-input id="phone" name="phone" type="text" class="mt-1 block w-full" value="{{ old('phone', $company ? $company->phone : '') }}" required></x-text-input>
-                                    <x-input-error class="mt-2" :messages="$errors->get('phone')"></x-input-error>
-                                </div>
-
-                                <div class="flex items-center gap-4 mt-4">
-                                    <x-primary-button>{{ __('Save') }}</x-primary-button>
-                                </div>
+                            <div style="display: flex; align-items: center; gap: 16px; margin-top: 24px;">
+                                <button type="submit" style="padding: 8px 16px; background-color: #4b5563; color: white; border-radius: 8px; font-size: 14px; font-weight: 600; text-transform: uppercase;">
+                                    {{ __('Save') }}
+                                </button>
                             </div>
                         </div>
                     </form>

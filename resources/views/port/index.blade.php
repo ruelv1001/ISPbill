@@ -14,7 +14,7 @@
                         <section>
                             @php
                                 $headers = [
-                                    'port' => 'Port',
+                                    'name' => 'Port',
                                     'description' => 'Description',
                                     'action' => 'Action'
                                 ];

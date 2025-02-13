@@ -1,4 +1,4 @@
-<nav style="background: white; border-bottom: 1px solid #e5e7eb; padding: 0 16px; height: 64px; display: flex; align-items: center; justify-content: space-between; position: relative;">
+<nav style="background: white; padding: 0 16px; height: 64px; display: flex; align-items: center; justify-content: space-between; position: relative;">
     <div style="display: flex; align-items: center;">
         <a href="{{ route('dashboard') }}" style="font-weight: bold; font-size: 18px; text-decoration: none; color: #333;">
             {{ config('app.name') }}

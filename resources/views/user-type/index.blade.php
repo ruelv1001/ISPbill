@@ -1,26 +1,17 @@
 <x-app-layout>
-
-    <div class="py-6">
-        <div class="max-w-8xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    <div class="flex justify-between items-center mb-6 border-b-2 border-slate-100 pb-4">
-                        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+    <div style="padding: 24px 0;">
+        <div style="max-width: 100%; margin: 0 auto; padding: 0 24px;">
+            <div style="background-color: white; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); border-radius: 8px;">
+                <div style="padding: 24px; color: #1f2937;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; border-bottom: 2px solid #e5e7eb; padding-bottom: 16px;">
+                        <h2 style="font-size: 20px; font-weight: 600; color: #374151; line-height: 1.25;">
                             {{ __('User Role List') }}
                         </h2>
-
-                        <!-- <a href="{{ route('user-type.index') }}"
-                            class="ml-2 inline-flex items-center px-4 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white rounded uppercase">
-                            {{ __('Area') }}
-                        </a> -->
-
-
                     </div>
                     <div>
                         <section>
                             @php
-                            $headers = [
-
+                                $headers = [
                                     'role' => 'Area',
                                     'description' => 'Description',
                                     'action' => ''
@@ -33,7 +24,6 @@
                                     'success' => '',
                                     'delete' => 'This User will be permanently deleted if you proceed.',
                                 ];
-
                             @endphp
                             <x-table :headers="$headers" :data="$data" title="User Type" :dropdown="$dropdownActions"
                                 :actions="$tableActions" tablename="User Role" :addbtn="$addButton" :filters="$areaFilter"
@@ -45,6 +35,9 @@
         </div>
     </div>
 </x-app-layout>
+
+@include('sweetalert::alert')
+
 
 @include('sweetalert::alert')
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">

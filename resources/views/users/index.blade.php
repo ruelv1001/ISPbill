@@ -74,48 +74,80 @@ $customMessage = [
     </div>
 
     <!-- Payment Modal -->
-   <div id="payment-modal" style="position: fixed; inset: 0; background: rgba(0, 0, 0, 0.5); display: none; overflow-y: auto; height: 100%; width: 100%;" x-show="open">
-    <div style="position: relative; top: 10%; margin: auto; padding: 20px; width: 60%; background: white; border-radius: 10px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);">
+    <div id="payment-modal" 
+     style="position: fixed; inset: 0; background: rgba(0, 0, 0, 0.5); display: none; overflow-y: auto; width: 100%; height: 100%;" 
+     x-show="open">
+    <div style="position: relative; top: 10%; margin: auto; padding: 20px; width: 50%; max-width: 600px; background: white; border-radius: 10px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);">
+        
+        <!-- Header -->
         <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 10px; border-bottom: 2px solid #ddd;">
             <h3 style="font-size: 20px; font-weight: bold; color: #333;">Payment Details</h3>
-            <button onclick="closePaymentModal()" style="font-size: 24px; color: #888; border: none; background: none; cursor: pointer;">&times;</button>
+            <button onclick="closePaymentModal()" 
+                    style="font-size: 24px; color: #888; border: none; background: none; cursor: pointer;">&times;
+            </button>
         </div>
 
+        <!-- Form -->
         <div style="padding-top: 15px;">
             <form method="post" action="{{ route('paybill.store') }}">
                 @csrf
-                <div style="display: flex; gap: 20px;">
-                    <div style="flex: 1;">
-                        <div style="display: none; ">
-                            <label for="user_id" style="font-size: 14px; font-weight: bold; ">Customer Name</label>
-                            <input id="user_id" name="user_id" type="text" value="{{ $user->id ?? '' }}" style="width: 100%; padding: 8px; background: #f5f5f5; border: 1px solid #ccc;">
+                <div style="display: flex; flex-wrap: wrap; gap: 20px;">
+                    
+                    <!-- Left Column -->
+                    <div style="flex: 1; min-width: 250px;">
+                        
+                        <input id="user_id" name="user_id" type="hidden" value="{{ $user->id ?? '' }}">
+                        
+                        <div style="margin-bottom: 20px; margin-right: 15px;">
+                            <label for="name" 
+                                   style="font-weight: 500; color: #374151; margin-bottom: 20px;">
+                                {{ __('Customer Name') }}
+                            </label>
+                            <input id="name" name="name" type="text" 
+                                   value="{{ $user->detail->name ?? '' }}" readonly 
+                                   style="margin-top: 0.25rem; display: block; width: 100%; padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 0.375rem; background: #f5f5f5;">
                         </div>
 
-                        <div>
-                            <label for="name" style="font-size: 14px; font-weight: bold; margin-right: 15px;">Customer Name</label>
-                            <input id="name" name="name" type="text" value="{{ $user->detail->name ?? '' }}" readonly style="width: 100%; padding: 8px; background: #f5f5f5; border: 1px solid #ccc;">
+                        <div style="margin-bottom: 20px; margin-right: 15px;"">
+                            <label for="package_name" 
+                                   style="font-weight: 500; color: #374151; margin-bottom: 20px;">
+                                {{ __('Package Name') }}
+                            </label>
+                            <input id="package_name" name="package_name" type="text" 
+                                   value="{{ $user->detail->package_name ?? '' }}" readonly 
+                                   style="margin-top: 0.25rem; display: block; width: 100%; padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 0.375rem; background: #f5f5f5;">
                         </div>
 
-                        <div>
-                            <label for="package_name" style="font-size: 14px; font-weight: bold;">Package Name</label>
-                            <input id="package_name" name="package_name" type="text" value="{{ $user->detail->package_name ?? '' }}" readonly style="width: 100%; padding: 8px; background: #f5f5f5; border: 1px solid #ccc;">
-                        </div>
-
-                        <div>
-                            <label for="package_price" style="font-size: 14px; font-weight: bold;">Package Price</label>
-                            <input id="package_price" name="package_price" type="text" value="{{ $user->detail->package_price ?? '' }}" disabled style="width: 100%; padding: 8px; background: #f5f5f5; border: 1px solid #ccc;">
+                        <div style="margin-bottom: 20px; margin-right: 15px;"">
+                            <label for="package_price" 
+                                   style="font-weight: 500; color: #374151; margin-bottom: 20px;">
+                                {{ __('Package Price') }}
+                            </label>
+                            <input id="package_price" name="package_price" type="text" 
+                                   value="{{ $user->detail->package_price ?? '' }}" disabled 
+                                   style="margin-top: 0.25rem; display: block; width: 100%; padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 0.375rem; background: #f5f5f5;">
                         </div>
                     </div>
 
-                    <div style="flex: 1; margin-left: 15px;">
-                        <div>
-                            <label for="payment_amount" style="font-size: 14px; font-weight: bold;">Amount to Pay</label>
-                            <input id="payment_amount" name="payment_amount" type="number" value="{{ $user->detail->package_price ?? '' }}" required style="width: 100%; padding: 8px; background: #f5f5f5; border: 1px solid #ccc;">
+                    <!-- Right Column -->
+                    <div style="flex: 1; min-width: 250px;">
+                        <div style="margin-bottom: 20px;">
+                            <label for="payment_amount" 
+                                   style="font-weight: 500; color: #374151; margin-bottom: 20px;">
+                                {{ __('Amount to Pay') }}
+                            </label>
+                            <input id="payment_amount" name="payment_amount" type="number" 
+                                   value="{{ $user->detail->package_price ?? '' }}" required 
+                                   style="margin-top: 0.25rem; display: block; width: 100%; padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 0.375rem; background: #f5f5f5;">
                         </div>
 
-                        <div>
-                            <label for="payment_method" style="font-size: 14px; font-weight: bold;">Payment Method</label>
-                            <select id="payment_method" name="payment_method" required onchange="toggleRefCode()" style="width: 100%; padding: 8px; background: #f5f5f5; border: 1px solid #ccc;">
+                        <div style="margin-bottom: 20px;">
+                            <label for="payment_method" 
+                                   style="font-weight: 500; color: #374151; margin-bottom: 20px;">
+                                {{ __('Payment Method') }}
+                            </label>
+                            <select id="payment_method" name="payment_method" required onchange="toggleRefCode()" 
+                                    style="margin-top: 0.25rem; display: block; width: 100%; padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 0.375rem; background: #f5f5f5;">
                                 <option value="">Select a payment method</option>
                                 <option value="Cash">Cash</option>
                                 <option value="Gcash">Gcash</option>
@@ -124,27 +156,38 @@ $customMessage = [
                             </select>
                         </div>
 
-                        <div id="ref_code_container" style="margin-top: 10px; display: none;">
-                            <label for="ref_code" style="font-size: 14px; font-weight: bold;">Reference Code</label>
-                            <input id="ref_code" name="ref_code" type="text" placeholder="Enter Reference Code" style="width: 100%; padding: 8px; background: #f5f5f5; border: 1px solid #ccc;">
+                        <div id="ref_code_container" style="margin-bottom: 20px; display: none;">
+                            <label for="ref_code" 
+                                   style="font-weight: 500; color: #374151; margin-bottom: 20px;">
+                                {{ __('Reference Code') }}
+                            </label>
+                            <input id="ref_code" name="ref_code" type="text" placeholder="Enter Reference Code" 
+                                   style="margin-top: 0.25rem; display: block; width: 100%; padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 0.375rem; background: #f5f5f5;">
                         </div>
 
-                        <div>
-                            <label for="remarks" style="font-size: 14px; font-weight: bold;">Remarks</label>
-                            <input id="remarks" name="remarks" type="text" required style="width: 100%; padding: 8px; background: #f5f5f5; border: 1px solid #ccc;">
+                        <div style="margin-bottom: 20px;">
+                            <label for="remarks" 
+                                   style="font-weight: 500; color: #374151; margin-bottom: 20px;">
+                                {{ __('Remarks') }}
+                            </label>
+                            <input id="remarks" name="remarks" type="text" required 
+                                   style="margin-top: 0.25rem; display: block; width: 100%; padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 0.375rem; background: #f5f5f5;">
                         </div>
 
-                        <div style="margin-top: 15px; text-align: right;">
-                            <button id="payment-button" type="submit" style="background: #007bff; color: white; padding: 10px 20px; font-size: 16px; border: none; border-radius: 5px; cursor: pointer;">
+                        <div style="text-align: right;">
+                            <button id="payment-button" type="submit" 
+                                    style="background: #007bff; color: white; padding: 10px 20px; font-size: 16px; border: none; border-radius: 5px; cursor: pointer;">
                                 Pay
                             </button>
                         </div>
                     </div>
+
                 </div>
             </form>
         </div>
     </div>
 </div>
+
 
 
 </x-app-layout>

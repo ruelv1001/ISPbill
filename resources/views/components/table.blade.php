@@ -2,7 +2,7 @@
 $searchField = filter_var($searchField, FILTER_VALIDATE_BOOLEAN);
 @endphp
 <div id="{{ $tablename }}-table" style="position: relative; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); border-radius: 0.5rem; background-color: #ffffff;">
-    <div style="display: flex; align-items: center; justify-content: space-between; background-color: #f3f4f6; padding: 1rem; border-top-left-radius: 0.75rem; border-top-right-radius: 0.75rem;">
+    <div style="display: flex; align-items: center; justify-content: space-between; background-color: #ffff; padding: 1rem; border-top-left-radius: 0.75rem; border-top-right-radius: 0.75rem;">
         <h3 style="font-size: 1.25rem; font-weight: 600; color: #374151;">{{ $title }}</h3>
         @if (!empty($addbtn))
         <a href="{{ route($addbtn[1]) }}" style="background-color: #28a745; color: white; padding: 0.5rem 1rem; border-radius: 9999px; text-decoration: none; display: flex; align-items: center; gap: 0.5rem;">

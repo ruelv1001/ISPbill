@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ config('app.name', 'ISP Management By Medz') }}</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -25,13 +25,12 @@
             font-family: 'Inter', sans-serif;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
-            margin: 0;
-            padding: 0;
+       
         }
 
         .container {
             min-height: 100vh;
-            background-color: #f8fafc;
+            background-color: #ffff;
             display: flex;
             flex-direction: column;
         }
@@ -53,7 +52,7 @@
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            background-color: #eef2ff;
+            background-color: #d3d3d3;
         }
     </style>
 </head>

@@ -1,56 +1,78 @@
 <x-app-layout>
-    <div class="py-6">
-        <div class="max-w-8xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white shadow sm:rounded-lg">
-                <div class="p-4 sm:p-8">
+    <div style="padding: 24px 0;">
+        <div style="max-width: 100%; margin: 0 auto; padding: 0 24px;">
+            <div style="background-color: white; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); border-radius: 8px;">
+                <div style="padding: 16px 32px;">
                     @if(session('error'))
-                        <div class="alert alert-danger text-red-600">
+                        <div style="color: red; font-size: 14px;">
                             {{ session('error') }}
                         </div>
                     @endif
 
-                        <h2 class="font-semibold text-xl text-gray-800 leading-tight border-b-2 border-slate-100 pb-4">
-                            {{ __('Edit Router') }}
-                        </h2>
+                    <h2 style="font-size: 20px; font-weight: 600; color: #374151; border-bottom: 2px solid #d1d5db; padding-bottom: 16px;">
+                        {{ __('Edit Router') }}
+                    </h2>
 
-                    <form method="post" action="{{ route('router.update', $router->id) }}" class="mt-6 space-y-6">
+                    <form method="post" action="{{ route('router.update', $router->id) }}" style="margin-top: 24px; margin-bottom: 24px;">
                         @csrf
                         @method('patch')
 
-                        <div class="grid grid-cols-2 gap-4">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
                             <div>
-                                <h2 class="text-lg font-medium text-gray-900">{{ __('Router') }}</h2>
-                                <p class="mt-1 text-sm text-gray-600">{{ __("Edit Mikrotik router details") }}</p>
+                                <h2 style="font-size: 18px; font-weight: 500; color: #374151;">{{ __('Router') }}</h2>
+                                <p style="margin-top: 8px; font-size: 14px; color: #4b5563;">{{ __("Edit Mikrotik router details") }}</p>
                             </div>
 
                             <div>
                                 <div>
-                                    <x-input-label for="name" :value="__('Router name')"></x-input-label>
-                                    <x-text-input id="name" name="name" type="text" class="mt-1 block w-full bg-gray-100" value="{{ $router->name }}" disabled></x-text-input>
+                                    <label for="name" style="font-weight: 500; color: #374151; margin-bottom: 8px;">{{ __('Router name') }}</label>
+                                    <input id="name" name="name" type="text" style="margin-top: 8px; display: block; width: 100%; padding: 8px; background-color: #f3f4f6; border: 1px solid #d1d5db; border-radius: 4px;" value="{{ $router->name }}" disabled>
                                 </div>
-                                <div>
-                                    <x-input-label for="location" :value="__('Location')" class="mt-4"></x-input-label>
-                                    <x-text-input id="location" name="location" type="text" class="mt-1 block w-full" value="{{ $router->location }}"></x-text-input>
-                                    <x-input-error class="mt-2" :messages="$errors->get('location')"></x-input-error>
-                                </div>
-                                <div>
-                                    <x-input-label for="ip" :value="__('Router IP')" class="mt-4"></x-input-label>
-                                    <x-text-input id="ip" name="ip" type="text" class="mt-1 block w-full" value="{{ $router->ip }}" required></x-text-input>
-                                    <x-input-error class="mt-2" :messages="$errors->get('ip')"></x-input-error>
-                                </div>
-                                <div>
-                                    <x-input-label for="username" :value="__('Router username')" class="mt-4"></x-input-label>
-                                    <x-text-input id="username" name="username" type="text" class="mt-1 block w-full" value="{{ $router->username }}" required></x-text-input>
-                                    <x-input-error class="mt-2" :messages="$errors->get('username')"></x-input-error>
-                                </div>
-                                <div>
-                                    <x-input-label for="password" :value="__('Router password')" class="mt-4"></x-input-label>
-                                    <x-text-input id="password" name="password" type="text" class="mt-1 block w-full" value="{{ $router->password }}" required></x-text-input>
-                                    <x-input-error class="mt-2" :messages="$errors->get('password')"></x-input-error>
+                                
+                                <div style="margin-top: 16px;">
+                                    <label for="location" style="font-weight: 500; color: #374151; margin-bottom: 8px;">{{ __('Location') }}</label>
+                                    <input id="location" name="location" type="text" style="margin-top: 8px; display: block; width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 4px;" value="{{ $router->location }}">
+                                    <div style="color: red; font-size: 12px; margin-top: 4px;">
+                                        @foreach ($errors->get('location') as $error)
+                                            {{ $error }}
+                                        @endforeach
+                                    </div>
                                 </div>
 
-                                <div class="flex items-center gap-4 mt-4">
-                                    <x-primary-button>{{ __('Update') }}</x-primary-button>
+                                <div style="margin-top: 16px;">
+                                    <label for="ip" style="font-weight: 500; color: #374151; margin-bottom: 8px;">{{ __('Router IP') }}</label>
+                                    <input id="ip" name="ip" type="text" style="margin-top: 8px; display: block; width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 4px;" value="{{ $router->ip }}" required>
+                                    <div style="color: red; font-size: 12px; margin-top: 4px;">
+                                        @foreach ($errors->get('ip') as $error)
+                                            {{ $error }}
+                                        @endforeach
+                                    </div>
+                                </div>
+
+                                <div style="margin-top: 16px;">
+                                    <label for="username" style="font-weight: 500; color: #374151; margin-bottom: 8px;">{{ __('Router username') }}</label>
+                                    <input id="username" name="username" type="text" style="margin-top: 8px; display: block; width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 4px;" value="{{ $router->username }}" required>
+                                    <div style="color: red; font-size: 12px; margin-top: 4px;">
+                                        @foreach ($errors->get('username') as $error)
+                                            {{ $error }}
+                                        @endforeach
+                                    </div>
+                                </div>
+
+                                <div style="margin-top: 16px;">
+                                    <label for="password" style="font-weight: 500; color: #374151; margin-bottom: 8px;">{{ __('Router password') }}</label>
+                                    <input id="password" name="password" type="text" style="margin-top: 8px; display: block; width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 4px;" value="{{ $router->password }}" required>
+                                    <div style="color: red; font-size: 12px; margin-top: 4px;">
+                                        @foreach ($errors->get('password') as $error)
+                                            {{ $error }}
+                                        @endforeach
+                                    </div>
+                                </div>
+
+                                <div style="display: flex; align-items: center; gap: 16px; margin-top: 16px;">
+                                    <button type="submit" style="background-color: #4CAF50; color: white; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer;">
+                                        {{ __('Update') }}
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -60,3 +82,4 @@
         </div>
     </div>
 </x-app-layout>
+@include('sweetalert::alert')
