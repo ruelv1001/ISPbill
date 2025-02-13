@@ -186,7 +186,7 @@ class UserController extends Controller
             "name" => "required|string|max:255",
             "address" => "required|string",
             "area" => "nullable",
-            "remarks" => "nullable",
+            "remarks" => "required|string",
             "phone" => "required|string",
             "router_id" => "nullable",
             "my_profile" => "nullable|in:Profile 1,Profile 2,Profile 3",
@@ -194,13 +194,14 @@ class UserController extends Controller
             "package_name" => "required|exists:packages,id",
             "router_name" => "required|exists:routers,id",
             "router_password" => "required|string",
+            "role" => "required|string",
             "olt" => "nullable",
             "pon" => "nullable",
             "port" => "nullable",
             "nap" => "nullable",
         ]);
 
-        Log::info('Remarks:', ['remarks' => $validatedData['remarks']]);
+
 
         // Start a database transaction for better error handling
         DB::beginTransaction();
@@ -216,8 +217,8 @@ class UserController extends Controller
                 'name' => str_replace(' ', '_', $validatedData['name']) . '_' . date('Y-m-d'),
                 'email' => $validatedData['email'],
                 'billing_address' => $validatedData['address'],
-                'role' => 'user',
-                //  'password' => Hash::make($validatedData['password']),
+                'role' => $validatedData['role'],
+                'password' => Hash::make("Pass@1234"),
             ]);
 
             // Retrieve package and router
@@ -334,7 +335,7 @@ class UserController extends Controller
             DB::commit();
 
             // Redirect with success message
-            return redirect()->route('users.a')
+            return redirect()->route('users.index')
                 ->with('success', __('User added successfully'));
 
         } catch (\Exception $e) {

@@ -14,7 +14,7 @@
             <x-sidebar-item :href="route('packages.index')" :active="request()->routeIs('packages.index')" style="font-size: 18px;">
                 <i class="fas fa-box" style="margin-right: 10px;"></i> {{ __('Packages') }}
             </x-sidebar-item>
-
+        
             @if(auth()->user()->isAdmin())
                 <x-sidebar-item :href="route('users.index')" :active="request()->routeIs('users.index')" style="font-size: 18px;">
                     <i class="fas fa-users" style="margin-right: 10px;"></i> {{ __('Customer') }}

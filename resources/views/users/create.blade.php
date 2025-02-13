@@ -18,15 +18,15 @@
                 <form method="post" action="{{ route('users.store') }}" style="margin-top: 1.5rem;">
                     @csrf
                     <div>
-                            <h2 style="font-size: 1.125rem; font-weight: 500; color: #1f2937;">{{ __('Account') }}</h2>
-                            <p style="margin-top: 0.25rem; font-size: 0.875rem; color: #6b7280;">
-                                {{ __("Add user account information") }}
-                            </p>
-                        </div>
+                        <h2 style="font-size: 1.125rem; font-weight: 500; color: #1f2937;">{{ __('Account') }}</h2>
+                        <p style="margin-top: 0.25rem; font-size: 0.875rem; color: #6b7280;">
+                            {{ __("Add user account information") }}
+                        </p>
+                    </div>
 
                     <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;">
                         <!-- Column 1: Account Information -->
-                      
+
 
                         <!-- Column 2: User Details -->
                         <div style="margin-right: 20px; ">
@@ -60,6 +60,14 @@
                                 <input id="address" name="address" type="text"
                                     style="margin-top: 0.25rem; display: block; width: 100%; padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 0.375rem;"
                                     value="{{ old('address') }}" required>
+                            </div>
+
+                            <div style="margin-bottom: 15px;">
+                                <label for="remarks"
+                                    style="font-weight: 500; color: #374151;">{{ __('Remarks') }}</label>
+                                <input id="remarks" name="remarks" type="text"
+                                    style="margin-top: 0.25rem; display: block; width: 100%; padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 0.375rem;"
+                                    value="{{ old('remarks') }}">
                             </div>
 
 
