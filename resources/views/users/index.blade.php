@@ -86,13 +86,13 @@ $customMessage = [
                 @csrf
                 <div style="display: flex; gap: 20px;">
                     <div style="flex: 1;">
-                        <div style="display: none;">
-                            <label for="user_id" style="font-size: 14px; font-weight: bold;">Customer Name</label>
+                        <div style="display: none; ">
+                            <label for="user_id" style="font-size: 14px; font-weight: bold; ">Customer Name</label>
                             <input id="user_id" name="user_id" type="text" value="{{ $user->id ?? '' }}" style="width: 100%; padding: 8px; background: #f5f5f5; border: 1px solid #ccc;">
                         </div>
 
                         <div>
-                            <label for="name" style="font-size: 14px; font-weight: bold;">Customer Name</label>
+                            <label for="name" style="font-size: 14px; font-weight: bold; margin-right: 15px;">Customer Name</label>
                             <input id="name" name="name" type="text" value="{{ $user->detail->name ?? '' }}" readonly style="width: 100%; padding: 8px; background: #f5f5f5; border: 1px solid #ccc;">
                         </div>
 
@@ -107,7 +107,7 @@ $customMessage = [
                         </div>
                     </div>
 
-                    <div style="flex: 1;">
+                    <div style="flex: 1; margin-left: 15px;">
                         <div>
                             <label for="payment_amount" style="font-size: 14px; font-weight: bold;">Amount to Pay</label>
                             <input id="payment_amount" name="payment_amount" type="number" value="{{ $user->detail->package_price ?? '' }}" required style="width: 100%; padding: 8px; background: #f5f5f5; border: 1px solid #ccc;">
@@ -161,6 +161,7 @@ $customMessage = [
                 document.getElementById('name').value = data.name;
                 document.getElementById('package_name').value = data.package_name;
                 document.getElementById('package_price').value = data.package_price;
+                document.getElementById('payment_amount').value = data.package_price;
                 toggleRefCode();
                 document.getElementById('payment-modal').style.display = 'block';
             });

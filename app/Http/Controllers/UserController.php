@@ -186,6 +186,7 @@ class UserController extends Controller
             "name" => "required|string|max:255",
             "address" => "required|string",
             "area" => "nullable",
+            "remarks" => "nullable",
             "phone" => "required|string",
             "router_id" => "nullable",
             "my_profile" => "nullable|in:Profile 1,Profile 2,Profile 3",
@@ -198,6 +199,8 @@ class UserController extends Controller
             "port" => "nullable",
             "nap" => "nullable",
         ]);
+
+        Log::info('Remarks:', ['remarks' => $validatedData['remarks']]);
 
         // Start a database transaction for better error handling
         DB::beginTransaction();
@@ -231,6 +234,7 @@ class UserController extends Controller
                 'router_name' => $router->name,
                 'package_price' => $package->price,
                 'due' => $package->price,
+                'remarks' => $validatedData['remarks'],
                 'status' => 'new',
                 'is_lock' => 'unlock',
                 'account_number' => $accountNumber,
@@ -456,7 +460,8 @@ class UserController extends Controller
             "phone" => "nullable|string|max:15",
             "email" => "nullable|email|unique:users,email," . $user->id,
             "name" => "nullable|string|max:255",
-            "area" => "nullable|in:1,2,3,4,5,6,7,8,9,10",
+            "area" => "nullable|string",
+            "remarks" => "nullable|string",
             "my_profile" => "nullable|in:Profile 1,Profile 2,Profile 3",
             "coordinates" => "nullable|string",
             // "package_name" => "nullable|exists:packages,name",
@@ -488,6 +493,7 @@ class UserController extends Controller
                 // 'router_password' => $validatedData['router_password'] ?? $details->router_password,
                 // 'package_name' => $validatedData['package_name'] ?? $details->package_name,
                 // 'router_name' => $validatedData['router_name'] ?? $details->router_name,
+                'remarks' => $validatedData['remarks'] ?? $details->remarks,
                 'area' => $validatedData['area'] ?? $details->area,
                 'my_profile' => $validatedData['my_profile'] ?? $details->my_profile,
                 'coordinates' => $validatedData['coordinates'] ?? $details->coordinates,

@@ -5,10 +5,11 @@ $searchField = filter_var($searchField, FILTER_VALIDATE_BOOLEAN);
     <div style="display: flex; align-items: center; justify-content: space-between; background-color: #f3f4f6; padding: 1rem; border-top-left-radius: 0.75rem; border-top-right-radius: 0.75rem;">
         <h3 style="font-size: 1.25rem; font-weight: 600; color: #374151;">{{ $title }}</h3>
         @if (!empty($addbtn))
-            <a href="{{ route($addbtn[1]) }}" style="background-color: #28a745; color: white; padding: 0.5rem 1rem; border-radius: 0.25rem; text-decoration: none; display: flex; align-items: center; gap: 0.5rem;">
-                <x-image src="/images/plus.svg" alt="Placeholder Image" width="20" height="20" />
-                {{ $addbtn[0] }}
-            </a>
+        <a href="{{ route($addbtn[1]) }}" style="background-color: #28a745; color: white; padding: 0.5rem 1rem; border-radius: 9999px; text-decoration: none; display: flex; align-items: center; gap: 0.5rem;">
+            <x-image src="/images/plus.svg" alt="Placeholder Image" width="20" height="20" />
+            {{ $addbtn[0] }}
+        </a>
+
         @endif
     </div>
     @if ((empty((array) $filters) && count($filters) > 0) || $searchField == true)

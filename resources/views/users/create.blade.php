@@ -17,19 +17,20 @@
 
                 <form method="post" action="{{ route('users.store') }}" style="margin-top: 1.5rem;">
                     @csrf
-
-                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;">
-                        <!-- Column 1: Account Information -->
-                        <div>
+                    <div>
                             <h2 style="font-size: 1.125rem; font-weight: 500; color: #1f2937;">{{ __('Account') }}</h2>
                             <p style="margin-top: 0.25rem; font-size: 0.875rem; color: #6b7280;">
                                 {{ __("Add user account information") }}
                             </p>
                         </div>
 
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;">
+                        <!-- Column 1: Account Information -->
+                      
+
                         <!-- Column 2: User Details -->
                         <div style="margin-right: 20px; ">
-                            <div style="margin-bottom: 15px;">
+                            <div style="margin-bottom: 15px; margin-top: 5px;">
                                 <label for="name"
                                     style="font-weight: 500; color: #374151; margin: bottom 20px;">{{ __('User Name') }}</label>
                                 <input id="name" name="name" type="text"

@@ -56,82 +56,85 @@
                                 <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem;">
                                     <!-- User Details Section -->
                                     <div
-                                        style="background: white; padding: 1rem; border-radius: 0.5rem; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);">
-                                        <x-input-label for="user_id" :value="__('User ID')"></x-input-label>
+                                        style="padding: 1rem; border-radius: 0.5rem;  ">
+                                        <x-input-label for="user_id" :value="__('User ID')" 
+                                            style="font-weight: bold; font-size: 0.9rem; color: #4a5568; display: block; margin-bottom: 0.3rem;">
+                                        </x-input-label>
                                         <x-text-input id="user_id" name="user_id" type="text" readonly
-                                            style="width: 100%; margin-top: 0.5rem; background: #f7fafc;"
-                                            value="{{ $user->id }}"></x-text-input>
+                                            style="width: 90%; margin-top: 0.5rem; background: #ffff; border-radius: 1.5rem; padding: 0.5rem 1rem; border: 1px solid #e2e8f0;"
+                                            value="{{ $user->id }}">
+                                        </x-text-input>
                                     </div>
 
                                     <div
-                                        style="background: white; padding: 1rem; border-radius: 0.5rem; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);">
+                                    style="padding: 1rem; border-radius: 0.5rem;  ">
                                         <x-input-label for="name" :value="__('User Name')"></x-input-label>
                                         <x-text-input id="name" name="name" type="text"
-                                            style="width: 100%; margin-top: 0.5rem;"
+                                            style="width: 90%; margin-top: 0.5rem; background: #ffff; border-radius: 1.5rem; padding: 0.5rem 1rem; border: 1px solid #e2e8f0;"
                                             value="{{ $user->detail->name }}"></x-text-input>
                                     </div>
 
                                     <div
-                                        style="background: white; padding: 1rem; border-radius: 0.5rem; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);">
+                                    style="padding: 1rem; border-radius: 0.5rem;  ">
                                         <x-input-label for="email" :value="__('Email')"></x-input-label>
                                         <x-text-input id="email" name="email" type="email"
-                                            style="width: 100%; margin-top: 0.5rem; background: #f7fafc;"
+                                            style="width: 90%; margin-top: 0.5rem; background: #ffff; border-radius: 1.5rem; padding: 0.5rem 1rem; border: 1px solid #e2e8f0;"
                                             value="{{ $user->email }}" disabled></x-text-input>
                                     </div>
 
                                     <div
-                                        style="background: white; padding: 1rem; border-radius: 0.5rem; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);">
+                                    style="padding: 1rem; border-radius: 0.5rem;  ">
                                         <x-input-label for="phone" :value="__('Phone')"></x-input-label>
                                         <x-text-input id="phone" name="phone" type="text"
-                                            style="width: 100%; margin-top: 0.5rem;"
+                                            style="width: 90%; margin-top: 0.5rem; background: #ffff; border-radius: 1.5rem; padding: 0.5rem 1rem; border: 1px solid #e2e8f0;"
                                             value="{{ $user->detail->phone }}"></x-text-input>
                                     </div>
 
                                     <!-- Subscription Details -->
                                     <div
-                                        style="background: white; padding: 1rem; border-radius: 0.5rem; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);">
+                                    style="padding: 1rem; border-radius: 0.5rem;  ">
                                         <x-input-label for="subscription_date" :value="__('Subscription Date')"></x-input-label>
                                         <x-text-input id="subscription_date" name="subscription_date" type="text"
-                                            readonly style="width: 100%; margin-top: 0.5rem; background: #f7fafc;"
+                                            readonly style="width: 90%; margin-top: 0.5rem; background: #ffff; border-radius: 1.5rem; padding: 0.5rem 1rem; border: 1px solid #e2e8f0;"
                                             value="{{ $user->service_details->subscription_date ?? '' }}"></x-text-input>
                                     </div>
 
                                     <div
-                                        style="background: white; padding: 1rem; border-radius: 0.5rem; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);">
+                                    style="padding: 1rem; border-radius: 0.5rem;  ">
                                         <x-input-label for="billing_date" :value="__('Next Billing Date')"></x-input-label>
                                         <x-text-input id="billing_date" name="billing_date" type="datetime-local"
-                                            style="width: 100%; margin-top: 0.5rem;"
+                                            style="width: 90%; margin-top: 0.5rem; background: #ffff; border-radius: 1.5rem; padding: 0.5rem 1rem; border: 1px solid #e2e8f0;"
                                             value="{{ old('billing_date', $user->service_details->billing_date ?? '') }}"></x-text-input>
                                     </div>
 
                                     <div
-                                        style="background: white; padding: 1rem; border-radius: 0.5rem; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);">
+                                    style="padding: 1rem; border-radius: 0.5rem;  ">
                                         <x-input-label for="active_due_date" :value="__('Active Due Date')"></x-input-label>
                                         <x-text-input id="active_due_date" name="active_due_date" type="text"
-                                            style="width: 100%; margin-top: 0.5rem;"
+                                            style="width: 90%; margin-top: 0.5rem; background: #ffff; border-radius: 1.5rem; padding: 0.5rem 1rem; border: 1px solid #e2e8f0;"
                                             value="{{ $user->service_details->active_due_date ?? '' }}"></x-text-input>
                                     </div>
 
                                     <div
-                                        style="background: white; padding: 1rem; border-radius: 0.5rem; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);">
+                                    style="padding: 1rem; border-radius: 0.5rem;  ">
                                         <x-input-label for="address" :value="__('Address')"></x-input-label>
                                         <x-text-input id="address" name="address" type="text"
-                                            style="width: 100%; margin-top: 0.5rem;"
+                                            style="width: 90%; margin-top: 0.5rem; background: #ffff; border-radius: 1.5rem; padding: 0.5rem 1rem; border: 1px solid #e2e8f0;"
                                             value="{{ $user->detail->address }}"></x-text-input>
                                     </div>
 
                                     <!-- Area and Coordinates -->
                                     <div
-                                        style="background: white; padding: 1rem; border-radius: 0.5rem; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);">
+                                    style="padding: 1rem; border-radius: 0.5rem;  ">
                                         <x-input-label for="coordinates" :value="__('Coordinates')"></x-input-label>
                                         <x-text-input id="coordinates" name="coordinates" type="text"
-                                            style="width: 100%; margin-top: 0.5rem;"
+                                            style="width: 90%; margin-top: 0.5rem; background: #ffff; border-radius: 1.5rem; padding: 0.5rem 1rem; border: 1px solid #e2e8f0;"
                                             value="{{ old('coordinates', $user->detail->coordinates ?? '') }}"
                                             readonly></x-text-input>
                                     </div>
 
                                     <div
-                                        style="background: white; padding: 1rem; border-radius: 0.5rem; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);">
+                                    style="padding: 1rem; border-radius: 0.5rem;  ">
                                         <x-input-label for="area" :value="__('Area')"></x-input-label>
                                         <select name="area" id="area"
                                             style="width: 100%; margin-top: 0.5rem; border: 1px solid #e2e8f0; border-radius: 0.375rem; padding: 0.5rem;">
@@ -150,10 +153,10 @@
                                     </div>
 
                                     <div
-                                        style="background: white; padding: 1rem; border-radius: 0.5rem; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);">
+                                    style="padding: 1rem; border-radius: 0.5rem;  ">
                                         <x-input-label for="remarks" :value="__('Remarks')"></x-input-label>
                                         <x-text-input id="remarks" name="remarks" type="text"
-                                            style="width: 100%; margin-top: 0.5rem;"
+                                            style="width: 90%; margin-top: 0.5rem; background: #ffff; border-radius: 1.5rem; padding: 0.5rem 1rem; border: 1px solid #e2e8f0;"
                                             value="{{ $user->detail->remarks }}"></x-text-input>
                                     </div>
                                 </div>
@@ -253,7 +256,7 @@
                                         style="background: white; padding: 1rem; border-radius: 0.5rem; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);">
                                         <x-input-label for="uptime" :value="__('Uptime')"></x-input-label>
                                         <x-text-input id="uptime" name="uptime" type="text" readonly
-                                            style="width: 100%; margin-top: 0.5rem; background: #f7fafc;"
+                                            style="width: 90%; margin-top: 0.5rem; background: #ffff; border-radius: 1.5rem; padding: 0.5rem 1rem; border: 1px solid #e2e8f0;"
                                             value="{{ $data['uptime'] ?? 'N/A' }}"></x-text-input>
                                     </div>
 
@@ -261,7 +264,7 @@
                                         style="background: white; padding: 1rem; border-radius: 0.5rem; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);">
                                         <x-input-label for="router_name" :value="__('Router Name')"></x-input-label>
                                         <x-text-input id="router_name" name="router_name" type="text" readonly
-                                            style="width: 100%; margin-top: 0.5rem; background: #f7fafc;"
+                                            style="width: 90%; margin-top: 0.5rem; background: #ffff; border-radius: 1.5rem; padding: 0.5rem 1rem; border: 1px solid #e2e8f0;"
                                             value="{{ $data['router']['name'] ?? 'Unknown' }}"></x-text-input>
                                     </div>
 
@@ -269,7 +272,7 @@
                                         style="background: white; padding: 1rem; border-radius: 0.5rem; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);">
                                         <x-input-label for="router_ip" :value="__('Router IP')"></x-input-label>
                                         <x-text-input id="router_ip" name="router_ip" type="text" readonly
-                                            style="width: 100%; margin-top: 0.5rem; background: #f7fafc;"
+                                            style="width: 90%; margin-top: 0.5rem; background: #ffff; border-radius: 1.5rem; padding: 0.5rem 1rem; border: 1px solid #e2e8f0;"
                                             value="{{ $data['router']['ip'] ?? 'N/A' }}"></x-text-input>
                                     </div>
                                 </div>
