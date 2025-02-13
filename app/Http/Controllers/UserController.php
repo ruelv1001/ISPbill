@@ -334,7 +334,7 @@ class UserController extends Controller
             DB::commit();
 
             // Redirect with success message
-            return redirect()->route('users.index')
+            return redirect()->route('users.a')
                 ->with('success', __('User added successfully'));
 
         } catch (\Exception $e) {

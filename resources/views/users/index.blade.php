@@ -1,9 +1,9 @@
 <x-app-layout>
-    <div style="padding: 24px;">
+    <div style="padding: 15px;">
         <div style="max-width: 1600px; margin: 0 auto; padding: 0 48px;">
             <div
                 style="background-color: white; overflow: hidden; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); border-radius: 8px;">
-                <div style="padding: 24px; color: #1a202c;">
+                <div style="padding: 15px; color: #1a202c;">
                     <!-- Scrollable container -->
                     <div style="max-height: 80vh; overflow-y: auto;">
                         <div
@@ -44,7 +44,7 @@
                             <section>
                                 @php
 $headers = [
-    'id' => 'ID',
+    'id' => 'Check All',
     'name' => 'Name',
     'active_due_date' => 'Expire',
     'area' => 'Area',

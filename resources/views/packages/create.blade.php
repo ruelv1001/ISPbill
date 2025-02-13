@@ -1,50 +1,62 @@
 <x-app-layout>
-    <div class="py-6">
-        <div class="max-w-8xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-4 sm:p-8">
+    <div style="padding: 24px 0;">
+        <div style="max-width: 100%; margin: 0 auto; padding: 0 24px;">
+            <div style="background-color: white; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); border-radius: 8px;">
+                <div style="padding: 16px 32px;">
                     @if(session('error'))
-                        <div class="alert alert-danger text-red-600">
+                        <div style="color: red; font-size: 14px;">
                             {{ session('error') }}
                         </div>
                     @endif
 
-                    <h2 class="font-semibold text-xl text-gray-800 leading-tight border-b-2 border-slate-100 pb-4">
+                    <h2 style="font-size: 20px; font-weight: 600; color: #374151; border-bottom: 2px solid #d1d5db; padding-bottom: 16px;">
                         {{ __('Create Package') }}
                     </h2>
 
-                    <form method="post" action="{{ route('packages.store') }}" class="space-y-6">
+                    <form method="post" action="{{ route('packages.store') }}" style="margin-top: 24px;">
                         @csrf
 
-                        <div class="grid grid-cols-2 gap-4">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
                             <div>
-                                <h2 class="text-lg font-medium text-gray-900">{{ __('Package') }}</h2>
-                                <p class="mt-1 text-sm text-gray-600">{{ __("Add package name and price") }}</p>
+                                <h2 style="font-size: 18px; font-weight: 500; color: #374151;">{{ __('Package') }}</h2>
+                                <p style="margin-top: 8px; font-size: 14px; color: #4b5563;">{{ __("Add package name and price") }}</p>
                             </div>
 
                             <div>
                                 <div>
-                                    <x-input-label for="router_id" :value="__('select router')" class="mt-4"></x-input-label>
-                                    <select name="router_id" id="router_id" class="mt-1 block w-full rounded-md border border-gray-300">
+                                    <label for="router_id" style="font-weight: 500; color: #374151; margin-bottom: 8px;">{{ __('Select router') }}</label>
+                                    <select name="router_id" id="router_id" style="margin-top: 8px; width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 4px;">
                                         <option value="">{{ __('Select Mikrotik router') }}</option>
                                         @foreach ($routers as $router)
                                             <option value="{{ $router->id }}">{{ $router->name }}</option>
                                         @endforeach 
                                     </select>
                                 </div>
-                                <div>
-                                    <x-input-label for="name" :value="__('Package name')" class="mt-4"></x-input-label>
-                                    <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name')" required></x-text-input>
-                                    <x-input-error class="mt-2" :messages="$errors->get('name')"></x-input-error>
-                                </div>
-                                <div>
-                                    <x-input-label for="price" :value="__('Package price')" class="mt-4"></x-input-label>
-                                    <x-text-input id="price" name="price" type="text" class="mt-1 block w-full" :value="old('price')" required></x-text-input>
-                                    <x-input-error class="mt-2" :messages="$errors->get('price')"></x-input-error>
+
+                                <div style="margin-top: 16px;">
+                                    <label for="name" style="font-weight: 500; color: #374151; margin-bottom: 8px;">{{ __('Package name') }}</label>
+                                    <input id="name" name="name" type="text" style="margin-top: 8px; display: block; width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 4px;" value="{{ old('name') }}" required>
+                                    <div style="color: red; font-size: 12px; margin-top: 4px;">
+                                        @foreach ($errors->get('name') as $error)
+                                            {{ $error }}
+                                        @endforeach
+                                    </div>
                                 </div>
 
-                                <div class="flex items-center gap-4 mt-4">
-                                    <x-primary-button>{{ __('Save') }}</x-primary-button>
+                                <div style="margin-top: 16px;">
+                                    <label for="price" style="font-weight: 500; color: #374151; margin-bottom: 8px;">{{ __('Package price') }}</label>
+                                    <input id="price" name="price" type="text" style="margin-top: 8px; display: block; width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 4px;" value="{{ old('price') }}" required>
+                                    <div style="color: red; font-size: 12px; margin-top: 4px;">
+                                        @foreach ($errors->get('price') as $error)
+                                            {{ $error }}
+                                        @endforeach
+                                    </div>
+                                </div>
+
+                                <div style="display: flex; align-items: center; gap: 16px; margin-top: 16px;">
+                                    <button type="submit" style="background-color: #4CAF50; color: white; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer;">
+                                        {{ __('Save') }}
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -54,3 +66,5 @@
         </div>
     </div>
 </x-app-layout>
+@include('sweetalert::alert')
+

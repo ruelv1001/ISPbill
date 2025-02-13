@@ -41,8 +41,8 @@
                                                 ];
 
                                             @endphp
-                                            <x-table :headers="$headers" :data="$data" title="Port" :dropdown="$dropdownActions"
-                                                :actions="$tableActions" tablename="Port" :addbtn="$addButton" :searchField="false"
+                                            <x-table :headers="$headers" :data="$data" title="Package" :dropdown="$dropdownActions"
+                                                :actions="$tableActions" tablename="Package" :addbtn="$addButton" :searchField="false"
                                                 :dltAllbtn="$dltAllbtn" itemName="Area" :message="$customMessage" />
                                         </section>
                     @endif

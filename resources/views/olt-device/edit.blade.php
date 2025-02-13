@@ -1,57 +1,58 @@
 <x-app-layout>
-    <div class="py-6">
-        <div class="max-w-8xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-gray-800 shadow sm:rounded-lg">
-                <div class="p-4 sm:p-8">
+    <div style="padding: 24px 0;">
+        <div style="max-width: 100%; margin: 0 auto; padding: 0 24px;">
+            <div style="background-color: white; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); border-radius: 8px;">
+                <div style="padding: 16px 32px;">
                     <x-slot name="header">
-                        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                            {{ $areaLocation->area }}
+                        <h2 style="font-size: 20px; font-weight: 600; color: #374151; padding-bottom: 16px; border-bottom: 2px solid #d1d5db;">
+                            {{ $oltDevice->olt }}
                         </h2>
                     </x-slot>
 
                     @if(session('error'))
-                        <div class="alert alert-danger text-red-600">
+                        <div style="color: red; font-size: 14px;">
                             {{ session('error') }}
                         </div>
                     @endif
 
-                    <h2
-                        class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight border-b-2 border-slate-100 pb-4">
+                    <h2 style="font-size: 20px; font-weight: 600; color: #374151; border-bottom: 2px solid #d1d5db; padding-bottom: 16px;">
                         {{ __('Edit Area') }}
                     </h2>
 
-                    <form method="post" action="{{ route('area-location.update', $areaLocation->id) }}"
-                        class="mt-6 space-y-6">
+                    <form method="post" action="{{ route('area-location.update', $oltDevice->id) }}" style="margin-top: 24px; padding-bottom: 24px;">
                         @csrf
                         @method('patch')
 
-                        <div class="grid grid-cols-2 gap-4">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
                             <div>
-                                <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">{{ __('Area') }}</h2>
-                                <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                                    {{ __("Edit Area") }}
-                                </p>
+                                <h2 style="font-size: 18px; font-weight: 500; color: #374151;">{{ __('Area') }}</h2>
+                                <p style="margin-top: 8px; font-size: 14px; color: #4b5563;">{{ __("Edit Area") }}</p>
                             </div>
 
                             <div>
-                                <div>
-                                    <x-input-label for="area" :value="__('Area')" class="mt-4"></x-input-label>
-                                    <x-text-input id="area" name="area" type="text" required
-                                        class="mt-1 block w-full bg-gray-100"
-                                        value="{{ old('area', $areaLocation->area) }}"></x-text-input>
+                                <div style="margin-top: 16px;">
+                                    <label for="area" style="font-weight: 500; color: #374151; margin-bottom: 8px;">{{ __('Area') }}</label>
+                                    <input id="area" name="area" type="text" required
+                                        style="margin-top: 8px; display: block; width: 100%; padding: 8px; background-color: #f3f4f6; border: 1px solid #d1d5db; border-radius: 4px;"
+                                        value="{{ old('area', $oltDevice->olt_device) }}">
                                 </div>
 
-                                <div>
-                                    <x-input-label for="description" :value="__('Description')"
-                                        class="mt-4"></x-input-label>
-                                    <x-text-input id="description" name="description" type="text" required
-                                        class="mt-1 block w-full bg-gray-100"
-                                        value="{{ old('description', $areaLocation->description) }}"></x-text-input>
-                                    <x-input-error class="mt-2" :messages="$errors->get('description')"></x-input-error>
+                                <div style="margin-top: 16px;">
+                                    <label for="description" style="font-weight: 500; color: #374151; margin-bottom: 8px;">{{ __('Description') }}</label>
+                                    <input id="description" name="description" type="text" required
+                                        style="margin-top: 8px; display: block; width: 100%; padding: 8px; background-color: #f3f4f6; border: 1px solid #d1d5db; border-radius: 4px;"
+                                        value="{{ old('description', $oltDevice->description) }}">
+                                    <div style="color: red; font-size: 12px; margin-top: 4px;">
+                                        @foreach ($errors->get('description') as $error)
+                                            {{ $error }}
+                                        @endforeach
+                                    </div>
                                 </div>
 
-                                <div class="flex items-center gap-4 mt-4">
-                                    <x-primary-button>{{ __('Update') }}</x-primary-button>
+                                <div style="display: flex; align-items: center; gap: 16px; margin-top: 16px;">
+                                    <button type="submit" style="background-color: #4CAF50; color: white; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer;">
+                                        {{ __('Update') }}
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -61,4 +62,5 @@
         </div>
     </div>
 </x-app-layout>
+
 @include('sweetalert::alert')

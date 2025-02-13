@@ -96,7 +96,7 @@ $searchField = filter_var($searchField, FILTER_VALIDATE_BOOLEAN);
                         <th scope="col" style="padding: 0.75rem 1.5rem; font-weight: 600; color: #374151; {{ $index == 'id' ? 'display: flex; align-items: center;' : '' }}">
                             @if ($index == 'id' && $tableCheckedbox)
                                 <input id="checkbox-all-{{ $tablename }}" type="checkbox" style="margin-right: 0.5rem;">
-                                <label for="checkbox-all-{{ $tablename }}">checkbox</label>
+                                <label for="checkbox-all-{{ $tablename }}"></label>
                                 {{ $header }}
                             @else
                                 {{ $header }}

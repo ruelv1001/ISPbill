@@ -1,48 +1,45 @@
 <x-app-layout>
-
-    <div class="py-6">
-        <div class="max-w-8xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    <div class="flex justify-between items-center mb-6 border-b-2 border-slate-100 pb-4">
-                        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+    <div style="padding: 15px;">
+        <div style="max-width: 1280px; margin: 0 auto; padding: 5px;">
+            <div style="background-color: white; overflow: hidden; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); border-radius: 8px;">
+                <div style="padding: 15px; color: #1a202c;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; border-bottom: 2px solid #e2e8f0; padding-bottom: 16px;">
+                        <h2 style="font-weight: 600; font-size: 20px; color: #2d3748; margin: 0;">
                             {{ __('PON List') }}
                         </h2>
-
-
-
-
                     </div>
-                    <div>
+
+                    <!-- Scrollable container -->
+                    <div style="height: 500px; overflow-y: auto; border: 1px solid #cbd5e0; border-radius: 8px; padding: 16px; background-color: #f9fafb;">
                         <section>
                             @php
-$headers = [
-  
-    'pon' => 'PON',
-    'description' => 'Description',
-    'action' => 'Action'
-];
-$dropdownActions = []; // Add lock action to dropdown
-$dltAllbtn = [];
-$tableActions = ['edit' => 'pon.edit', 'delete-item' => 'pon.destroy'];
-$addButton = ['Add PON', 'pon.create'];
+                                $headers = [
+                                    'pon' => 'PON',
+                                    'description' => 'Description',
+                                    'action' => 'Action'
+                                ];
+                                $dropdownActions = [];
+                                $dltAllbtn = [];
+                                $tableActions = ['edit' => 'pon.edit', 'delete-item' => 'pon.destroy'];
+                                $addButton = ['Add PON', 'pon.create'];
 
-$customMessage = [
-    'success' => '',
-    'delete' => 'This User will be permanently deleted if you proceed.',
-];
-
+                                $customMessage = [
+                                    'success' => '',
+                                    'delete' => 'This User will be permanently deleted if you proceed.',
+                                ];
                             @endphp
                             <x-table :headers="$headers" :data="$data" title="PON" :dropdown="$dropdownActions"
                                 :actions="$tableActions" tablename="PON" :addbtn="$addButton"
                                 :searchField="false" :dltAllbtn="$dltAllbtn" itemName="Area" :message="$customMessage" />
                         </section>
                     </div>
+                    <!-- End Scrollable container -->
                 </div>
             </div>
         </div>
     </div>
 </x-app-layout>
+
 
 @include('sweetalert::alert')
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">

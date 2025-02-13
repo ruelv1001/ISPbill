@@ -1,47 +1,49 @@
 <x-app-layout>
-    <div class="py-6">
-        <div class="max-w-8xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900 dark:text-gray-100">
+    <div style="padding: 24px 0;">
+        <div style="max-width: 100%; margin: 0 auto; padding: 0 24px;">
+            <div style="background-color: white; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); border-radius: 8px; overflow: hidden;">
+                <div style="padding: 24px; color: #374151;">
                     @if(session('success'))
-                        <div class="alert alert-success text-green-600">
+                        <div style="color: green; font-size: 14px;">
                             {{ session('success') }}
                         </div>
                     @endif
 
                     @if(session('error'))
-                        <div class="alert alert-danger text-red-600">
+                        <div style="color: red; font-size: 14px;">
                             {{ session('error') }}
                         </div>
                     @endif
-                    <div class="flex justify-between items-center mb-6 border-b-2 border-slate-100 pb-4">
-                        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; border-bottom: 2px solid #e5e7eb; padding-bottom: 16px;">
+                        <h2 style="font-size: 20px; font-weight: 600; color: #374151;">
                             {{ __('Users') }}
                         </h2>
-                        <div class="flex items-center  ">
+                        <div style="display: flex; align-items: center;">
                             @if (auth()->user()->isAdmin())
-                                <form action="{{ route('due.user.disable') }}" method="post" class="hidden">
+                                <form action="{{ route('due.user.disable') }}" method="post" style="display: none;">
                                     @csrf
-                                    <x-danger-button>{{ __('Disable all Customer with due') }}</x-danger-button>
+                                    <button type="submit" style="background-color: #e11d48; color: white; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer;">
+                                        {{ __('Disable all Customer with due') }}
+                                    </button>
                                 </form>
-                                <a href="{{ route('user.download') }}"
-                                    class="ml-2 inline-flex items-center px-4 py-2 bg-orange-400 text-white dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs rounded uppercase">
+
+                                <a href="{{ route('user.download') }}" style="margin-left: 8px; display: inline-flex; align-items: center; padding: 8px 16px; background-color: #f59e0b; color: white; border-radius: 4px; font-size: 12px; font-weight: 600; text-transform: uppercase; text-decoration: none;">
                                     {{ __('Download') }}
                                 </a>
 
-                                <a href="{{ route('user-management.create') }}"
-                                    class="ml-2 inline-flex items-center px-4 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white rounded uppercase">
+                                <a href="{{ route('user-management.create') }}" style="margin-left: 8px; display: inline-flex; align-items: center; padding: 8px 16px; background-color: #2d3748; color: white; border-radius: 4px; font-size: 12px; font-weight: 600; text-transform: uppercase; text-decoration: none;">
                                     {{ __('Create') }}
                                 </a>
 
-                                <a href="{{ route('user-type.index') }}"
-                                    class="ml-2 inline-flex items-center px-4 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white rounded uppercase">
+                                <a href="{{ route('user-type.index') }}" style="margin-left: 8px; display: inline-flex; align-items: center; padding: 8px 16px; background-color: #2d3748; color: white; border-radius: 4px; font-size: 12px; font-weight: 600; text-transform: uppercase; text-decoration: none;">
                                     {{ __('User Type management') }}
                                 </a>
                             @endif
                         </div>
                     </div>
-                    <div class="max-h-[600px] overflow-y-auto"> <!-- Increased max-height for a larger screen -->
+
+                    <div style="max-height: 600px; overflow-y: auto;">
                         <section>
                             @php
 $headers = [
@@ -49,7 +51,7 @@ $headers = [
     'role' => 'Role',
     'action' => 'Action'
 ];
-$dropdownActions = ['Lock Selected' => 'lock']; // Add lock action to dropdown
+$dropdownActions = ['Lock Selected' => 'lock']; 
 $dltAllbtn = ["Lock Selected", "users.bulk-lock"];
 $tableActions = ['edit' => 'user-management.edit', 'delete-item' => 'user-management.destroy'];
 $addButton = ['Add User Role', 'user-management.create'];
@@ -70,6 +72,7 @@ $customMessage = [
         </div>
     </div>
 </x-app-layout>
+
 @include('sweetalert::alert')
 
 
