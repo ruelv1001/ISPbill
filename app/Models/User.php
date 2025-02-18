@@ -109,6 +109,12 @@ class User extends Authenticatable
         return $this->hasOne(ArchieveDetail::class);
     }
 
+    public function user_limit()
+    {
+        return $this->hasOne(UserLimit::class, 'user_type', 'role'); 
+    }
+
+
     // public function userLimit()
     // {
     //     return $this->hasOne(UserLimit::class);
