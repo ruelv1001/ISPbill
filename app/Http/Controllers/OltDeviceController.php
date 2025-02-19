@@ -123,7 +123,7 @@ class OltDeviceController extends Controller
     public function destroy(string $id)
     {
 
-        $areaLocation = AreaLocation::find($id);
+        $areaLocation = OltDevice::find($id);
 
 
         if (!$areaLocation) {

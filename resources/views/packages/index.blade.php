@@ -46,8 +46,32 @@
                                                 :dltAllbtn="$dltAllbtn" itemName="Area" :message="$customMessage" />
                                         </section>
                     @endif
-                    @if (auth()->user()->isUser())
-                        <livewire:user-package-table />
+
+
+                    @if (optional(auth()->user()->user_limit)->packages_view == 1)
+                                        <section>
+                                            @php
+                                                $headers = [
+                                                    'name' => 'name',
+                                                    'price' => 'Price',
+                                                    'created_at' => 'Date Created',
+                                                    'action' => 'Action'
+                                                ];
+                                                $dropdownActions = [];
+                                                $dltAllbtn = [];
+                                                $tableActions = ['edit' => 'packages.edit', 'delete-item' => 'packages.destroy'];
+                                                $addButton = ['Add package', 'packages.create'];
+
+                                                $customMessage = [
+                                                    'success' => '',
+                                                    'delete' => 'This User will be permanently deleted if you proceed.',
+                                                ];
+
+                                            @endphp
+                                            <x-table :headers="$headers" :data="$data" title="Package" :dropdown="$dropdownActions"
+                                                :actions="$tableActions" tablename="Package" :addbtn="$addButton" :searchField="false"
+                                                :dltAllbtn="$dltAllbtn" itemName="Area" :message="$customMessage" />
+                                        </section>
                     @endif
 
                 </div>

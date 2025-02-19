@@ -15,7 +15,7 @@ class PackageController extends Controller
         $data = null; // Define $data to prevent "undefined variable" error
         $areaFilter = []; // Define $areaFilter to avoid undefined variable error
 
-        if (auth()->user()->isUser()) {
+        if (optional(auth()->user()->user_limit)->packages_view == 1) {
             $user = auth()->user();
             // $router_name = $user->detail->router_name;
             // $router = Router::where("name", $router_name)->firstOrFail();
