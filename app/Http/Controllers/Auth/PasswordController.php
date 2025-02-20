@@ -20,10 +20,18 @@ class PasswordController extends Controller
             'password' => ['required', Password::defaults(), 'confirmed'],
         ]);
 
-        $request->user()->update([
-            'password' => Hash::make($validated['password']),
-        ]);
+        try {
+            // Update the password
+            $request->user()->update([
+                'password' => Hash::make($validated['password']),
+            ]);
 
-        return back()->with('status', 'password-updated');
+            // Success message
+            return back()->with('status', 'password-updated');
+        } catch (\Exception $e) {
+            // In case of any errors, return an error status
+            return back()->with('error', 'Something went wrong. Please try again.');
+        }
     }
+    
 }
