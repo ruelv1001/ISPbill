@@ -2,7 +2,7 @@
 
 <!-- Sidebar Wrapper with White Background -->
 <div
-    style="background-color: #ffffff; padding: 15px; margin-top: 15px; height: 100vh; overflow-y: auto; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+    style="background-color: #ffffff; padding: 15px; margin-top: 15px; height: 90vh; overflow-y: auto; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
 
 
     <nav class="mt-10">
@@ -38,7 +38,7 @@
                     <i class="fas fa-user-shield" style="margin-right: 10px;"></i> {{ __('User Management') }}
                 </x-sidebar-item>
             @endif
-    
+     
 
 
                 @if(optional(auth()->user()->user_limit)->tickets_view == 1)
