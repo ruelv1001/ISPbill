@@ -1,6 +1,6 @@
 <x-app-layout>
-    <div style="padding: 24px;">
-        <div style="max-width: 1280px; margin: 0 auto; padding: 16px;">
+    <div style="padding: 2px;">
+        <div style="max-width: 1280px; margin: 0 auto; padding: 5px;">
             <div style="background: white; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border-radius: 8px;">
                 <div style="padding: 24px; color: #1a202c;">
                     <h2 style="font-weight: 600; font-size: 1.25rem; color: #2d3748; margin-bottom: 32px; border-bottom: 2px solid #e2e8f0; padding-bottom: 16px;">

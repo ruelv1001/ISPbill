@@ -1,8 +1,8 @@
 <x-app-layout>
-    <div style="padding: 24px 0;">
-        <div style="max-width: 100%; margin: 0 auto; padding: 0 24px;">
+    <div style="padding: 5px 0;">
+        <div style="max-width: 100%; margin: 0 auto; padding: 0 5px;">
             <div style="background-color: white; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); border-radius: 8px; overflow: hidden;">
-                <div style="padding: 24px; color: #374151;">
+                <div style="padding: 5px; color: #374151;">
                     @if(session('success'))
                         <div style="color: green; font-size: 14px;">
                             {{ session('success') }}

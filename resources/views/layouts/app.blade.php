@@ -26,12 +26,13 @@
             font-family: 'Inter', sans-serif;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
-
+            margin: 0;
+            padding: 0;
         }
 
         .container {
             min-height: 100vh;
-            background-color: #ffff;
+            background-color: #fff;
             display: flex;
             flex-direction: column;
         }
@@ -54,6 +55,43 @@
             flex-direction: column;
             overflow: hidden;
             background-color: #d3d3d3;
+            padding: 5px;
+        }
+
+        /* Responsive Sidebar */
+        .sidebar {
+            width: 100%;
+            background-color: #333;
+            color: white;
+            padding: 10px;
+            display: none; /* Initially hidden on mobile */
+        }
+
+        .sidebar.active {
+            display: block; /* Show when toggled */
+        }
+
+        @media (min-width: 768px) {
+            .sidebar {
+                width: 250px;
+                display: block;
+            }
+        }
+
+        /* Toggle Button */
+        .sidebar-toggle {
+            display: block;
+            background-color: #333;
+            color: white;
+            padding: 10px;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        @media (min-width: 768px) {
+            .sidebar-toggle {
+                display: none; /* Hide toggle button on larger screens */
+            }
         }
     </style>
 </head>
@@ -61,8 +99,13 @@
 <body>
     <div class="container">
         @include('layouts.navigation')
-        <div class="main-wrapper">
+
+        <div class="sidebar-toggle" onclick="toggleSidebar()">☰ Menu</div>
+        <div class="sidebar">
             @include('layouts.sidebar2')
+        </div>
+
+        <div class="main-wrapper">
             <main class="main-content">
                 {{ $slot }}
             </main>
@@ -71,6 +114,13 @@
 
     @livewireScripts
     @stack('scripts')
+
+    <script>
+        function toggleSidebar() {
+            var sidebar = document.querySelector('.sidebar');
+            sidebar.classList.toggle('active');
+        }
+    </script>
 </body>
 
 </html>

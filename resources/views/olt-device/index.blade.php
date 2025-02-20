@@ -3,7 +3,7 @@
         <div style="max-width: 1280px; margin: 0 auto; padding: 5px;">
             <div
                 style="background-color: white; overflow: hidden; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); border-radius: 8px;">
-                <div style="padding: 15px; color: #1a202c;">
+                <div style="padding: 5px; color: #1a202c;">
                     <div
                         style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; border-bottom: 2px solid #e2e8f0; padding-bottom: 16px;">
                         <h2 style="font-weight: 600; font-size: 20px; color: #2d3748; margin: 0;">

@@ -38,12 +38,7 @@
                     <i class="fas fa-user-shield" style="margin-right: 10px;"></i> {{ __('User Management') }}
                 </x-sidebar-item>
             @endif
-            @if(optional(auth()->user()->user_limit)->transaction_view == 1)
-                <x-sidebar-item :href="route('ticket.index')" :active="request()->routeIs('ticket.index')"
-                    style="font-size: 18px;">
-                    <i class="fas fa-ticket-alt" style="margin-right: 10px;"></i> {{ __('Ticket') }}
-                </x-sidebar-item>
-            @endif
+    
 
 
                 @if(optional(auth()->user()->user_limit)->tickets_view == 1)

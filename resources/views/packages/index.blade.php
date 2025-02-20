@@ -1,9 +1,9 @@
 <x-app-layout>
-    <div style="padding: 24px;">
-        <div style="max-width: 1280px; margin: 0 auto; padding: 0 24px;">
+    <div style="padding: 5px;">
+        <div style="max-width: 1280px; margin: 0 auto; padding: 0 5px;">
             <div
                 style="background-color: #ffffff; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); border-radius: 8px; overflow: hidden;">
-                <div style="padding: 24px; color: #1a202c;">
+                <div style="padding: 5px; color: #1a202c;">
                     @if(session('success'))
                         <div
                             style="background-color: #d1fae5; color: #065f46; padding: 12px; border-radius: 4px; margin-bottom: 16px;">
